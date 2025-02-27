@@ -26,7 +26,7 @@
 //#include "gui/action_file_dialog.h"
 //#include "gui/filter_mesh_dock_widget.h"
 
-//#include <vclib/processing/actions.h>
+#include <vclib/processing.h>
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
@@ -66,6 +66,33 @@ MeshProcessingMainWindow::~MeshProcessingMainWindow()
 
 void MeshProcessingMainWindow::openMesh()
 {
+    std::vector<FileFormat> formats = proc::ActionManager::loadMeshFormats();
+    QString filter = filterFormatsToQString(formats);
+
+    QString f = QFileDialog::getOpenFileName(
+        nullptr,
+        QObject::tr("Open Document"),
+        QDir::currentPath(),
+        filter);
+
+    if (!f.isEmpty()) {
+        std::string filename = f.toStdString();
+        std::string pfn      = FileInfo::fileNameWithExtension(filename);
+        FileFormat  format   = FileInfo::extension(filename);
+        logger().startTimer();
+        auto mesh =
+            proc::ActionManager::loadMeshAction<vcl::TriEdgeMesh>(format)->load(
+                filename, logger());
+        logger().stopTimer();
+        logger().log(
+            TextEditLogger::MESSAGE_LOG,
+            pfn + " loaded in " + std::to_string(logger().time()) +
+                " seconds.");
+        mMeshVector->pushBack(makeMeshDrawable(std::move(mesh)));
+        mUI->meshViewer->updateGUI();
+        mUI->meshViewer->fitScene();
+    }
+
     // std::vector<FileFormat> formats = mActionManager.loadMeshFormats();
 
     // ActionOpenFileDialog<proc::LoadMeshAction>* dialog =
@@ -261,26 +288,6 @@ void MeshProcessingMainWindow::populateFilterMenu()
 //         &MeshProcessingMainWindow::applyFilter);
 
 //     dock->show();
-// }
-
-// std::shared_ptr<DrawableObject> MeshProcessingMainWindow::makeMeshDrawable(
-//     const std::shared_ptr<proc::MeshI>& mesh)
-// {
-//     switch (mesh->type()) {
-//     case proc::MeshIType::TRI_MESH: {
-//         auto m = std::make_shared<DrawableMesh<proc::TriMesh>>(
-//             mesh->as<proc::TriMesh>());
-//         setMeshInfo(*m);
-//         return m;
-//     }
-//     case proc::MeshIType::POLY_MESH: {
-//         auto m = std::make_shared<DrawableMesh<proc::PolyMesh>>(
-//             mesh->as<proc::PolyMesh>());
-//         setMeshInfo(*m);
-//         return m;
-//     }
-//     default: return nullptr;
-//     }
 // }
 
 // std::shared_ptr<proc::MeshI> MeshProcessingMainWindow::toMesh(

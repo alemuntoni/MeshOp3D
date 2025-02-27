@@ -27,7 +27,7 @@
 
 //#include <vclib/processing/action_manager.h>
 #include <vclib/qt/gui/text_edit_logger.h>
-#include <vclib/render/drawable/abstract_drawable_mesh.h>
+#include <vclib/render/drawable/drawable_mesh.h>
 #include <vclib/render/drawable/drawable_object_vector.h>
 
 namespace vcl::qt {
@@ -78,6 +78,16 @@ private:
 
     // static std::shared_ptr<vcl::AbstractDrawableMesh> toAbstractDrawableMesh(
     //     const std::shared_ptr<vcl::proc::MeshI>& mesh);
+
+    template<MeshConcept MeshType>
+    std::shared_ptr<DrawableObject> makeMeshDrawable(
+        MeshType&& mesh)
+    {
+        std::shared_ptr<DrawableMesh<MeshType>> m =
+            std::make_shared<DrawableMesh<MeshType>>(std::move(mesh));
+        setMeshInfo(*m);
+        return m;
+    }
 
     template<MeshConcept MeshType>
     static void setMeshInfo(MeshType& mesh)
