@@ -23,10 +23,10 @@
 #include "ui_mesh_processing_main_window.h"
 #include "mesh_processing_main_window.h"
 
-#include "gui/action_file_dialog.h"
-#include "gui/filter_mesh_dock_widget.h"
+//#include "gui/action_file_dialog.h"
+//#include "gui/filter_mesh_dock_widget.h"
 
-#include <vclib/processing/actions.h>
+//#include <vclib/processing/actions.h>
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
@@ -42,7 +42,7 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
     mUI->meshViewer->setDrawableObjectVector(mMeshVector);
 
     // populate action manager
-    mActionManager.add(proc::vclibActions());
+    //mActionManager.add(proc::vclibActions());
 
     populateFilterMenu();
 
@@ -66,146 +66,146 @@ MeshProcessingMainWindow::~MeshProcessingMainWindow()
 
 void MeshProcessingMainWindow::openMesh()
 {
-    std::vector<FileFormat> formats = mActionManager.loadMeshFormats();
+    // std::vector<FileFormat> formats = mActionManager.loadMeshFormats();
 
-    ActionOpenFileDialog<proc::LoadMeshAction>* dialog =
-        new ActionOpenFileDialog<proc::LoadMeshAction>(
-            mActionManager.loadMeshActionManager(), "Open Mesh", "", this);
+    // ActionOpenFileDialog<proc::LoadMeshAction>* dialog =
+    //     new ActionOpenFileDialog<proc::LoadMeshAction>(
+    //         mActionManager.loadMeshActionManager(), "Open Mesh", "", this);
 
-    if (dialog->exec() == QDialog::Accepted) {
-        auto fs = dialog->selectedFiles();
+    // if (dialog->exec() == QDialog::Accepted) {
+    //     auto fs = dialog->selectedFiles();
 
-        double tTime = 0.0;
+    //     double tTime = 0.0;
 
-        for (const auto& f : fs) {
-            std::string filename = f.toStdString();
-            std::string pfn      = FileInfo::fileNameWithExtension(filename);
-            FileFormat  format   = FileInfo::extension(filename);
-            auto        params   = dialog->parameters(format);
+    //     for (const auto& f : fs) {
+    //         std::string filename = f.toStdString();
+    //         std::string pfn      = FileInfo::fileNameWithExtension(filename);
+    //         FileFormat  format   = FileInfo::extension(filename);
+    //         auto        params   = dialog->parameters(format);
 
-            logger().startTimer();
-            auto mesh = mActionManager.loadMeshAction(format)->load(
-                filename, params, logger());
-            logger().stopTimer();
-            tTime += logger().time();
-            logger().log(
-                TextEditLogger::MESSAGE_LOG,
-                pfn + " loaded in " + std::to_string(logger().time()) +
-                    " seconds.");
-            mMeshVector->pushBack(makeMeshDrawable(mesh));
-        }
+    //         logger().startTimer();
+    //         auto mesh = mActionManager.loadMeshAction(format)->load(
+    //             filename, params, logger());
+    //         logger().stopTimer();
+    //         tTime += logger().time();
+    //         logger().log(
+    //             TextEditLogger::MESSAGE_LOG,
+    //             pfn + " loaded in " + std::to_string(logger().time()) +
+    //                 " seconds.");
+    //         mMeshVector->pushBack(makeMeshDrawable(mesh));
+    //     }
 
-        logger().log(
-            TextEditLogger::MESSAGE_LOG,
-            "All meshes loaded in " + std::to_string(tTime) + " seconds.");
+    //     logger().log(
+    //         TextEditLogger::MESSAGE_LOG,
+    //         "All meshes loaded in " + std::to_string(tTime) + " seconds.");
 
-        mUI->meshViewer->updateGUI();
-        mUI->meshViewer->fitScene();
-    }
+    //     mUI->meshViewer->updateGUI();
+    //     mUI->meshViewer->fitScene();
+    // }
 }
 
 void MeshProcessingMainWindow::saveMeshAs()
 {
-    if (mMeshVector->size() == 0) {
-        return;
-    }
+    // if (mMeshVector->size() == 0) {
+    //     return;
+    // }
 
-    std::vector<FileFormat> formats = mActionManager.saveMeshFormats();
+    // std::vector<FileFormat> formats = mActionManager.saveMeshFormats();
 
-    ActionSaveFileDialog<proc::SaveMeshAction>* dialog =
-        new ActionSaveFileDialog<proc::SaveMeshAction>(
-            mActionManager.saveMeshActionManager(), "Save Mesh", "", this);
+    // ActionSaveFileDialog<proc::SaveMeshAction>* dialog =
+    //     new ActionSaveFileDialog<proc::SaveMeshAction>(
+    //         mActionManager.saveMeshActionManager(), "Save Mesh", "", this);
 
-    if (dialog->exec() == QDialog::Accepted) {
-        auto fs = dialog->selectedFiles();
+    // if (dialog->exec() == QDialog::Accepted) {
+    //     auto fs = dialog->selectedFiles();
 
-        std::string filename = fs.first().toStdString();
-        std::string pfn      = FileInfo::fileNameWithExtension(filename);
-        std::string format   = FileInfo::extension(filename);
-        FileFormat  f        = dialog->selectedFormat();
+    //     std::string filename = fs.first().toStdString();
+    //     std::string pfn      = FileInfo::fileNameWithExtension(filename);
+    //     std::string format   = FileInfo::extension(filename);
+    //     FileFormat  f        = dialog->selectedFormat();
 
-        if (f != FileFormat(format)) {
-            filename += "." + f.extensions().front();
-        }
+    //     if (f != FileFormat(format)) {
+    //         filename += "." + f.extensions().front();
+    //     }
 
-        uint i = mUI->meshViewer->selectedDrawableObject();
-        std::shared_ptr<DrawableObject> d = mMeshVector->at(i);
+    //     uint i = mUI->meshViewer->selectedDrawableObject();
+    //     std::shared_ptr<DrawableObject> d = mMeshVector->at(i);
 
-        std::shared_ptr<proc::MeshI> m = toMesh(d);
+    //     std::shared_ptr<proc::MeshI> m = toMesh(d);
 
-        if (m) {
-            auto params = dialog->parameters(format);
+    //     if (m) {
+    //         auto params = dialog->parameters(format);
 
-            logger().startTimer();
-            mActionManager.saveMeshAction(format)->save(
-                filename, *m, params, logger());
-            logger().stopTimer();
-            logger().log(
-                TextEditLogger::MESSAGE_LOG,
-                pfn + " saved in " + std::to_string(logger().time()) +
-                    " seconds.");
-        }
-    }
+    //         logger().startTimer();
+    //         mActionManager.saveMeshAction(format)->save(
+    //             filename, *m, params, logger());
+    //         logger().stopTimer();
+    //         logger().log(
+    //             TextEditLogger::MESSAGE_LOG,
+    //             pfn + " saved in " + std::to_string(logger().time()) +
+    //                 " seconds.");
+    //     }
+    // }
 }
 
 void MeshProcessingMainWindow::openFilterDialog(bool)
 {
-    QAction* sender = qobject_cast<QAction*>(QObject::sender());
+    // QAction* sender = qobject_cast<QAction*>(QObject::sender());
 
-    std::string filterId =
-        sender->property("filter_id").toString().toStdString();
-    auto filter = mActionManager.filterMeshActionById(filterId);
+    // std::string filterId =
+    //     sender->property("filter_id").toString().toStdString();
+    // auto filter = mActionManager.filterMeshActionById(filterId);
 
-    if (filter) {
-        openFilterDialog(filter);
-    }
+    // if (filter) {
+    //     openFilterDialog(filter);
+    // }
 }
 
-void MeshProcessingMainWindow::applyFilter(
-    const std::shared_ptr<proc::FilterMeshAction>& action,
-    const proc::ParameterVector&                   params)
-{
-    proc::MeshVector                          inputMeshes;
-    std::vector<std::shared_ptr<proc::MeshI>> inputOutputMeshes;
-    proc::MeshVector                          outputMeshes;
+// void MeshProcessingMainWindow::applyFilter(
+//     const std::shared_ptr<proc::FilterMeshAction>& action,
+//     const proc::ParameterVector&                   params)
+// {
+//     proc::MeshVector                          inputMeshes;
+//     std::vector<std::shared_ptr<proc::MeshI>> inputOutputMeshes;
+//     proc::MeshVector                          outputMeshes;
 
-    uint niMeshes  = action->inputMeshParameters().size();
-    uint nioMeshes = action->inputOutputMeshParameters().size();
+//     uint niMeshes  = action->inputMeshParameters().size();
+//     uint nioMeshes = action->inputOutputMeshParameters().size();
 
-    if (niMeshes + nioMeshes == 1) {
-        auto m =
-            toMesh(mMeshVector->at(mUI->meshViewer->selectedDrawableObject()));
-        if (niMeshes == 1) {
-            inputMeshes.pushBack(m);
-        }
-        else {
-            inputOutputMeshes.push_back(m);
-        }
-    }
+//     if (niMeshes + nioMeshes == 1) {
+//         auto m =
+//             toMesh(mMeshVector->at(mUI->meshViewer->selectedDrawableObject()));
+//         if (niMeshes == 1) {
+//             inputMeshes.pushBack(m);
+//         }
+//         else {
+//             inputOutputMeshes.push_back(m);
+//         }
+//     }
 
-    logger().startTimer();
+//     logger().startTimer();
 
-    action->applyFilter(
-        inputMeshes, inputOutputMeshes, outputMeshes, params, logger());
+//     action->applyFilter(
+//         inputMeshes, inputOutputMeshes, outputMeshes, params, logger());
 
-    logger().stopTimer();
+//     logger().stopTimer();
 
-    logger().log(
-        TextEditLogger::MESSAGE_LOG,
-        action->name() + " applied in " + std::to_string(logger().time()) +
-            " seconds.");
+//     logger().log(
+//         TextEditLogger::MESSAGE_LOG,
+//         action->name() + " applied in " + std::to_string(logger().time()) +
+//             " seconds.");
 
-    for (const auto& m : inputOutputMeshes) {
-        toAbstractDrawableMesh(m)->updateBuffers();
-    }
+//     for (const auto& m : inputOutputMeshes) {
+//         toAbstractDrawableMesh(m)->updateBuffers();
+//     }
 
-    for (const auto& m : outputMeshes) {
-        mMeshVector->pushBack(makeMeshDrawable(m));
-    }
+//     for (const auto& m : outputMeshes) {
+//         mMeshVector->pushBack(makeMeshDrawable(m));
+//     }
 
-    mUI->meshViewer->updateGUI();
-    mUI->meshViewer->fitScene();
-}
+//     mUI->meshViewer->updateGUI();
+//     mUI->meshViewer->fitScene();
+// }
 
 TextEditLogger& MeshProcessingMainWindow::logger()
 {
@@ -214,85 +214,85 @@ TextEditLogger& MeshProcessingMainWindow::logger()
 
 void MeshProcessingMainWindow::populateFilterMenu()
 {
-    auto filters = mActionManager.filterMeshActions();
+    // auto filters = mActionManager.filterMeshActions();
 
-    std::array<QMenu*, proc::FilterMeshAction::N_CATEGORIES> menus;
-    menus[proc::FilterMeshAction::CREATE] =
-        new QMenu("Create", mUI->menuFilter);
-    menus[proc::FilterMeshAction::CLEANING_AND_REPAIRING] =
-        new QMenu("Cleaning and Repairing", mUI->menuFilter);
-    menus[proc::FilterMeshAction::RECONSTRUCTION] =
-        new QMenu("Reconstruction", mUI->menuFilter);
-    menus[proc::FilterMeshAction::SMOOTHING] =
-        new QMenu("Smoothing", mUI->menuFilter);
+    // std::array<QMenu*, proc::FilterMeshAction::N_CATEGORIES> menus;
+    // menus[proc::FilterMeshAction::CREATE] =
+    //     new QMenu("Create", mUI->menuFilter);
+    // menus[proc::FilterMeshAction::CLEANING_AND_REPAIRING] =
+    //     new QMenu("Cleaning and Repairing", mUI->menuFilter);
+    // menus[proc::FilterMeshAction::RECONSTRUCTION] =
+    //     new QMenu("Reconstruction", mUI->menuFilter);
+    // menus[proc::FilterMeshAction::SMOOTHING] =
+    //     new QMenu("Smoothing", mUI->menuFilter);
 
-    for (uint i = 0; i < proc::FilterMeshAction::N_CATEGORIES; ++i) {
-        mUI->menuFilter->addMenu(menus[i]);
-    }
+    // for (uint i = 0; i < proc::FilterMeshAction::N_CATEGORIES; ++i) {
+    //     mUI->menuFilter->addMenu(menus[i]);
+    // }
 
-    for (const std::shared_ptr<proc::FilterMeshAction>& f : filters) {
-        QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
-        action->setProperty(
-            "filter_id", QVariant(QString::fromStdString(f->identifier())));
+    // for (const std::shared_ptr<proc::FilterMeshAction>& f : filters) {
+    //     QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
+    //     action->setProperty(
+    //         "filter_id", QVariant(QString::fromStdString(f->identifier())));
 
-        for (uint i = 0; i < proc::FilterMeshAction::N_CATEGORIES; ++i) {
-            if (f->categories()[i]) {
-                menus[i]->addAction(action);
-            }
-        }
+    //     for (uint i = 0; i < proc::FilterMeshAction::N_CATEGORIES; ++i) {
+    //         if (f->categories()[i]) {
+    //             menus[i]->addAction(action);
+    //         }
+    //     }
 
-        connect(
-            action,
-            SIGNAL(triggered(bool)),
-            this,
-            SLOT(openFilterDialog(bool)));
-    }
+    //     connect(
+    //         action,
+    //         SIGNAL(triggered(bool)),
+    //         this,
+    //         SLOT(openFilterDialog(bool)));
+    // }
 }
 
-void MeshProcessingMainWindow::openFilterDialog(
-    const std::shared_ptr<proc::FilterMeshAction>& action)
-{
-    FilterMeshDockWidget* dock = new FilterMeshDockWidget(action, this);
+// void MeshProcessingMainWindow::openFilterDialog(
+//     const std::shared_ptr<proc::FilterMeshAction>& action)
+// {
+//     FilterMeshDockWidget* dock = new FilterMeshDockWidget(action, this);
 
-    connect(
-        dock,
-        &FilterMeshDockWidget::applyFilter,
-        this,
-        &MeshProcessingMainWindow::applyFilter);
+//     connect(
+//         dock,
+//         &FilterMeshDockWidget::applyFilter,
+//         this,
+//         &MeshProcessingMainWindow::applyFilter);
 
-    dock->show();
-}
+//     dock->show();
+// }
 
-std::shared_ptr<DrawableObject> MeshProcessingMainWindow::makeMeshDrawable(
-    const std::shared_ptr<proc::MeshI>& mesh)
-{
-    switch (mesh->type()) {
-    case proc::MeshIType::TRI_MESH: {
-        auto m = std::make_shared<DrawableMesh<proc::TriMesh>>(
-            mesh->as<proc::TriMesh>());
-        setMeshInfo(*m);
-        return m;
-    }
-    case proc::MeshIType::POLY_MESH: {
-        auto m = std::make_shared<DrawableMesh<proc::PolyMesh>>(
-            mesh->as<proc::PolyMesh>());
-        setMeshInfo(*m);
-        return m;
-    }
-    default: return nullptr;
-    }
-}
+// std::shared_ptr<DrawableObject> MeshProcessingMainWindow::makeMeshDrawable(
+//     const std::shared_ptr<proc::MeshI>& mesh)
+// {
+//     switch (mesh->type()) {
+//     case proc::MeshIType::TRI_MESH: {
+//         auto m = std::make_shared<DrawableMesh<proc::TriMesh>>(
+//             mesh->as<proc::TriMesh>());
+//         setMeshInfo(*m);
+//         return m;
+//     }
+//     case proc::MeshIType::POLY_MESH: {
+//         auto m = std::make_shared<DrawableMesh<proc::PolyMesh>>(
+//             mesh->as<proc::PolyMesh>());
+//         setMeshInfo(*m);
+//         return m;
+//     }
+//     default: return nullptr;
+//     }
+// }
 
-std::shared_ptr<proc::MeshI> MeshProcessingMainWindow::toMesh(
-    const std::shared_ptr<DrawableObject>& drawable)
-{
-    return std::dynamic_pointer_cast<proc::MeshI>(drawable);
-}
+// std::shared_ptr<proc::MeshI> MeshProcessingMainWindow::toMesh(
+//     const std::shared_ptr<DrawableObject>& drawable)
+// {
+//     return std::dynamic_pointer_cast<proc::MeshI>(drawable);
+// }
 
-std::shared_ptr<AbstractDrawableMesh> MeshProcessingMainWindow::
-    toAbstractDrawableMesh(const std::shared_ptr<proc::MeshI>& mesh)
-{
-    return std::dynamic_pointer_cast<AbstractDrawableMesh>(mesh);
-}
+// std::shared_ptr<AbstractDrawableMesh> MeshProcessingMainWindow::
+//     toAbstractDrawableMesh(const std::shared_ptr<proc::MeshI>& mesh)
+// {
+//     return std::dynamic_pointer_cast<AbstractDrawableMesh>(mesh);
+// }
 
 } // namespace vcl::qt

@@ -25,7 +25,7 @@
 
 #include <QMainWindow>
 
-#include <vclib/processing/action_manager.h>
+//#include <vclib/processing/action_manager.h>
 #include <vclib/qt/gui/text_edit_logger.h>
 #include <vclib/render/drawable/abstract_drawable_mesh.h>
 #include <vclib/render/drawable/drawable_object_vector.h>
@@ -42,7 +42,7 @@ class MeshProcessingMainWindow : public QMainWindow
 
     Ui::MeshProcessingMainWindow* mUI;
 
-    proc::ActionManager mActionManager;
+    //proc::ActionManager mActionManager;
 
     std::shared_ptr<vcl::DrawableObjectVector> mMeshVector =
         std::make_shared<vcl::DrawableObjectVector>();
@@ -58,26 +58,26 @@ public slots:
 
     void openFilterDialog(bool);
 
-    void applyFilter(
-        const std::shared_ptr<proc::FilterMeshAction>& action,
-        const proc::ParameterVector&                   params);
+    // void applyFilter(
+    //     const std::shared_ptr<proc::FilterMeshAction>& action,
+    //     const proc::ParameterVector&                   params);
 
 private:
     TextEditLogger& logger();
 
     void populateFilterMenu();
 
-    void openFilterDialog(
-        const std::shared_ptr<proc::FilterMeshAction>& action);
+    // void openFilterDialog(
+    //     const std::shared_ptr<proc::FilterMeshAction>& action);
 
-    static std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
-        const std::shared_ptr<proc::MeshI>& mesh);
+    // static std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
+    //     const std::shared_ptr<proc::MeshI>& mesh);
 
-    static std::shared_ptr<vcl::proc::MeshI> toMesh(
-        const std::shared_ptr<vcl::DrawableObject>& drawable);
+    // static std::shared_ptr<vcl::proc::MeshI> toMesh(
+    //     const std::shared_ptr<vcl::DrawableObject>& drawable);
 
-    static std::shared_ptr<vcl::AbstractDrawableMesh> toAbstractDrawableMesh(
-        const std::shared_ptr<vcl::proc::MeshI>& mesh);
+    // static std::shared_ptr<vcl::AbstractDrawableMesh> toAbstractDrawableMesh(
+    //     const std::shared_ptr<vcl::proc::MeshI>& mesh);
 
     template<MeshConcept MeshType>
     static void setMeshInfo(MeshType& mesh)
