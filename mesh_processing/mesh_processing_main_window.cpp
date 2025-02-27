@@ -67,7 +67,7 @@ MeshProcessingMainWindow::~MeshProcessingMainWindow()
 void MeshProcessingMainWindow::openMesh()
 {
     std::vector<FileFormat> formats = proc::ActionManager::loadMeshFormats();
-    QString filter = filterFormatsToQString(formats);
+    QString filter = filterFormatsToQString(formats, true);
 
     QString f = QFileDialog::getOpenFileName(
         nullptr,

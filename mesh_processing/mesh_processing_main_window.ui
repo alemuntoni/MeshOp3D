@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="vcl::qt::MeshViewer" name="meshViewer"/>
+  <widget class="MeshViewer" name="meshViewer"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -63,9 +63,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>vcl::qt::MeshViewer</class>
+   <class>MeshViewer</class>
    <extends>QWidget</extends>
-   <header>vclib/qt/mesh_viewer.h</header>
+   <header>mesh_viewer.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
