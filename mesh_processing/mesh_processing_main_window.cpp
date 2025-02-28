@@ -25,12 +25,14 @@
 
 //#include "gui/action_file_dialog.h"
 //#include "gui/filter_mesh_dock_widget.h"
+#include "gui/parameters_grid_layout.h"
 
 #include <vclib/processing.h>
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
 #include <QFileDialog>
+#include <QPushButton>
 
 namespace vcl::qt {
 
@@ -79,9 +81,41 @@ void MeshProcessingMainWindow::openMesh()
         std::string filename = f.toStdString();
         std::string pfn      = FileInfo::fileNameWithExtension(filename);
         FileFormat  format   = FileInfo::extension(filename);
-        logger().startTimer();
 
-        auto [m, id] = proc::loadMeshBestFit(filename, {}, logger());
+        auto params =
+            proc::ActionManager::loadMeshAction<vcl::PolyEdgeMesh>(format)
+                ->parametersLoad(format);
+
+        if (!params.empty()) {
+            ParametersGridLayout* layout = new ParametersGridLayout(this);
+            layout->setParameters(params);
+
+            // open dialog
+            QDialog* dialog = new QDialog(this);
+            dialog->setWindowTitle("Load Mesh Parameters");
+            dialog->setModal(true);
+            dialog->setLayout(layout);
+
+            QPushButton* okButton = new QPushButton("Ok", dialog);
+            connect(
+                okButton,
+                &QPushButton::clicked,
+                [&, dialog]() {
+                    dialog->accept();
+                });
+            dialog->layout()->addWidget(okButton);
+            dialog->exec();
+
+            if (dialog->result() == QDialog::Rejected) {
+                return;
+            }
+            else {
+                params = layout->parameters();
+            }
+        }
+
+        logger().startTimer();
+        auto [m, id] = proc::loadMeshBestFit(filename, params, logger());
         logger().stopTimer();
         logger().log(
             TextEditLogger::MESSAGE_LOG,
@@ -104,43 +138,6 @@ void MeshProcessingMainWindow::openMesh()
         mUI->meshViewer->updateGUI();
         mUI->meshViewer->fitScene();
     }
-
-    // std::vector<FileFormat> formats = mActionManager.loadMeshFormats();
-
-    // ActionOpenFileDialog<proc::LoadMeshAction>* dialog =
-    //     new ActionOpenFileDialog<proc::LoadMeshAction>(
-    //         mActionManager.loadMeshActionManager(), "Open Mesh", "", this);
-
-    // if (dialog->exec() == QDialog::Accepted) {
-    //     auto fs = dialog->selectedFiles();
-
-    //     double tTime = 0.0;
-
-    //     for (const auto& f : fs) {
-    //         std::string filename = f.toStdString();
-    //         std::string pfn      = FileInfo::fileNameWithExtension(filename);
-    //         FileFormat  format   = FileInfo::extension(filename);
-    //         auto        params   = dialog->parameters(format);
-
-    //         logger().startTimer();
-    //         auto mesh = mActionManager.loadMeshAction(format)->load(
-    //             filename, params, logger());
-    //         logger().stopTimer();
-    //         tTime += logger().time();
-    //         logger().log(
-    //             TextEditLogger::MESSAGE_LOG,
-    //             pfn + " loaded in " + std::to_string(logger().time()) +
-    //                 " seconds.");
-    //         mMeshVector->pushBack(makeMeshDrawable(mesh));
-    //     }
-
-    //     logger().log(
-    //         TextEditLogger::MESSAGE_LOG,
-    //         "All meshes loaded in " + std::to_string(tTime) + " seconds.");
-
-    //     mUI->meshViewer->updateGUI();
-    //     mUI->meshViewer->fitScene();
-    // }
 }
 
 void MeshProcessingMainWindow::saveMeshAs()
