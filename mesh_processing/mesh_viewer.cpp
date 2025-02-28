@@ -23,6 +23,7 @@
 #include "mesh_viewer.h"
 #include "ui_mesh_viewer.h"
 
+#include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
 using namespace vcl;
@@ -82,6 +83,26 @@ MeshViewer::MeshViewer(QWidget* parent) :
         SLOT(selectedDrawableObjectChanged(uint)));
 
     mUI->viewer->setFocus();
+
+    auto f = [](const DrawableObject& obj) {
+        const auto* tri =
+            dynamic_cast<const DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
+        if (tri) {
+            return std::make_pair(
+                QIcon(QString(MESH_PROCESSING_ASSETS_DIR) + "/icons/tri.png"),
+                "TriMesh");
+        }
+        const auto* pol =
+            dynamic_cast<const DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
+        if (pol) {
+            return std::make_pair(
+                QIcon(QString(MESH_PROCESSING_ASSETS_DIR) + "/icons/poly.png"),
+                "PolyMesh");
+        }
+        return std::make_pair(QIcon(), "");
+    };
+
+    mUI->drawVectorFrame->setIconFunction(f);
 }
 
 MeshViewer::~MeshViewer()
