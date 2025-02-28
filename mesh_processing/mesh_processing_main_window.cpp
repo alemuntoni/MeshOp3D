@@ -80,15 +80,27 @@ void MeshProcessingMainWindow::openMesh()
         std::string pfn      = FileInfo::fileNameWithExtension(filename);
         FileFormat  format   = FileInfo::extension(filename);
         logger().startTimer();
-        auto mesh =
-            proc::ActionManager::loadMeshAction<vcl::TriEdgeMesh>(format)->load(
-                filename, logger());
+
+        auto [m, id] = proc::loadMeshBestFit(filename, {}, logger());
         logger().stopTimer();
         logger().log(
             TextEditLogger::MESSAGE_LOG,
             pfn + " loaded in " + std::to_string(logger().time()) +
                 " seconds.");
-        mMeshVector->pushBack(makeMeshDrawable(std::move(mesh)));
+
+        switch (id) {
+        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
+            mMeshVector->pushBack(makeMeshDrawable(
+                std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
+            break;
+        case vcl::proc::MeshTypeId::POLYGON_MESH:
+            mMeshVector->pushBack(makeMeshDrawable(
+                std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
+            break;
+        default:
+            break;
+        }
+
         mUI->meshViewer->updateGUI();
         mUI->meshViewer->fitScene();
     }
