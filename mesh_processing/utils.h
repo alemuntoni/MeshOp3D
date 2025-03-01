@@ -20,65 +20,66 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
-#define VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
 
-#include "utils.h"
+#ifndef UTILS_H
+#define UTILS_H
 
-//#include <vclib/processing/action_manager.h>
-#include <vclib/qt/gui/text_edit_logger.h>
+#include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
-#include <vclib/render/drawable/drawable_object_vector.h>
+#include <vclib/processing.h>
 
-#include <QMainWindow>
-
-namespace vcl::qt {
-
-namespace Ui {
-class MeshProcessingMainWindow;
-} // namespace Ui
-
-class MeshProcessingMainWindow : public QMainWindow
+template<vcl::MeshConcept MeshType>
+void setMeshInfo(MeshType& mesh)
 {
-    Q_OBJECT
+    std::string info;
+    if constexpr (vcl::HasTriangles<MeshType>) {
+        info += "TriMesh\n";
+    }
+    else if constexpr (vcl::HasPolygons<MeshType>) {
+        info += "PolyMesh\n";
+    }
 
-    Ui::MeshProcessingMainWindow* mUI;
+    info += "Vertices: " + std::to_string(mesh.vertexNumber()) + "\n";
+    if constexpr (vcl::HasFaces<MeshType>) {
+        info += "Faces: " + std::to_string(mesh.faceNumber()) + "\n";
+    }
+    mesh.info() = info;
+}
 
-    //proc::ActionManager mActionManager;
+template<vcl::MeshConcept MeshType>
+std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
+    MeshType&& mesh)
+{
+    std::shared_ptr<vcl::DrawableMesh<MeshType>> m =
+        std::make_shared<vcl::DrawableMesh<MeshType>>(std::move(mesh));
+    setMeshInfo(*m);
+    return m;
+}
 
-    std::shared_ptr<vcl::DrawableObjectVector> mMeshVector =
-        std::make_shared<vcl::DrawableObjectVector>();
+inline vcl::proc::MeshTypeId meshId(
+    const std::shared_ptr<vcl::DrawableObject>& obj)
+{
+    auto m = std::dynamic_pointer_cast<vcl::AbstractDrawableMesh>(obj);
 
-public:
-    explicit MeshProcessingMainWindow(QWidget* parent = nullptr);
-    ~MeshProcessingMainWindow();
+    if (!m) {
+        assert(0);
+        return vcl::proc::MeshTypeId::COUNT;
+    }
 
-public slots:
-    void openMesh();
+    auto tm = std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(m);
 
-    void saveMeshAs();
+    if (tm) {
+        return vcl::proc::MeshTypeId::TRIANGLE_MESH;
+    }
 
-    void openFilterDialog(bool);
+    auto pm = std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(m);
 
-    // void applyFilter(
-    //     const std::shared_ptr<proc::FilterMeshAction>& action,
-    //     const proc::ParameterVector&                   params);
+    if (pm) {
+        return vcl::proc::MeshTypeId::POLYGON_MESH;
+    }
 
-private:
-    TextEditLogger& logger();
+    assert(0);
+    return vcl::proc::MeshTypeId::COUNT;
+}
 
-    void populateFilterMenu();
-
-    // void openFilterDialog(
-    //     const std::shared_ptr<proc::FilterMeshAction>& action);
-
-    // static std::shared_ptr<vcl::proc::MeshI> toMesh(
-    //     const std::shared_ptr<vcl::DrawableObject>& drawable);
-
-    // static std::shared_ptr<vcl::AbstractDrawableMesh> toAbstractDrawableMesh(
-    //     const std::shared_ptr<vcl::proc::MeshI>& mesh);
-};
-
-} // namespace vcl::qt
-
-#endif // VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
+#endif // UTILS_H

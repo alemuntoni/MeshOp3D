@@ -142,9 +142,100 @@ void MeshProcessingMainWindow::openMesh()
 
 void MeshProcessingMainWindow::saveMeshAs()
 {
-    // if (mMeshVector->size() == 0) {
-    //     return;
-    // }
+    uint i = mUI->meshViewer->selectedDrawableObject();
+
+    if (mMeshVector->size() == 0 || i == UINT_NULL) {
+        return;
+    }
+
+    auto obj = mMeshVector->at(i);
+
+    vcl::proc::MeshTypeId type = meshId(obj);
+
+    if (type == vcl::proc::MeshTypeId::COUNT) {
+        return;
+    }
+
+    std::vector<FileFormat> formats =
+        proc::ActionManager::saveMeshFormats(type);
+    QString filter = filterFormatsToQString(formats);
+
+    QString fs;
+    QString f = QFileDialog::getSaveFileName(
+        nullptr,
+        QObject::tr("Save Document"),
+        QDir::currentPath(),
+        filter,
+        &fs);
+
+    if (!f.isEmpty()) {
+        std::string filename = f.toStdString();
+        std::string pfn      = FileInfo::fileNameWithExtension(filename);
+        std::string format   = FileInfo::extension(filename);
+        // get selected filter
+        FileFormat f = formatFromQStringFilter(fs);
+        if (f != FileFormat(format)) {
+            filename += "." + f.extensions().front();
+        }
+
+        auto action = proc::ActionManager::saveMeshAction(f, type);
+        proc::ParameterVector params = proc::saveMeshParameters(type, f);
+
+        if (!params.empty()) {
+            ParametersGridLayout* layout = new ParametersGridLayout(this);
+            layout->setParameters(params);
+
+                   // open dialog
+            QDialog* dialog = new QDialog(this);
+            dialog->setWindowTitle("Load Mesh Parameters");
+            dialog->setModal(true);
+            dialog->setLayout(layout);
+
+            QPushButton* okButton = new QPushButton("Ok", dialog);
+            connect(
+                okButton,
+                &QPushButton::clicked,
+                [&, dialog]() {
+                    dialog->accept();
+                });
+            dialog->layout()->addWidget(okButton);
+            dialog->exec();
+
+            if (dialog->result() == QDialog::Rejected) {
+                return;
+            }
+            else {
+                params = layout->parameters();
+            }
+        }
+
+        logger().startTimer();
+        switch(type) {
+        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
+        {
+            auto m =
+                std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(obj);
+            actionDownCast<proc::MeshIOAction, vcl::TriEdgeMesh>(action)
+                ->save(filename, *m, params, logger());
+        }
+            break;
+        case vcl::proc::MeshTypeId::POLYGON_MESH:
+        {
+            auto m =
+                std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(obj);
+            actionDownCast<proc::MeshIOAction, vcl::PolyEdgeMesh>(action)
+                ->save(filename, *m, params, logger());
+        }
+            break;
+        default:
+            break;
+        }
+        logger().stopTimer();
+        logger().log(
+            TextEditLogger::MESSAGE_LOG,
+            pfn + " saved in " + std::to_string(logger().time()) +
+                " seconds.");
+    }
 
     // std::vector<FileFormat> formats = mActionManager.saveMeshFormats();
 
