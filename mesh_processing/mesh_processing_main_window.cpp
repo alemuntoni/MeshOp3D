@@ -215,7 +215,7 @@ void MeshProcessingMainWindow::saveMeshAs()
         {
             auto m =
                 std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(obj);
-            actionDownCast<proc::MeshIOAction, vcl::TriEdgeMesh>(action)
+            actionDownCast<proc::MeshIOActionT, vcl::TriEdgeMesh>(action)
                 ->save(filename, *m, params, logger());
         }
             break;
@@ -223,7 +223,7 @@ void MeshProcessingMainWindow::saveMeshAs()
         {
             auto m =
                 std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(obj);
-            actionDownCast<proc::MeshIOAction, vcl::PolyEdgeMesh>(action)
+            actionDownCast<proc::MeshIOActionT, vcl::PolyEdgeMesh>(action)
                 ->save(filename, *m, params, logger());
         }
             break;
