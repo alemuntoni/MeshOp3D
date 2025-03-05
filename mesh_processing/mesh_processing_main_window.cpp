@@ -83,8 +83,7 @@ void MeshProcessingMainWindow::openMesh()
         FileFormat  format   = FileInfo::extension(filename);
 
         auto params =
-            proc::ActionManager::loadMeshAction<vcl::PolyEdgeMesh>(format)
-                ->parametersLoad(format);
+            proc::ActionManager::loadMeshParameters(format);
 
         if (!params.empty()) {
             ParametersGridLayout* layout = new ParametersGridLayout(this);
