@@ -8,6 +8,8 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
+target_include_directories(vclib-render PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_executable(MeshProcessing ${HEADERS} ${SOURCES} ${FORMS})
 target_link_libraries(MeshProcessing PRIVATE vclib)
 target_include_directories(MeshProcessing PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

@@ -65,7 +65,7 @@
   <customwidget>
    <class>vcl::qt::MeshViewer</class>
    <extends>QWidget</extends>
-   <header>viewer.h</header>
+   <header>vclib/qt/mesh_viewer.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

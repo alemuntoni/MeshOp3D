@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VIEWER_H
-#define VIEWER_H
+#ifndef CUSTOM_MESH_VIEWER_RENDER_APP_H
+#define CUSTOM_MESH_VIEWER_RENDER_APP_H
 
 #include <vclib/imgui/imgui_drawer.h>
 #include <vclib/imgui/imgui_stats_drawer.h>
@@ -31,12 +31,15 @@
 #include <vclib/render/drawers/viewer_drawer.h>
 #include <vclib/render/render_app.h>
 
-using Viewer =
-    vcl::RenderApp<
-        vcl::qt::WidgetManager,
-        vcl::Canvas,
-        //vcl::imgui::ImGuiDrawer,
-        //vcl::imgui::ImguiStatsDrawer,
-        vcl::ViewerDrawer>;
+namespace vcl::qt {
 
-#endif // VIEWER_H
+using MeshViewerRenderApp = vcl::RenderApp<
+    vcl::qt::WidgetManager,
+    vcl::Canvas,
+    // vcl::imgui::ImGuiDrawer,
+    // vcl::imgui::ImguiStatsDrawer,
+    vcl::ViewerDrawer>;
+
+} // namespace vcl::qt
+
+#endif // CUSTOM_MESH_VIEWER_RENDER_APP_H
