@@ -25,7 +25,7 @@
 
 //#include "gui/action_file_dialog.h"
 //#include "gui/filter_mesh_dock_widget.h"
-#include "gui/parameters_grid_layout.h"
+#include "gui/parameter_dialog.h"
 
 #include <vclib/processing.h>
 #include <vclib/qt/utils/file_format.h>
@@ -107,30 +107,14 @@ void MeshProcessingMainWindow::openMesh()
             proc::ActionManager::loadMeshParameters(format);
 
         if (!params.empty()) {
-            ParametersGridLayout* layout = new ParametersGridLayout(this);
-            layout->setParameters(params);
-
-            // open dialog
-            QDialog* dialog = new QDialog(this);
-            dialog->setWindowTitle("Load Mesh Parameters");
-            dialog->setModal(true);
-            dialog->setLayout(layout);
-
-            QPushButton* okButton = new QPushButton("Ok", dialog);
-            connect(
-                okButton,
-                &QPushButton::clicked,
-                [&, dialog]() {
-                    dialog->accept();
-                });
-            dialog->layout()->addWidget(okButton);
+            ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
             dialog->exec();
 
             if (dialog->result() == QDialog::Rejected) {
                 return;
             }
             else {
-                params = layout->parameters();
+                params = dialog->parameters();
             }
         }
 
@@ -202,30 +186,14 @@ void MeshProcessingMainWindow::saveMeshAs()
         proc::ParameterVector params = proc::saveMeshParameters(type, f);
 
         if (!params.empty()) {
-            ParametersGridLayout* layout = new ParametersGridLayout(this);
-            layout->setParameters(params);
-
-                   // open dialog
-            QDialog* dialog = new QDialog(this);
-            dialog->setWindowTitle("Save Mesh Parameters");
-            dialog->setModal(true);
-            dialog->setLayout(layout);
-
-            QPushButton* okButton = new QPushButton("Ok", dialog);
-            connect(
-                okButton,
-                &QPushButton::clicked,
-                [&, dialog]() {
-                    dialog->accept();
-                });
-            dialog->layout()->addWidget(okButton);
+            ParameterDialog* dialog = new ParameterDialog(params, "Save Mesh");
             dialog->exec();
 
             if (dialog->result() == QDialog::Rejected) {
                 return;
             }
             else {
-                params = layout->parameters();
+                params = dialog->parameters();
             }
         }
 
