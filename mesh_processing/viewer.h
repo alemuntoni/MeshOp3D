@@ -25,6 +25,7 @@
 
 #include <vclib/imgui/imgui_drawer.h>
 #include <vclib/imgui/imgui_stats_drawer.h>
+#include <vclib/qt/mesh_viewer.h>
 #include <vclib/qt/widget_manager.h>
 #include <vclib/render/canvas.h>
 #include <vclib/render/drawers/viewer_drawer.h>

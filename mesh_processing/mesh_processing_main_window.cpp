@@ -59,6 +59,27 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
         &QAction::triggered,
         this,
         &MeshProcessingMainWindow::saveMeshAs);
+
+    // set this function to mesh viewer
+    auto f = [](const DrawableObject& obj) {
+        const auto* tri =
+            dynamic_cast<const DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
+        if (tri) {
+            return std::make_pair(
+                QIcon(QString(MESH_PROCESSING_ASSETS_DIR) + "/icons/tri.png"),
+                "TriMesh");
+        }
+        const auto* pol =
+            dynamic_cast<const DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
+        if (pol) {
+            return std::make_pair(
+                QIcon(QString(MESH_PROCESSING_ASSETS_DIR) + "/icons/poly.png"),
+                "PolyMesh");
+        }
+        return std::make_pair(QIcon(), "");
+    };
+
+    mUI->meshViewer->setDrawVectorIconFunction(f);
 }
 
 MeshProcessingMainWindow::~MeshProcessingMainWindow()
@@ -186,7 +207,7 @@ void MeshProcessingMainWindow::saveMeshAs()
 
                    // open dialog
             QDialog* dialog = new QDialog(this);
-            dialog->setWindowTitle("Load Mesh Parameters");
+            dialog->setWindowTitle("Save Mesh Parameters");
             dialog->setModal(true);
             dialog->setLayout(layout);
 
