@@ -24,7 +24,7 @@
 #include "ui_mesh_processing_main_window.h"
 
 // #include "gui/action_file_dialog.h"
-// #include "gui/filter_mesh_dock_widget.h"
+#include "gui/filter_dock_widget.h"
 #include "gui/parameter_dialog.h"
 
 #include <vclib/processing.h>
@@ -228,10 +228,11 @@ void MeshProcessingMainWindow::openFilterDialog(bool)
     }
 }
 
-// void MeshProcessingMainWindow::applyFilter(
-//     const std::shared_ptr<proc::FilterMeshAction>& action,
-//     const proc::ParameterVector&                   params)
-// {
+void MeshProcessingMainWindow::applyFilter(
+    const std::shared_ptr<proc::FilterActions>& action,
+    const proc::ParameterVector&                params)
+{
+    std::cerr << "Apply filter " << action->name() << std::endl;
 //     proc::MeshVector                          inputMeshes;
 //     std::vector<std::shared_ptr<proc::MeshI>> inputOutputMeshes;
 //     proc::MeshVector                          outputMeshes;
@@ -272,7 +273,7 @@ void MeshProcessingMainWindow::openFilterDialog(bool)
 
 //     mUI->meshViewer->updateGUI();
 //     mUI->meshViewer->fitScene();
-// }
+}
 
 TextEditLogger& MeshProcessingMainWindow::logger()
 {
@@ -319,15 +320,15 @@ void MeshProcessingMainWindow::populateFilterMenu()
 void MeshProcessingMainWindow::openFilterDialog(
     const std::shared_ptr<proc::FilterActions>& action)
 {
-    // FilterMeshDockWidget* dock = new FilterMeshDockWidget(action, this);
+    FilterDockWidget* dock = new FilterDockWidget(action, this);
 
-    // connect(
-    //     dock,
-    //     &FilterMeshDockWidget::applyFilter,
-    //     this,
-    //     &MeshProcessingMainWindow::applyFilter);
+    connect(
+        dock,
+        &FilterDockWidget::applyFilter,
+        this,
+        &MeshProcessingMainWindow::applyFilter);
 
-    // dock->show();
+    dock->show();
 }
 
 // std::shared_ptr<proc::MeshI> MeshProcessingMainWindow::toMesh(

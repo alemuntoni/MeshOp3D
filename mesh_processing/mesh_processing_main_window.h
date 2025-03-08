@@ -60,9 +60,9 @@ public slots:
 
     void openFilterDialog(bool);
 
-    // void applyFilter(
-    //     const std::shared_ptr<proc::FilterMeshAction>& action,
-    //     const proc::ParameterVector&                   params);
+    void applyFilter(
+        const std::shared_ptr<proc::FilterActions>& action,
+        const proc::ParameterVector&                params);
 
 private:
     TextEditLogger& logger();
