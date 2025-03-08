@@ -57,6 +57,11 @@ private slots:
     void onApplyButtonClicked();
 
     void onCancelButtonClicked();
+
+private:
+    void addOutputMeshTypeParameter(
+        proc::ParameterVector&                      vec,
+        const std::shared_ptr<proc::FilterActions>& action);
 };
 
 } // namespace vcl::qt

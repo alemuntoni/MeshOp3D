@@ -29,7 +29,7 @@ namespace vcl::qt {
 
 FilterDockWidget::FilterDockWidget(
     const std::shared_ptr<proc::FilterActions>& action,
-    QWidget*                                       parent) :
+    QWidget*                                    parent) :
         QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
     mUI->setupUi(this);
@@ -39,7 +39,16 @@ FilterDockWidget::FilterDockWidget(
     mUI->filterDescriptionLabel->setText(
         QString::fromStdString(action->description()));
 
-    mUI->parameterFrame->setParameters(action->parameters());
+    auto params = action->parameters();
+
+    // if the action has only output mesh(es)
+    if (action->inputMeshes().empty() && action->inputOutputMeshes().empty()) {
+        // we don't know which type of mesh the user wants
+        // we add an additional parameter to let the user choose the mesh type
+        addOutputMeshTypeParameter(params, action);
+    }
+
+    mUI->parameterFrame->setParameters(params);
 
     QPushButton* applyButton = mUI->buttonBox->button(QDialogButtonBox::Apply);
     QPushButton* cancelButton =
@@ -71,6 +80,32 @@ void FilterDockWidget::onApplyButtonClicked()
 void FilterDockWidget::onCancelButtonClicked()
 {
     close();
+}
+
+void FilterDockWidget::addOutputMeshTypeParameter(
+    proc::ParameterVector&                      params,
+    const std::shared_ptr<proc::FilterActions>& action)
+{
+    auto arr = proc::meshTypeNames();
+
+    std::vector<std::string> enumValues(arr.begin(), arr.end());
+
+    // get first available value
+    uint i = 0;
+    for (i = 0; i < enumValues.size(); i++) {
+        if (action->supportedMeshTypes()[i]) {
+            break;
+        }
+    }
+    proc::EnumParameter param(
+        "output_mesh_type",
+        i,
+        enumValues,
+        action->supportedMeshTypes(), // todo
+        "Output Mesh Type",
+        "The type of the output mesh.");
+
+    params.insert(0, param);
 }
 
 } // namespace vcl::qt

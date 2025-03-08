@@ -22,6 +22,8 @@
 
 #include "enum_parameter_row.h"
 
+#include <QStandardItemModel>
+
 namespace vcl::qt {
 
 EnumParameterRow::EnumParameterRow(const proc::EnumParameter& param) :
@@ -30,8 +32,20 @@ EnumParameterRow::EnumParameterRow(const proc::EnumParameter& param) :
     mComboBox = new QComboBox();
     mComboBox->setToolTip(param.tooltip().c_str());
 
-    for (const auto& value : param.enumValues()) {
+    QStandardItemModel* model =
+        qobject_cast<QStandardItemModel*>(mComboBox->model());
+    assert(model != nullptr);
+
+    for (uint i = 0; const auto& value : param.enumValues()) {
         mComboBox->addItem(value.c_str());
+        QStandardItem* item = model->item(i);
+        if (param.isEnabled(i)) {
+            item->setFlags(item->flags() | Qt::ItemIsEnabled);
+        }
+        else {
+            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+        }
+        ++i;
     }
 
     mComboBox->setCurrentIndex(param.uintValue());
