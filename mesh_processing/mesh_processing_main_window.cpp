@@ -212,56 +212,20 @@ void MeshProcessingMainWindow::saveMeshAs()
             TextEditLogger::MESSAGE_LOG,
             pfn + " saved in " + std::to_string(logger().time()) + " seconds.");
     }
-
-    // std::vector<FileFormat> formats = mActionManager.saveMeshFormats();
-
-    // ActionSaveFileDialog<proc::SaveMeshAction>* dialog =
-    //     new ActionSaveFileDialog<proc::SaveMeshAction>(
-    //         mActionManager.saveMeshActionManager(), "Save Mesh", "", this);
-
-    // if (dialog->exec() == QDialog::Accepted) {
-    //     auto fs = dialog->selectedFiles();
-
-    //     std::string filename = fs.first().toStdString();
-    //     std::string pfn      = FileInfo::fileNameWithExtension(filename);
-    //     std::string format   = FileInfo::extension(filename);
-    //     FileFormat  f        = dialog->selectedFormat();
-
-    //     if (f != FileFormat(format)) {
-    //         filename += "." + f.extensions().front();
-    //     }
-
-    //     uint i = mUI->meshViewer->selectedDrawableObject();
-    //     std::shared_ptr<DrawableObject> d = mMeshVector->at(i);
-
-    //     std::shared_ptr<proc::MeshI> m = toMesh(d);
-
-    //     if (m) {
-    //         auto params = dialog->parameters(format);
-
-    //         logger().startTimer();
-    //         mActionManager.saveMeshAction(format)->save(
-    //             filename, *m, params, logger());
-    //         logger().stopTimer();
-    //         logger().log(
-    //             TextEditLogger::MESSAGE_LOG,
-    //             pfn + " saved in " + std::to_string(logger().time()) +
-    //                 " seconds.");
-    //     }
-    // }
 }
 
 void MeshProcessingMainWindow::openFilterDialog(bool)
 {
-    // QAction* sender = qobject_cast<QAction*>(QObject::sender());
+    QAction* sender = qobject_cast<QAction*>(QObject::sender());
 
-    // std::string filterId =
-    //     sender->property("filter_id").toString().toStdString();
-    // auto filter = mActionManager.filterMeshActionById(filterId);
+    std::string filterId =
+        sender->property("filter_id").toString().toStdString();
+    auto filter = proc::ActionManager::filterActions(filterId);
 
-    // if (filter) {
-    //     openFilterDialog(filter);
-    // }
+    if (filter) {
+        std::cerr << "Called " << filterId << std::endl;
+        openFilterDialog(filter);
+    }
 }
 
 // void MeshProcessingMainWindow::applyFilter(
@@ -317,54 +281,54 @@ TextEditLogger& MeshProcessingMainWindow::logger()
 
 void MeshProcessingMainWindow::populateFilterMenu()
 {
-    // auto filters = mActionManager.filterMeshActions();
+    using enum proc::FilterAction::Category;
 
-    // std::array<QMenu*, proc::FilterMeshAction::N_CATEGORIES> menus;
-    // menus[proc::FilterMeshAction::CREATE] =
-    //     new QMenu("Create", mUI->menuFilter);
-    // menus[proc::FilterMeshAction::CLEANING_AND_REPAIRING] =
-    //     new QMenu("Cleaning and Repairing", mUI->menuFilter);
-    // menus[proc::FilterMeshAction::RECONSTRUCTION] =
-    //     new QMenu("Reconstruction", mUI->menuFilter);
-    // menus[proc::FilterMeshAction::SMOOTHING] =
-    //     new QMenu("Smoothing", mUI->menuFilter);
+    auto filters = proc::ActionManager::filterActions();
 
-    // for (uint i = 0; i < proc::FilterMeshAction::N_CATEGORIES; ++i) {
-    //     mUI->menuFilter->addMenu(menus[i]);
-    // }
+    std::array<QMenu*, vcl::toUnderlying(COUNT)> menus;
+    menus[toUnderlying(CREATE)] = new QMenu("Create", mUI->menuFilter);
+    menus[toUnderlying(CLEANING_AND_REPAIRING)] =
+        new QMenu("Cleaning and Repairing", mUI->menuFilter);
+    menus[toUnderlying(RECONSTRUCTION)] =
+        new QMenu("Reconstruction", mUI->menuFilter);
+    menus[toUnderlying(SMOOTHING)] = new QMenu("Smoothing", mUI->menuFilter);
 
-    // for (const std::shared_ptr<proc::FilterMeshAction>& f : filters) {
-    //     QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
-    //     action->setProperty(
-    //         "filter_id", QVariant(QString::fromStdString(f->identifier())));
+    for (uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
+        mUI->menuFilter->addMenu(menus[i]);
+    }
 
-    //     for (uint i = 0; i < proc::FilterMeshAction::N_CATEGORIES; ++i) {
-    //         if (f->categories()[i]) {
-    //             menus[i]->addAction(action);
-    //         }
-    //     }
+    for (const std::shared_ptr<proc::FilterActions>& f : filters) {
+        QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
+        action->setProperty(
+            "filter_id", QVariant(QString::fromStdString(f->name())));
 
-    //     connect(
-    //         action,
-    //         SIGNAL(triggered(bool)),
-    //         this,
-    //         SLOT(openFilterDialog(bool)));
-    // }
+        for (uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
+            if (f->categories()[i]) {
+                menus[i]->addAction(action);
+            }
+        }
+
+        connect(
+            action,
+            SIGNAL(triggered(bool)),
+            this,
+            SLOT(openFilterDialog(bool)));
+    }
 }
 
-// void MeshProcessingMainWindow::openFilterDialog(
-//     const std::shared_ptr<proc::FilterMeshAction>& action)
-// {
-//     FilterMeshDockWidget* dock = new FilterMeshDockWidget(action, this);
+void MeshProcessingMainWindow::openFilterDialog(
+    const std::shared_ptr<proc::FilterActions>& action)
+{
+    // FilterMeshDockWidget* dock = new FilterMeshDockWidget(action, this);
 
-//     connect(
-//         dock,
-//         &FilterMeshDockWidget::applyFilter,
-//         this,
-//         &MeshProcessingMainWindow::applyFilter);
+    // connect(
+    //     dock,
+    //     &FilterMeshDockWidget::applyFilter,
+    //     this,
+    //     &MeshProcessingMainWindow::applyFilter);
 
-//     dock->show();
-// }
+    // dock->show();
+}
 
 // std::shared_ptr<proc::MeshI> MeshProcessingMainWindow::toMesh(
 //     const std::shared_ptr<DrawableObject>& drawable)
