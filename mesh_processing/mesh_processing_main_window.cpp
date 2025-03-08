@@ -20,11 +20,11 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#include "ui_mesh_processing_main_window.h"
 #include "mesh_processing_main_window.h"
+#include "ui_mesh_processing_main_window.h"
 
-//#include "gui/action_file_dialog.h"
-//#include "gui/filter_mesh_dock_widget.h"
+// #include "gui/action_file_dialog.h"
+// #include "gui/filter_mesh_dock_widget.h"
 #include "gui/parameter_dialog.h"
 
 #include <vclib/processing.h>
@@ -44,7 +44,7 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
     mUI->meshViewer->setDrawableObjectVector(mMeshVector);
 
     // populate action manager
-    //mActionManager.add(proc::vclibActions());
+    // mActionManager.add(proc::vclibActions());
 
     populateFilterMenu();
 
@@ -90,21 +90,17 @@ MeshProcessingMainWindow::~MeshProcessingMainWindow()
 void MeshProcessingMainWindow::openMesh()
 {
     std::vector<FileFormat> formats = proc::ActionManager::loadMeshFormats();
-    QString filter = filterFormatsToQString(formats, true);
+    QString                 filter  = filterFormatsToQString(formats, true);
 
     QString f = QFileDialog::getOpenFileName(
-        nullptr,
-        QObject::tr("Open Document"),
-        QDir::currentPath(),
-        filter);
+        nullptr, QObject::tr("Open Document"), QDir::currentPath(), filter);
 
     if (!f.isEmpty()) {
         std::string filename = f.toStdString();
         std::string pfn      = FileInfo::fileNameWithExtension(filename);
         FileFormat  format   = FileInfo::extension(filename);
 
-        auto params =
-            proc::ActionManager::loadMeshParameters(format);
+        auto params = proc::ActionManager::loadMeshParameters(format);
 
         if (!params.empty()) {
             ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
@@ -135,8 +131,7 @@ void MeshProcessingMainWindow::openMesh()
             mMeshVector->pushBack(makeMeshDrawable(
                 std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
             break;
-        default:
-            break;
+        default: break;
         }
 
         mUI->meshViewer->updateGUI();
@@ -160,9 +155,8 @@ void MeshProcessingMainWindow::saveMeshAs()
         return;
     }
 
-    std::vector<FileFormat> formats =
-        proc::ActionManager::saveMeshFormats(type);
-    QString filter = filterFormatsToQString(formats);
+    std::vector<FileFormat> formats = proc::ActionManager::saveMeshFormats();
+    QString                 filter  = filterFormatsToQString(formats);
 
     QString fs;
     QString f = QFileDialog::getSaveFileName(
@@ -182,8 +176,8 @@ void MeshProcessingMainWindow::saveMeshAs()
             filename += "." + f.extensions().front();
         }
 
-        auto action = proc::ActionManager::saveMeshAction(f, type);
-        proc::ParameterVector params = proc::saveMeshParameters(type, f);
+        auto                  actions = proc::ActionManager::saveMeshActions(f);
+        proc::ParameterVector params  = actions->parametersSave(f);
 
         if (!params.empty()) {
             ParameterDialog* dialog = new ParameterDialog(params, "Save Mesh");
@@ -198,31 +192,25 @@ void MeshProcessingMainWindow::saveMeshAs()
         }
 
         logger().startTimer();
-        switch(type) {
-        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
-        {
+        switch (type) {
+        case vcl::proc::MeshTypeId::TRIANGLE_MESH: {
             auto m =
-                std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(obj);
-            actionDownCast<proc::MeshIOActionT, vcl::TriEdgeMesh>(action)
-                ->save(filename, *m, params, logger());
-        }
-            break;
-        case vcl::proc::MeshTypeId::POLYGON_MESH:
-        {
+                std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(
+                    obj);
+            actions->save<vcl::TriEdgeMesh>(filename, *m, params, logger());
+        } break;
+        case vcl::proc::MeshTypeId::POLYGON_MESH: {
             auto m =
-                std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(obj);
-            actionDownCast<proc::MeshIOActionT, vcl::PolyEdgeMesh>(action)
-                ->save(filename, *m, params, logger());
-        }
-            break;
-        default:
-            break;
+                std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(
+                    obj);
+            actions->save<vcl::PolyEdgeMesh>(filename, *m, params, logger());
+        } break;
+        default: break;
         }
         logger().stopTimer();
         logger().log(
             TextEditLogger::MESSAGE_LOG,
-            pfn + " saved in " + std::to_string(logger().time()) +
-                " seconds.");
+            pfn + " saved in " + std::to_string(logger().time()) + " seconds.");
     }
 
     // std::vector<FileFormat> formats = mActionManager.saveMeshFormats();
