@@ -20,38 +20,38 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_QT_GUI_PROCESSING_FILTER_MESH_DOCK_WIDGET_H
-#define VCL_QT_GUI_PROCESSING_FILTER_MESH_DOCK_WIDGET_H
+#ifndef VCL_QT_GUI_PROCESSING_FILTER_DOCK_WIDGET_H
+#define VCL_QT_GUI_PROCESSING_FILTER_DOCK_WIDGET_H
 
 #include <QDockWidget>
 
-#include <vclib/processing/action_interfaces/filter_mesh_action.h>
+#include <vclib/processing/engine/action_aggregators/filter_actions.h>
 
 namespace vcl::qt {
 
 namespace Ui {
-class FilterMeshDockWidget;
+class FilterDockWidget;
 } // namespace Ui
 
-class FilterMeshDockWidget : public QDockWidget
+class FilterDockWidget : public QDockWidget
 {
     Q_OBJECT
 
-    Ui::FilterMeshDockWidget* mUI;
+    Ui::FilterDockWidget* mUI;
 
-    const std::shared_ptr<proc::FilterMeshAction> mAction;
+    const std::shared_ptr<proc::FilterActions> mAction;
 
 public:
-    explicit FilterMeshDockWidget(
-        const std::shared_ptr<proc::FilterMeshAction>& action,
-        QWidget*                                       parent = nullptr);
+    explicit FilterDockWidget(
+        const std::shared_ptr<proc::FilterActions>& action,
+        QWidget*                                    parent = nullptr);
 
-    ~FilterMeshDockWidget();
+    ~FilterDockWidget();
 
 signals:
     void applyFilter(
-        const std::shared_ptr<proc::FilterMeshAction>& action,
-        const proc::ParameterVector&                   parmas);
+        const std::shared_ptr<proc::FilterActions>& action,
+        const proc::ParameterVector&                parmas);
 
 private slots:
     void onApplyButtonClicked();
@@ -61,4 +61,4 @@ private slots:
 
 } // namespace vcl::qt
 
-#endif // VCL_QT_GUI_PROCESSING_FILTER_MESH_DOCK_WIDGET_H
+#endif // VCL_QT_GUI_PROCESSING_FILTER_DOCK_WIDGET_H

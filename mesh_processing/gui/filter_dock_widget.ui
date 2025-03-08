@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>vcl::qt::FilterMeshDockWidget</class>
- <widget class="QDockWidget" name="vcl::qt::FilterMeshDockWidget">
+ <class>vcl::qt::FilterDockWidget</class>
+ <widget class="QDockWidget" name="vcl::qt::FilterDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

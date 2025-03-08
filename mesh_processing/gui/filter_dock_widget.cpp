@@ -20,17 +20,17 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#include "filter_mesh_dock_widget.h"
-#include "ui_filter_mesh_dock_widget.h"
+#include "filter_dock_widget.h"
+#include "ui_filter_dock_widget.h"
 
 #include <QPushButton>
 
 namespace vcl::qt {
 
-FilterMeshDockWidget::FilterMeshDockWidget(
-    const std::shared_ptr<proc::FilterMeshAction>& action,
+FilterDockWidget::FilterDockWidget(
+    const std::shared_ptr<proc::FilterActions>& action,
     QWidget*                                       parent) :
-        QDockWidget(parent), mUI(new Ui::FilterMeshDockWidget), mAction(action)
+        QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
     mUI->setupUi(this);
 
@@ -49,26 +49,26 @@ FilterMeshDockWidget::FilterMeshDockWidget(
         applyButton,
         &QPushButton::clicked,
         this,
-        &FilterMeshDockWidget::onApplyButtonClicked);
+        &FilterDockWidget::onApplyButtonClicked);
 
     connect(
         cancelButton,
         &QPushButton::clicked,
         this,
-        &FilterMeshDockWidget::onCancelButtonClicked);
+        &FilterDockWidget::onCancelButtonClicked);
 }
 
-FilterMeshDockWidget::~FilterMeshDockWidget()
+FilterDockWidget::~FilterDockWidget()
 {
     delete mUI;
 }
 
-void FilterMeshDockWidget::onApplyButtonClicked()
+void FilterDockWidget::onApplyButtonClicked()
 {
     emit applyFilter(mAction, mUI->parameterFrame->parameters());
 }
 
-void FilterMeshDockWidget::onCancelButtonClicked()
+void FilterDockWidget::onCancelButtonClicked()
 {
     close();
 }
