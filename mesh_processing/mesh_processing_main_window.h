@@ -119,7 +119,6 @@ private:
             mMeshVector->pushBack(makeMeshDrawable(m));
         }
         mUI->meshViewer->updateGUI();
-        mUI->meshViewer->fitScene();
     }
 
     template<MeshConcept MeshType>
