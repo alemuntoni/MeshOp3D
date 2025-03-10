@@ -25,6 +25,8 @@
 
 #include "utils.h"
 
+#include "ui_mesh_processing_main_window.h"
+
 //#include <vclib/processing/action_manager.h>
 #include <vclib/qt/gui/text_edit_logger.h>
 #include <vclib/render/drawable/drawable_mesh.h>
@@ -72,11 +74,60 @@ private:
     void openFilterDialog(
         const std::shared_ptr<proc::FilterActions>& action);
 
-    // static std::shared_ptr<vcl::proc::MeshI> toMesh(
-    //     const std::shared_ptr<vcl::DrawableObject>& drawable);
+    proc::MeshTypeId getFilterMeshType(
+        const std::shared_ptr<proc::FilterActions>& action,
+        const proc::ParameterVector&                params,
+        uint selectedMesh);
 
-    // static std::shared_ptr<vcl::AbstractDrawableMesh> toAbstractDrawableMesh(
-    //     const std::shared_ptr<vcl::proc::MeshI>& mesh);
+    template<MeshConcept MeshType>
+    void executeFilter(
+        const std::shared_ptr<proc::FilterActions>& action,
+        const proc::ParameterVector&                params)
+    {
+        std::vector<const MeshType*> inputMeshes;
+        std::vector<MeshType*>       inputOutputMeshes;
+        std::vector<MeshType>        outputMeshes;
+
+        std::shared_ptr<vcl::DrawableMesh<MeshType>> m;
+
+        uint niMeshes = action->inputMeshes().size();
+        uint nioMeshes = action->inputOutputMeshes().size();
+        if (niMeshes + nioMeshes == 1) {
+            m = toDrawableMesh<MeshType>(
+                mMeshVector->at(mUI->meshViewer->selectedDrawableObject()));
+            if (niMeshes == 1) {
+                inputMeshes.push_back(m.get());
+            }
+            else {
+                inputOutputMeshes.push_back(m.get());
+            }
+        }
+        logger().startTimer();
+        action->execute(
+            inputMeshes, inputOutputMeshes, outputMeshes, params, logger());
+        logger().stopTimer();
+
+        logger().log(
+            TextEditLogger::MESSAGE_LOG,
+            action->name() + " applied in " +
+                std::to_string(logger().time()) + " seconds.");
+
+        if (nioMeshes > 0) {
+            m->updateBuffers();
+        }
+        for (const auto& m : outputMeshes) {
+            mMeshVector->pushBack(makeMeshDrawable(m));
+        }
+        mUI->meshViewer->updateGUI();
+        mUI->meshViewer->fitScene();
+    }
+
+    template<MeshConcept MeshType>
+    std::shared_ptr<vcl::DrawableMesh<MeshType>> toDrawableMesh(
+        const std::shared_ptr<vcl::DrawableObject>& drawable)
+    {
+        return std::dynamic_pointer_cast<vcl::DrawableMesh<MeshType>>(drawable);
+    }
 };
 
 } // namespace vcl::qt

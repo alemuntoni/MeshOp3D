@@ -50,8 +50,10 @@ template<vcl::MeshConcept MeshType>
 std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
     MeshType&& mesh)
 {
-    std::shared_ptr<vcl::DrawableMesh<MeshType>> m =
-        std::make_shared<vcl::DrawableMesh<MeshType>>(std::move(mesh));
+    using MT = vcl::RemoveCVRefAndPointer<MeshType>;
+
+    std::shared_ptr<vcl::DrawableMesh<MT>> m =
+        std::make_shared<vcl::DrawableMesh<MT>>(std::move(mesh));
     setMeshInfo(*m);
     return m;
 }

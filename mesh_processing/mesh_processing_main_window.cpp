@@ -21,7 +21,6 @@
  ****************************************************************************/
 
 #include "mesh_processing_main_window.h"
-#include "ui_mesh_processing_main_window.h"
 
 // #include "gui/action_file_dialog.h"
 #include "gui/filter_dock_widget.h"
@@ -42,9 +41,6 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
     mUI->setupUi(this);
 
     mUI->meshViewer->setDrawableObjectVector(mMeshVector);
-
-    // populate action manager
-    // mActionManager.add(proc::vclibActions());
 
     populateFilterMenu();
 
@@ -155,13 +151,14 @@ void MeshProcessingMainWindow::saveMeshAs()
         return;
     }
 
-    std::vector<FileFormat> formats = proc::ActionManager::saveMeshFormats();
-    QString                 filter  = filterFormatsToQString(formats);
+    std::vector<FileFormat> formats =
+        proc::ActionManager::saveMeshFormats(type);
+    QString filter = filterFormatsToQString(formats);
 
     QString fs;
     QString f = QFileDialog::getSaveFileName(
         nullptr,
-        QObject::tr("Save Document"),
+        QObject::tr("Save Mesh"),
         QDir::currentPath(),
         filter,
         &fs);
@@ -232,47 +229,21 @@ void MeshProcessingMainWindow::applyFilter(
     const std::shared_ptr<proc::FilterActions>& action,
     const proc::ParameterVector&                params)
 {
-    std::cerr << "Apply filter " << action->name() << std::endl;
-//     proc::MeshVector                          inputMeshes;
-//     std::vector<std::shared_ptr<proc::MeshI>> inputOutputMeshes;
-//     proc::MeshVector                          outputMeshes;
+    proc::MeshTypeId filterMeshType = getFilterMeshType(
+        action,
+        params,
+        mUI->meshViewer->selectedDrawableObject());
 
-//     uint niMeshes  = action->inputMeshParameters().size();
-//     uint nioMeshes = action->inputOutputMeshParameters().size();
-
-//     if (niMeshes + nioMeshes == 1) {
-//         auto m =
-//             toMesh(mMeshVector->at(mUI->meshViewer->selectedDrawableObject()));
-//         if (niMeshes == 1) {
-//             inputMeshes.pushBack(m);
-//         }
-//         else {
-//             inputOutputMeshes.push_back(m);
-//         }
-//     }
-
-//     logger().startTimer();
-
-//     action->applyFilter(
-//         inputMeshes, inputOutputMeshes, outputMeshes, params, logger());
-
-//     logger().stopTimer();
-
-//     logger().log(
-//         TextEditLogger::MESSAGE_LOG,
-//         action->name() + " applied in " + std::to_string(logger().time()) +
-//             " seconds.");
-
-//     for (const auto& m : inputOutputMeshes) {
-//         toAbstractDrawableMesh(m)->updateBuffers();
-//     }
-
-//     for (const auto& m : outputMeshes) {
-//         mMeshVector->pushBack(makeMeshDrawable(m));
-//     }
-
-//     mUI->meshViewer->updateGUI();
-//     mUI->meshViewer->fitScene();
+    switch(filterMeshType) {
+        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
+            executeFilter<vcl::TriEdgeMesh>(action, params);
+            break;
+        case vcl::proc::MeshTypeId::POLYGON_MESH:
+            executeFilter<vcl::PolyEdgeMesh>(action, params);
+            break;
+        default:
+            break;
+    }
 }
 
 TextEditLogger& MeshProcessingMainWindow::logger()
@@ -331,16 +302,30 @@ void MeshProcessingMainWindow::openFilterDialog(
     dock->show();
 }
 
-// std::shared_ptr<proc::MeshI> MeshProcessingMainWindow::toMesh(
-//     const std::shared_ptr<DrawableObject>& drawable)
-// {
-//     return std::dynamic_pointer_cast<proc::MeshI>(drawable);
-// }
+proc::MeshTypeId MeshProcessingMainWindow::getFilterMeshType(
+    const std::shared_ptr<proc::FilterActions>& action,
+    const proc::ParameterVector&                params,
+    uint                                        selectedMesh)
+{
+    uint niMeshes  = action->inputMeshes().size();
+    uint nioMeshes = action->inputOutputMeshes().size();
 
-// std::shared_ptr<AbstractDrawableMesh> MeshProcessingMainWindow::
-//     toAbstractDrawableMesh(const std::shared_ptr<proc::MeshI>& mesh)
-// {
-//     return std::dynamic_pointer_cast<AbstractDrawableMesh>(mesh);
-// }
+    if (niMeshes + nioMeshes == 0) {
+        // no input meshes, the type of the mesh is given by the user trough
+        // the parameters
+        uint t = params.get("output_mesh_type")->uintValue();
+        return static_cast<proc::MeshTypeId>(t);
+    }
+    else if (niMeshes + nioMeshes == 1) {
+        assert(selectedMesh != UINT_NULL);
+        // only one mesh input, the type of the mesh is the same as the
+        // selectedMesh
+        return meshId(mMeshVector->at(selectedMesh));
+    }
+    else {
+        // TODO: implement
+        return proc::MeshTypeId::COUNT;
+    }
+}
 
 } // namespace vcl::qt
