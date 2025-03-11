@@ -66,6 +66,8 @@ public slots:
         const std::shared_ptr<proc::FilterActions>& action,
         const proc::ParameterVector&                params);
 
+    void convertCurrentMesh(bool);
+
 private:
     TextEditLogger& logger();
 
@@ -117,6 +119,33 @@ private:
         }
         for (const auto& m : outputMeshes) {
             mMeshVector->pushBack(makeMeshDrawable(m));
+        }
+        mUI->meshViewer->updateGUI();
+    }
+
+    template<MeshConcept MeshType>
+    void convertAndAddMesh(
+        const std::shared_ptr<proc::ConvertActions>& action,
+        const MeshType& mesh)
+    {
+        logger().startTimer();
+        auto [id, anyMesh] = action->convert(mesh, logger());
+        logger().stopTimer();
+        logger().log(
+            TextEditLogger::MESSAGE_LOG,
+            action->name() + " applied in " + std::to_string(logger().time()) +
+                " seconds.");
+
+        switch (id) {
+        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
+            mMeshVector->pushBack(makeMeshDrawable(std::move(
+                std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh)))));
+            break;
+        case vcl::proc::MeshTypeId::POLYGON_MESH:
+            mMeshVector->pushBack(makeMeshDrawable(std::move(
+                std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh)))));
+            break;
+        default: break;
         }
         mUI->meshViewer->updateGUI();
     }

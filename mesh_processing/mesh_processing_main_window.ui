@@ -35,8 +35,14 @@
      <string>Filter</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuConvert">
+    <property name="title">
+     <string>Convert</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuFilter"/>
+   <addaction name="menuConvert"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpenMesh">

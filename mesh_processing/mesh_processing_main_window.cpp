@@ -215,12 +215,11 @@ void MeshProcessingMainWindow::openFilterDialog(bool)
 {
     QAction* sender = qobject_cast<QAction*>(QObject::sender());
 
-    std::string filterId =
-        sender->property("filter_id").toString().toStdString();
-    auto filter = proc::ActionManager::filterActions(filterId);
-
+    std::string actionId =
+        sender->property("action_id").toString().toStdString();
+    auto filter = proc::ActionManager::filterActions(actionId);
+    assert(filter);
     if (filter) {
-        std::cerr << "Called " << filterId << std::endl;
         openFilterDialog(filter);
     }
 }
@@ -243,6 +242,45 @@ void MeshProcessingMainWindow::applyFilter(
             break;
         default:
             break;
+    }
+}
+
+void MeshProcessingMainWindow::convertCurrentMesh(bool)
+{
+    using enum vcl::proc::MeshTypeId;
+
+    QAction* sender = qobject_cast<QAction*>(QObject::sender());
+
+    std::string actionId =
+        sender->property("action_id").toString().toStdString();
+
+    auto convert = proc::ActionManager::convertActions(actionId);
+    assert(convert);
+    if (convert) {
+        auto i = mUI->meshViewer->selectedDrawableObject();
+        if (i != UINT_NULL) {
+            auto obj = mMeshVector->at(i);
+            auto type = meshId(obj);
+
+            if (type != COUNT) {
+                switch(type) {
+                    case TRIANGLE_MESH:
+                        convertAndAddMesh<vcl::TriEdgeMesh>(
+                            convert,
+                            *std::dynamic_pointer_cast<
+                                vcl::DrawableMesh<vcl::TriEdgeMesh>>(obj));
+                        break;
+                    case POLYGON_MESH:
+                        convertAndAddMesh<vcl::PolyEdgeMesh>(
+                            convert,
+                            *std::dynamic_pointer_cast<
+                                vcl::DrawableMesh<vcl::PolyEdgeMesh>>(obj));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 }
 
@@ -272,7 +310,7 @@ void MeshProcessingMainWindow::populateFilterMenu()
     for (const std::shared_ptr<proc::FilterActions>& f : filters) {
         QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
         action->setProperty(
-            "filter_id", QVariant(QString::fromStdString(f->name())));
+            "action_id", QVariant(QString::fromStdString(f->name())));
 
         for (uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
             if (f->categories()[i]) {
@@ -285,6 +323,21 @@ void MeshProcessingMainWindow::populateFilterMenu()
             SIGNAL(triggered(bool)),
             this,
             SLOT(openFilterDialog(bool)));
+    }
+
+    auto convert = proc::ActionManager::convertActions();
+
+    for (const std::shared_ptr<proc::ConvertActions>& c : convert) {
+        QAction* action = new QAction(c->name().c_str(), mUI->menuConvert);
+        action->setProperty(
+            "action_id", QVariant(QString::fromStdString(c->name())));
+        mUI->menuConvert->addAction(action);
+
+        connect(
+            action,
+            SIGNAL(triggered(bool)),
+            this,
+            SLOT(convertCurrentMesh(bool)));
     }
 }
 
