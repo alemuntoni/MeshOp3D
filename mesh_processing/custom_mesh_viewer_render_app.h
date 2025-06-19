@@ -25,10 +25,9 @@
 
 #include <vclib/imgui/imgui_drawer.h>
 #include <vclib/imgui/imgui_stats_drawer.h>
-#include <vclib/qt/mesh_viewer.h>
 #include <vclib/qt/widget_manager.h>
 #include <vclib/render/canvas.h>
-#include <vclib/render/drawers/viewer_drawer.h>
+#include <vclib/render/drawers/trackball_viewer_drawer.h>
 #include <vclib/render/render_app.h>
 
 namespace vcl::qt {
@@ -38,7 +37,7 @@ using MeshViewerRenderApp = vcl::RenderApp<
     vcl::Canvas,
     // vcl::imgui::ImGuiDrawer,
     // vcl::imgui::ImguiStatsDrawer,
-    vcl::ViewerDrawer>;
+    vcl::TrackBallViewerDrawer>;
 
 } // namespace vcl::qt
 
