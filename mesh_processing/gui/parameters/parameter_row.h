@@ -30,7 +30,7 @@
 #include <QWidget>
 
 #include <vclib/processing/engine/parameters.h>
-#include <vclib/qt/gui/q_clickable_label.h>
+#include <vclib/qt/gui/clickable_label.h>
 
 namespace vcl::qt {
 
@@ -44,7 +44,7 @@ class ParameterRow
     bool mHasBeenModified;
 
 protected:
-    QClickableLabel* mDescriptionLabel;
+    ClickableLabel* mDescriptionLabel;
 
 public:
     ParameterRow(const proc::Parameter& param);

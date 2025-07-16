@@ -30,7 +30,7 @@ ParameterRow::ParameterRow(const proc::Parameter& param) :
     QString dl = param.description().c_str();
     QString tt = param.tooltip().c_str();
 
-    mDescriptionLabel = new QClickableLabel();
+    mDescriptionLabel = new ClickableLabel();
     mDescriptionLabel->setText(dl);
     mDescriptionLabel->setToolTip(tt);
     mDescriptionLabel->setSizePolicy(
