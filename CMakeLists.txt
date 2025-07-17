@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(MeshProcessing)
+project(HighLevelGeometryProcessing)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -12,10 +12,7 @@ set(VCLIB_BUILD_TESTS OFF)
 
 add_subdirectory(vclib)
 
-if (NOT TARGET vclib-3rd-qt)
-    message(FATAL_ERROR "Qt6 not found. Please set Qt6_DIR to the Qt6Config.cmake file.")
-endif()
+set(HLGP_ASSETS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
 
-set(MESH_PROCESSING_ASSETS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
-
-add_subdirectory(mesh_processing)
+add_subdirectory(core)
+add_subdirectory(gui)

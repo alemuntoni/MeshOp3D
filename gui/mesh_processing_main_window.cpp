@@ -62,14 +62,14 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
             dynamic_cast<const DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
         if (tri) {
             return std::make_pair(
-                QIcon(QString(MESH_PROCESSING_ASSETS_DIR) + "/icons/tri.png"),
+                QIcon(QString(HLGP_ASSETS_DIR) + "/icons/tri.png"),
                 vcl::meshTypeName<vcl::TriEdgeMesh>().c_str());
         }
         const auto* pol =
             dynamic_cast<const DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
         if (pol) {
             return std::make_pair(
-                QIcon(QString(MESH_PROCESSING_ASSETS_DIR) + "/icons/poly.png"),
+                QIcon(QString(HLGP_ASSETS_DIR) + "/icons/poly.png"),
                 vcl::meshTypeName<vcl::PolyEdgeMesh>().c_str());
         }
         return std::make_pair(QIcon(), "");
