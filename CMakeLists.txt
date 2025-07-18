@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(HighLevelGeometryProcessing)
+project(HighLevelMeshProcessing)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -12,7 +12,7 @@ set(VCLIB_BUILD_TESTS OFF)
 
 add_subdirectory(vclib)
 
-set(HLGP_ASSETS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
+set(HLMP_ASSETS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
 
 add_subdirectory(core)
 add_subdirectory(gui)
