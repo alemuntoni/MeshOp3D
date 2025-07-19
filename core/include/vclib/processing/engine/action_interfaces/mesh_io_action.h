@@ -25,7 +25,7 @@
 
 #include "io_action.h"
 
-#include <vclib/processing/engine/parameter_vector.h>
+#include <hlmp/parameter_vector.h>
 
 #include <vclib/io/file_format.h>
 #include <vclib/space/complex/mesh_info.h>

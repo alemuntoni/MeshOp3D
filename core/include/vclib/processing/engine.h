@@ -25,8 +25,5 @@
 
 #include "engine/action_aggregators.h"
 #include "engine/action_interfaces.h"
-#include "engine/parameter_vector.h"
-#include "engine/parameters.h"
-#include "engine/settings.h"
 
 #endif // VCL_PROCESSING_ENGINE_H

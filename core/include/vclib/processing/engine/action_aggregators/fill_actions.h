@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_ENGINE_ACTION_AGGREGATORS_FILL_ACTIONS_H
 #define VCL_PROCESSING_ENGINE_ACTION_AGGREGATORS_FILL_ACTIONS_H
 
-#include <vclib/processing/engine/settings.h>
+#include <hlmp/settings.h>
 
 #include <vclib/types.h>
 

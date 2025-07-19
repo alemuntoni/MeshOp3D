@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ENGINE_PARAMETERS_ENUM_PARAMETER_H
-#define VCL_PROCESSING_ENGINE_PARAMETERS_ENUM_PARAMETER_H
+#ifndef HLMP_PARAMETERS_ENUM_PARAMETER_H
+#define HLMP_PARAMETERS_ENUM_PARAMETER_H
 
 #include "parameter.h"
 
@@ -122,4 +122,4 @@ private:
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ENGINE_PARAMETERS_ENUM_PARAMETER_H
+#endif // HLMP_PARAMETERS_ENUM_PARAMETER_H

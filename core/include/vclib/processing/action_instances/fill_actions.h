@@ -24,7 +24,7 @@
 #define VCL_PROCESSING_ACTION_INSTANCES_FILL_ACTIONS_H
 
 #include <vclib/processing/engine/action_interfaces/action.h>
-#include <vclib/processing/engine/settings.h>
+#include <hlmp/settings.h>
 
 namespace vcl::proc {
 

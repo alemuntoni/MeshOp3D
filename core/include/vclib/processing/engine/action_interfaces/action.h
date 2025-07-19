@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_ENGINE_ACTION_INTERFACES_ACTION_H
 #define VCL_PROCESSING_ENGINE_ACTION_INTERFACES_ACTION_H
 
-#include <vclib/processing/engine/settings.h>
+#include <hlmp/settings.h>
 
 #include <vclib/misc/logger.h>
 #include <vclib/misc/string.h>

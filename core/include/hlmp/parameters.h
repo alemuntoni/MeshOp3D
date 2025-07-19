@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,34 +20,15 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ENGINE_PARAMETERS_SCALAR_PARAMETER_H
-#define VCL_PROCESSING_ENGINE_PARAMETERS_SCALAR_PARAMETER_H
+#ifndef HLMP_PARAMETERS_H
+#define HLMP_PARAMETERS_H
 
-#include "parameter.h"
+#include "parameters/bool_parameter.h"
+#include "parameters/enum_parameter.h"
+#include "parameters/int_parameter.h"
+#include "parameters/scalar_parameter.h"
+#include "parameters/string_parameter.h"
+#include "parameters/uint_parameter.h"
+#include "parameters/uscalar_parameter.h"
 
-namespace vcl::proc {
-
-class ScalarParameter : public Parameter
-{
-public:
-    ScalarParameter(
-        const std::string& name,
-        ScalarType         value,
-        const std::string& description = "",
-        const std::string& tooltip     = "",
-        const std::string& category    = "") :
-            Parameter(name, value, description, tooltip, category)
-    {
-    }
-
-    ParameterType type() const override { return ParameterType::SCALAR; }
-
-    std::shared_ptr<Parameter> clone() const override
-    {
-        return std::make_shared<ScalarParameter>(*this);
-    }
-};
-
-} // namespace vcl::proc
-
-#endif // VCL_PROCESSING_ENGINE_PARAMETERS_SCALAR_PARAMETER_H
+#endif // HLMP_PARAMETERS_H

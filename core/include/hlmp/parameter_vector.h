@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,34 +20,43 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ENGINE_PARAMETERS_INT_PARAMETER_H
-#define VCL_PROCESSING_ENGINE_PARAMETERS_INT_PARAMETER_H
+#ifndef HLMP_PARAMETER_VECTOR_H
+#define HLMP_PARAMETER_VECTOR_H
 
-#include "parameter.h"
+#include "parameters/parameter.h"
+
+#include <vclib/space/core/vector/polymorphic_object_vector.h>
 
 namespace vcl::proc {
 
-class IntParameter : public Parameter
+class ParameterVector : public PolymorphicObjectVector<Parameter>
 {
 public:
-    IntParameter(
-        const std::string& name,
-        int                value,
-        const std::string& description = "",
-        const std::string& tooltip     = "",
-        const std::string& category    = "") :
-            Parameter(name, value, description, tooltip, category)
+    std::shared_ptr<const Parameter> get(const std::string& name) const
     {
+        for (const auto& parameter : *this) {
+            if (parameter->name() == name) {
+                return parameter;
+            }
+        }
+
+        return nullptr;
     }
 
-    ParameterType type() const override { return ParameterType::INT; }
-
-    std::shared_ptr<Parameter> clone() const override
+    std::shared_ptr<Parameter> get(const std::string& name)
     {
-        return std::make_shared<IntParameter>(*this);
+        for (auto& parameter : *this) {
+            if (parameter->name() == name) {
+                return parameter;
+            }
+        }
+
+        return nullptr;
     }
 };
 
+using OutputValues = ParameterVector;
+
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ENGINE_PARAMETERS_INT_PARAMETER_H
+#endif // HLMP_PARAMETER_VECTOR_H

@@ -29,7 +29,7 @@
 #include <QLabel>
 #include <QWidget>
 
-#include <vclib/processing/engine/parameters.h>
+#include <hlmp/parameters.h>
 #include <vclib/qt/gui/clickable_label.h>
 
 namespace vcl::qt {
