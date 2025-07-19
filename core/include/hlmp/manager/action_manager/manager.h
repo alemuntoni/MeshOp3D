@@ -28,11 +28,7 @@
 #include "image_io_manager.h"
 #include "mesh_io_manager.h"
 
-namespace vcl::proc {
-
-std::vector<std::shared_ptr<Action>> actionInstances();
-
-namespace detail {
+namespace vcl::proc::detail {
 
 class Manager :
         public ConvertManager,
@@ -41,39 +37,9 @@ class Manager :
         public MeshIOManager
 {
 public:
-    Manager() { addDefaultActions(); }
+    Manager();
 
-    void add(const std::shared_ptr<Action>& action)
-    {
-        using enum Action::Type;
-
-        uint mt;
-
-        std::shared_ptr<ConvertActions> convertActions;
-        std::shared_ptr<FilterActions>  filterActions;
-        std::shared_ptr<ImageIOAction>  imageIOAction;
-        std::shared_ptr<MeshIOActions>  meshIOActions;
-
-        switch (action->type()) {
-        case CONVERT_ACTION:
-            convertActions = std::dynamic_pointer_cast<ConvertActions>(action);
-            ConvertManager::add(convertActions);
-            break;
-        case FILTER_ACTION:
-            filterActions = std::dynamic_pointer_cast<FilterActions>(action);
-            FilterManager::add(filterActions);
-            break;
-        case IMAGE_IO_ACTION:
-            imageIOAction = std::dynamic_pointer_cast<ImageIOAction>(action);
-            ImageIOManager::add(imageIOAction);
-            break;
-        case MESH_IO_ACTION:
-            meshIOActions = std::dynamic_pointer_cast<MeshIOActions>(action);
-            MeshIOManager::add(meshIOActions);
-            break;
-        default: throw std::runtime_error("Action type not supported");
-        }
-    }
+    void add(const std::shared_ptr<Action>& action);
 
     template<vcl::Range R>
     requires vcl::RangeOf<R, std::shared_ptr<Action>>
@@ -84,11 +50,9 @@ public:
         }
     }
 
-    void addDefaultActions() { add(actionInstances()); }
+    void addDefaultActions();
 };
 
-} // namespace detail
-
-} // namespace vcl::proc
+} // namespace vcl::proc::detail
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_MANAGER_H

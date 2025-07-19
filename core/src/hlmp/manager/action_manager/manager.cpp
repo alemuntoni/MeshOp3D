@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,19 +20,52 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_H
-#define VCL_PROCESSING_H
+#include <hlmp/manager/action_manager/manager.h>
 
 #include <hlmp/manager/action_instances.h>
-#include <hlmp/functions.h>
-#include <hlmp/manager.h>
 
-/**
- * @defgroup processing Processing
- *
- * @brief List of classes and functions that allow to perform high level
- * processing, without the need to interact with the underlying data structures
- * and algorithms.
- */
+namespace vcl::proc::detail {
 
-#endif // VCL_PROCESSING_H
+Manager::Manager()
+{
+    addDefaultActions();
+}
+
+void Manager::add(const std::shared_ptr<Action>& action)
+{
+    using enum Action::Type;
+
+    uint mt;
+
+    std::shared_ptr<ConvertActions> convertActions;
+    std::shared_ptr<FilterActions>  filterActions;
+    std::shared_ptr<ImageIOAction>  imageIOAction;
+    std::shared_ptr<MeshIOActions>  meshIOActions;
+
+    switch (action->type()) {
+    case CONVERT_ACTION:
+        convertActions = std::dynamic_pointer_cast<ConvertActions>(action);
+        ConvertManager::add(convertActions);
+        break;
+    case FILTER_ACTION:
+        filterActions = std::dynamic_pointer_cast<FilterActions>(action);
+        FilterManager::add(filterActions);
+        break;
+    case IMAGE_IO_ACTION:
+        imageIOAction = std::dynamic_pointer_cast<ImageIOAction>(action);
+        ImageIOManager::add(imageIOAction);
+        break;
+    case MESH_IO_ACTION:
+        meshIOActions = std::dynamic_pointer_cast<MeshIOActions>(action);
+        MeshIOManager::add(meshIOActions);
+        break;
+    default: throw std::runtime_error("Action type not supported");
+    }
+}
+
+void vcl::proc::detail::Manager::addDefaultActions()
+{
+    add(actionInstances());
+}
+
+} // namespace vcl::proc

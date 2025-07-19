@@ -23,11 +23,13 @@
 #ifndef VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
 #define VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
 
+#include <hlmp/actions/aggregators/convert_actions.h>
+#include <hlmp/actions/aggregators/filter_actions.h>
+
 #include "utils.h"
 
 #include "ui_mesh_processing_main_window.h"
 
-//#include <vclib/processing/action_manager.h>
 #include <vclib/qt/gui/text_edit_logger.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 #include <vclib/render/drawable/drawable_object_vector.h>

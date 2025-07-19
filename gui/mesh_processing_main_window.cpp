@@ -26,7 +26,8 @@
 #include "gui/filter_dock_widget.h"
 #include "gui/parameter_dialog.h"
 
-#include <vclib/processing.h>
+#include <hlmp/functions.h>
+#include <hlmp/manager.h>
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 

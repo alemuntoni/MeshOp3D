@@ -24,9 +24,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <hlmp/settings.h>
 #include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
-#include <vclib/processing.h>
 
 template<vcl::MeshConcept MeshType>
 void setMeshInfo(MeshType& mesh)
