@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,11 +20,51 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTIONS_FILTER_MESH_H
-#define VCL_PROCESSING_ACTIONS_FILTER_MESH_H
+#ifndef HLMP_ACTIONS_ACTIONS_IMAGE_IO_BASE_IMAGE_IO_H
+#define HLMP_ACTIONS_ACTIONS_IMAGE_IO_BASE_IMAGE_IO_H
 
-#include "filter_mesh/apply.h"
-#include "filter_mesh/create.h"
-#include "filter_mesh/generate.h"
+#include <hlmp/actions/interfaces/image_io_action.h>
 
-#endif // VCL_PROCESSING_ACTIONS_FILTER_MESH_H
+#include <vclib/io/image.h>
+
+namespace vcl::proc {
+
+class BaseImageIO : public ImageIOAction
+{
+public:
+    std::string name() const final { return "Base IO Image"; }
+
+    IOSupport ioSupport() const final { return IOSupport::BOTH; }
+
+    std::vector<FileFormat> supportedFormats() const final
+    {
+        std::vector<FileFormat> formats;
+        formats.push_back(FileFormat("png", "Portable Network Graphics"));
+        formats.push_back(FileFormat("bmp", "Bitmap"));
+        formats.push_back(FileFormat("tga", "Truevision TGA"));
+        formats.push_back(FileFormat(
+            std::vector<std::string> {"jpg", "jpeg"},
+            "Joint Photographic Experts Group"));
+
+        return formats;
+    }
+
+    Image load(const std::string& filename, AbstractLogger& log = logger())
+        const final
+    {
+        return loadImage(filename);
+    }
+
+    void save(
+        const std::string& filename,
+        const Image&       image,
+        AbstractLogger&    log = logger()) const final
+    {
+        assert(!image.isNull());
+        saveImage(image, filename);
+    }
+};
+
+} // namespace vcl::proc
+
+#endif // HLMP_ACTIONS_ACTIONS_IMAGE_IO_BASE_IMAGE_IO_H

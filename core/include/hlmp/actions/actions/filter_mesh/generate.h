@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,9 +20,9 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTIONS_FILTER_MESH_APPLY_H
-#define VCL_PROCESSING_ACTIONS_FILTER_MESH_APPLY_H
+#ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_GENERATE_H
+#define HLMP_ACTIONS_ACTIONS_FILTER_MESH_GENERATE_H
 
-#include "apply/laplacian_smoothing_filter.h"
+#include "generate/convex_hull_filter.h"
 
-#endif // VCL_PROCESSING_ACTIONS_FILTER_MESH_APPLY_H
+#endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_GENERATE_H

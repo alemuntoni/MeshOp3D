@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,9 +20,34 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTIONS_FILTER_MESH_GENERATE_H
-#define VCL_PROCESSING_ACTIONS_FILTER_MESH_GENERATE_H
+#ifndef HLMP_ACTIONS_ACTIONS_CONVERT_POLY_EDGE_MESH_H
+#define HLMP_ACTIONS_ACTIONS_CONVERT_POLY_EDGE_MESH_H
 
-#include "generate/convex_hull_filter.h"
+#include <hlmp/actions/interfaces/convert_action_t.h>
 
-#endif // VCL_PROCESSING_ACTIONS_FILTER_MESH_GENERATE_H
+namespace vcl::proc {
+
+template<MeshConcept MeshType>
+
+class PolyEdgeMeshConvert : public ConvertActionT<MeshType>
+{
+    using Base = ConvertActionT<MeshType>;
+
+    std::string name() const final { return "Convert to PolyEdgeMesh"; }
+
+    std::pair<MeshTypeId, std::any> convert(
+        const MeshType& inputMesh,
+        AbstractLogger& log) const final
+    {
+        using PolyEdgeMeshType = GetMeshType<MeshTypeId::POLYGON_MESH>;
+
+        PolyEdgeMeshType polyEdgeMesh;
+        polyEdgeMesh.importFrom(inputMesh);
+
+        return {MeshTypeId::POLYGON_MESH, std::any(polyEdgeMesh)};
+    }
+};
+
+} // namespace vcl::proc
+
+#endif // HLMP_ACTIONS_ACTIONS_CONVERT_POLY_EDGE_MESH_H

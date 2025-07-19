@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_ACTION_INSTANCES_IMAGE_IO_H
 #define VCL_PROCESSING_ACTION_INSTANCES_IMAGE_IO_H
 
-#include <vclib/processing/actions/image_io.h>
+#include <hlmp/actions/actions/image_io.h>
 
 #include <memory>
 #include <vector>

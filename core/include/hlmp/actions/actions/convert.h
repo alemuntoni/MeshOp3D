@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,12 +20,10 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTIONS_H
-#define VCL_PROCESSING_ACTIONS_H
+#ifndef HLMP_ACTIONS_ACTIONS_CONVERT_H
+#define HLMP_ACTIONS_ACTIONS_CONVERT_H
 
-#include "actions/convert.h"
-#include "actions/filter_mesh.h"
-#include "actions/image_io.h"
-#include "actions/mesh_io.h"
+#include "convert/poly_edge_mesh.h"
+#include "convert/tri_edge_mesh.h"
 
-#endif // VCL_PROCESSING_ACTIONS_H
+#endif // HLMP_ACTIONS_ACTIONS_CONVERT_H

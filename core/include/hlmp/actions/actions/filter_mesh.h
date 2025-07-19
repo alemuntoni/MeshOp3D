@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,34 +20,11 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTIONS_CONVERT_TRI_EDGE_MESH_H
-#define VCL_PROCESSING_ACTIONS_CONVERT_TRI_EDGE_MESH_H
+#ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_H
+#define HLMP_ACTIONS_ACTIONS_FILTER_MESH_H
 
-#include <hlmp/actions/interfaces/convert_action_t.h>
+#include "filter_mesh/apply.h"
+#include "filter_mesh/create.h"
+#include "filter_mesh/generate.h"
 
-namespace vcl::proc {
-
-template<MeshConcept MeshType>
-
-class TriEdgeMeshConvert : public ConvertActionT<MeshType>
-{
-    using Base = ConvertActionT<MeshType>;
-
-    std::string name() const final { return "Convert to TriEdgeMesh"; }
-
-    std::pair<MeshTypeId, std::any> convert(
-        const MeshType& inputMesh,
-        AbstractLogger& log) const final
-    {
-        using TriEdgeMeshType = GetMeshType<MeshTypeId::TRIANGLE_MESH>;
-
-        TriEdgeMeshType triEdgeMesh;
-        triEdgeMesh.importFrom(inputMesh);
-
-        return {MeshTypeId::TRIANGLE_MESH, std::any(triEdgeMesh)};
-    }
-};
-
-} // namespace vcl::proc
-
-#endif // VCL_PROCESSING_ACTIONS_CONVERT_TRI_EDGE_MESH_H
+#endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_H

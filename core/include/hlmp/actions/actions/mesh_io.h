@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,9 +20,9 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTIONS_MESH_IO_H
-#define VCL_PROCESSING_ACTIONS_MESH_IO_H
+#ifndef HLMP_ACTIONS_ACTIONS_MESH_IO_H
+#define HLMP_ACTIONS_ACTIONS_MESH_IO_H
 
 #include "mesh_io/base_mesh_io.h"
 
-#endif // VCL_PROCESSING_ACTIONS_MESH_IO_H
+#endif // HLMP_ACTIONS_ACTIONS_MESH_IO_H
