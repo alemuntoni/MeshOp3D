@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,44 +20,10 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_FUNCTIONS_H
-#define VCL_PROCESSING_FUNCTIONS_H
+#ifndef HLMP_MANAGER_H
+#define HLMP_MANAGER_H
 
-#include "manager.h"
+#include "manager/action_manager.h"
+#include "manager/load_save_textures.h"
 
-#include <any>
-
-namespace vcl::proc {
-
-template<template<typename> typename Action, typename MeshType>
-auto actionDownCast(const std::shared_ptr<vcl::proc::Action>& action)
-{
-    return std::dynamic_pointer_cast<Action<MeshType>>(action);
-}
-
-std::pair<std::any, MeshTypeId> loadMeshBestFit(
-    const std::string&     filename,
-    const ParameterVector& parameters,
-    auto&                  logger)
-{
-    std::any    res;
-    std::string ext = FileInfo::extension(filename);
-
-    PolyEdgeMesh mesh = ActionManager::loadMeshActions(ext)->load<PolyEdgeMesh>(
-        filename, parameters, logger);
-
-    if (isTriangleMesh(mesh)) {
-        TriEdgeMesh m;
-        m.importFrom(mesh);
-        res = std::move(m);
-        return {res, MeshTypeId::TRIANGLE_MESH};
-    }
-    else {
-        res = std::move(mesh);
-        return {res, MeshTypeId::POLYGON_MESH};
-    }
-}
-
-} // namespace vcl::proc
-
-#endif // VCL_PROCESSING_FUNCTIONS_H
+#endif // HLMP_MANAGER_H

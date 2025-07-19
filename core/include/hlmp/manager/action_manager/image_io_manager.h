@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,10 +20,51 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_MANAGER_H
-#define VCL_PROCESSING_MANAGER_H
+#ifndef HLMP_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H
+#define HLMP_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H
 
-#include "manager/action_manager.h"
-#include "manager/load_save_textures.h"
+#include "io_action_container.h"
 
-#endif // VCL_PROCESSING_MANAGER_H
+#include <hlmp/actions/interfaces/image_io_action.h>
+
+namespace vcl::proc::detail {
+
+class ImageIOManager
+{
+    IOActionContainer<ImageIOAction> mImageIOActions;
+
+protected:
+    void add(const std::shared_ptr<ImageIOAction>& action)
+    {
+        mImageIOActions.add(action);
+    }
+
+public:
+    // load image
+
+    std::vector<FileFormat> loadImageFormats() const
+    {
+        return mImageIOActions.loadFormats();
+    }
+
+    std::shared_ptr<ImageIOAction> loadImageAction(FileFormat fmt) const
+    {
+        return mImageIOActions.loadAction(fmt);
+    }
+
+    // save image
+
+    std::vector<FileFormat> saveImageFormats() const
+    {
+        return mImageIOActions.saveFormats();
+    }
+
+    std::shared_ptr<ImageIOAction> saveImageAction(FileFormat fmt) const
+    {
+        return mImageIOActions.saveAction(fmt);
+    }
+};
+
+} // namespace vcl::proc::detail
+
+#endif // HLMP_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H

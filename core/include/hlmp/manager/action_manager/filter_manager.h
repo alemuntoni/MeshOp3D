@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,46 +20,45 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H
-#define VCL_PROCESSING_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H
+#ifndef HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H
+#define HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H
 
 #include "id_action_container.h"
 
-#include <hlmp/actions/aggregators/convert_actions.h>
+#include <hlmp/actions/aggregators/filter_actions.h>
 
 namespace vcl::proc::detail {
 
-class ConvertManager
+class FilterManager
 {
-    IDActionContainer<ConvertActions> mConvertActions;
+    IDActionContainer<FilterActions> mFilterActions;
 
 protected:
-    void add(const std::shared_ptr<ConvertActions>& action)
+    void add(const std::shared_ptr<FilterActions>& action)
     {
-        mConvertActions.add(action);
+        mFilterActions.add(action);
     }
 
 public:
-    // convert
+    // filter
 
-    std::shared_ptr<ConvertActions> convertActions(
-        const std::string& name) const
+    std::shared_ptr<FilterActions> filterActions(const std::string& name) const
     {
-        return mConvertActions.action(name);
+        return mFilterActions.action(name);
     }
 
     template<typename MeshType>
-    std::shared_ptr<ConvertActionT<MeshType>> convertAction(
+    std::shared_ptr<FilterActionT<MeshType>> filterAction(
         const std::string& name)
     {
-        std::shared_ptr<ConvertActions> actions = convertActions(name);
+        std::shared_ptr<FilterActions> actions = filterActions(name);
 
         return actions->action<MeshType>();
     }
 
-    auto convertActions() { return mConvertActions.actions(); }
+    auto filterActions() { return mFilterActions.actions(); }
 };
 
 } // namespace vcl::proc::detail
 
-#endif // VCL_PROCESSING_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H
+#endif // HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H

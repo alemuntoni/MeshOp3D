@@ -24,8 +24,8 @@
 #define VCL_PROCESSING_H
 
 #include <hlmp/manager/action_instances.h>
-#include "processing/functions.h"
-#include "processing/manager.h"
+#include <hlmp/functions.h>
+#include <hlmp/manager.h>
 
 /**
  * @defgroup processing Processing

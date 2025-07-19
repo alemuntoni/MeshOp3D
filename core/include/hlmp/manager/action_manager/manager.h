@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_MANAGER_ACTION_MANAGER_MANAGER_H
-#define VCL_PROCESSING_MANAGER_ACTION_MANAGER_MANAGER_H
+#ifndef HLMP_MANAGER_ACTION_MANAGER_MANAGER_H
+#define HLMP_MANAGER_ACTION_MANAGER_MANAGER_H
 
 #include "convert_manager.h"
 #include "filter_manager.h"
@@ -91,4 +91,4 @@ public:
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_MANAGER_ACTION_MANAGER_MANAGER_H
+#endif // HLMP_MANAGER_ACTION_MANAGER_MANAGER_H

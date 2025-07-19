@@ -24,7 +24,7 @@
 #define HLMP_ACTIONS_ACTIONS_MESH_IO_BASE_MESH_IO_H
 
 #include <hlmp/actions/interfaces/mesh_io_action_t.h>
-#include <vclib/processing/manager.h>
+#include <hlmp/manager.h>
 
 #include <vclib/algorithms/mesh.h>
 #include <vclib/io.h>

@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,51 +20,44 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H
-#define VCL_PROCESSING_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H
+#ifndef HLMP_FUNCTIONS_H
+#define HLMP_FUNCTIONS_H
 
-#include "io_action_container.h"
+#include "manager.h"
 
-#include <hlmp/actions/interfaces/image_io_action.h>
+#include <any>
 
-namespace vcl::proc::detail {
+namespace vcl::proc {
 
-class ImageIOManager
+template<template<typename> typename Action, typename MeshType>
+auto actionDownCast(const std::shared_ptr<vcl::proc::Action>& action)
 {
-    IOActionContainer<ImageIOAction> mImageIOActions;
+    return std::dynamic_pointer_cast<Action<MeshType>>(action);
+}
 
-protected:
-    void add(const std::shared_ptr<ImageIOAction>& action)
-    {
-        mImageIOActions.add(action);
+std::pair<std::any, MeshTypeId> loadMeshBestFit(
+    const std::string&     filename,
+    const ParameterVector& parameters,
+    auto&                  logger)
+{
+    std::any    res;
+    std::string ext = FileInfo::extension(filename);
+
+    PolyEdgeMesh mesh = ActionManager::loadMeshActions(ext)->load<PolyEdgeMesh>(
+        filename, parameters, logger);
+
+    if (isTriangleMesh(mesh)) {
+        TriEdgeMesh m;
+        m.importFrom(mesh);
+        res = std::move(m);
+        return {res, MeshTypeId::TRIANGLE_MESH};
     }
-
-public:
-    // load image
-
-    std::vector<FileFormat> loadImageFormats() const
-    {
-        return mImageIOActions.loadFormats();
+    else {
+        res = std::move(mesh);
+        return {res, MeshTypeId::POLYGON_MESH};
     }
+}
 
-    std::shared_ptr<ImageIOAction> loadImageAction(FileFormat fmt) const
-    {
-        return mImageIOActions.loadAction(fmt);
-    }
+} // namespace vcl::proc
 
-    // save image
-
-    std::vector<FileFormat> saveImageFormats() const
-    {
-        return mImageIOActions.saveFormats();
-    }
-
-    std::shared_ptr<ImageIOAction> saveImageAction(FileFormat fmt) const
-    {
-        return mImageIOActions.saveAction(fmt);
-    }
-};
-
-} // namespace vcl::proc::detail
-
-#endif // VCL_PROCESSING_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H
+#endif // HLMP_FUNCTIONS_H
