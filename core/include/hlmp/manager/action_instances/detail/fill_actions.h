@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,18 +20,17 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTION_INSTANCES_FILL_ACTIONS_H
-#define VCL_PROCESSING_ACTION_INSTANCES_FILL_ACTIONS_H
+#ifndef HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H
+#define HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H
 
 #include <hlmp/actions/interfaces/action.h>
-#include <hlmp/settings.h>
 
 namespace vcl::proc {
 
 /**
  * @brief @brief Given a list of actions in a TemplatedTypeWrapper, this
  * function fills the given vector with instances of Aggregator type (one for
- * each action type) - see processing/engine/action_aggregators.
+ * each action type) - see hlmp/actions/action_aggregators.
  * Each Aggregator contains the action instances that can be instantiated for
  * the supported mesh types.
  * @param vec
@@ -52,4 +51,4 @@ void fillAggregatedActions(
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ACTION_INSTANCES_FILL_ACTIONS_H
+#endif // HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H

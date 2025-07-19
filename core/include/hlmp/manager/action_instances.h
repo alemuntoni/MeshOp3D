@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,72 +20,39 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTION_INSTANCES_FILTER_H
-#define VCL_PROCESSING_ACTION_INSTANCES_FILTER_H
+#ifndef HLMP_MANAGER_ACTION_INSTANCES_H
+#define HLMP_MANAGER_ACTION_INSTANCES_H
 
-#include "fill_actions.h"
-
-#include <hlmp/actions/actions/filter_mesh.h>
-#include <hlmp/actions/aggregators/filter_actions.h>
-
-#include <memory>
-#include <vector>
+#include "action_instances/convert.h"
+#include "action_instances/filter.h"
+#include "action_instances/image_io.h"
+#include "action_instances/mesh_io.h"
 
 namespace vcl::proc {
 
-namespace detail {
-
-inline std::vector<std::shared_ptr<Action>> applyFilterActions()
+inline std::vector<std::shared_ptr<Action>> actionInstances()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
-    using Actions = TemplatedTypeWrapper<LaplacianSmoothingFilter>;
+    // Convert actions
+    auto convertVector = convertActions();
+    vec.insert(vec.end(), convertVector.begin(), convertVector.end());
 
-    fillAggregatedActions<FilterActions>(vec, Actions());
+    // Filter actions
+    auto filterVector = filterActions();
+    vec.insert(vec.end(), filterVector.begin(), filterVector.end());
 
-    return vec;
-}
+    // ImageIO actions
+    auto imgIOVector = imageIOActions();
+    vec.insert(vec.end(), imgIOVector.begin(), imgIOVector.end());
 
-inline std::vector<std::shared_ptr<Action>> createFilterActions()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    using Actions = TemplatedTypeWrapper<CreateConeFilter>;
-
-    fillAggregatedActions<FilterActions>(vec, Actions());
-
-    return vec;
-}
-
-inline std::vector<std::shared_ptr<Action>> generateFilterActions()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    using Actions = TemplatedTypeWrapper<ConvexHullFilter>;
-
-    fillAggregatedActions<FilterActions>(vec, Actions());
-
-    return vec;
-}
-
-} // namespace detail
-
-inline std::vector<std::shared_ptr<Action>> filterActions()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    auto a = detail::applyFilterActions();
-    vec.insert(vec.begin(), a.begin(), a.end());
-
-    auto c = detail::createFilterActions();
-    vec.insert(vec.begin(), c.begin(), c.end());
-
-    auto g = detail::generateFilterActions();
-    vec.insert(vec.begin(), g.begin(), g.end());
+    // MeshIO actions
+    auto meshIOVector = meshIOActions();
+    vec.insert(vec.end(), meshIOVector.begin(), meshIOVector.end());
 
     return vec;
 }
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ACTION_INSTANCES_FILTER_H
+#endif // HLMP_MANAGER_ACTION_INSTANCES_H

@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,30 +20,31 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTION_INSTANCES_MESH_IO_H
-#define VCL_PROCESSING_ACTION_INSTANCES_MESH_IO_H
+#ifndef HLMP_MANAGER_ACTION_INSTANCES_CONVERT_H
+#define HLMP_MANAGER_ACTION_INSTANCES_CONVERT_H
 
-#include "fill_actions.h"
+#include "detail/fill_actions.h"
 
-#include <hlmp/actions/actions/mesh_io.h>
-#include <hlmp/actions/aggregators/mesh_io_actions.h>
+#include <hlmp/actions/actions/convert.h>
+#include <hlmp/actions/aggregators/convert_actions.h>
 
 #include <memory>
 #include <vector>
 
 namespace vcl::proc {
 
-inline std::vector<std::shared_ptr<Action>> meshIOActions()
+inline std::vector<std::shared_ptr<Action>> convertActions()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
-    using Actions = TemplatedTypeWrapper<BaseMeshIO>;
+    using Actions =
+        TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
 
-    fillAggregatedActions<MeshIOActions>(vec, Actions());
+    fillAggregatedActions<ConvertActions>(vec, Actions());
 
     return vec;
 }
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ACTION_INSTANCES_MESH_IO_H
+#endif // HLMP_MANAGER_ACTION_INSTANCES_CONVERT_H

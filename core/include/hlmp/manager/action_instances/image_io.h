@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ACTION_INSTANCES_IMAGE_IO_H
-#define VCL_PROCESSING_ACTION_INSTANCES_IMAGE_IO_H
+#ifndef HLMP_MANAGER_ACTION_INSTANCES_IMAGE_IO_H
+#define HLMP_MANAGER_ACTION_INSTANCES_IMAGE_IO_H
 
 #include <hlmp/actions/actions/image_io.h>
 
@@ -41,4 +41,4 @@ inline std::vector<std::shared_ptr<Action>> imageIOActions()
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ACTION_INSTANCES_IMAGE_IO_H
+#endif // HLMP_MANAGER_ACTION_INSTANCES_IMAGE_IO_H
