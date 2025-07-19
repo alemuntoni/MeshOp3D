@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_MANAGER_ACTION_MANAGER_ID_ACTION_CONTAINER_H
 #define VCL_PROCESSING_MANAGER_ACTION_MANAGER_ID_ACTION_CONTAINER_H
 
-#include <vclib/processing/engine/action_interfaces/action.h>
+#include <hlmp/actions/interfaces/action.h>
 
 #include <map>
 

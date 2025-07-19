@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_ACTIONS_IMAGE_IO_BASE_IMAGE_IO_H
 #define VCL_PROCESSING_ACTIONS_IMAGE_IO_BASE_IMAGE_IO_H
 
-#include <vclib/processing/engine.h>
+#include <hlmp/actions/interfaces/image_io_action.h>
 
 #include <vclib/io/image.h>
 

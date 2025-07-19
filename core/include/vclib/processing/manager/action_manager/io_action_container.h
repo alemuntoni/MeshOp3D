@@ -24,7 +24,7 @@
 #define VCL_PROCESSING_MANAGER_ACTION_MANAGER_IO_ACTION_CONTAINER_H
 
 #include <vclib/io/file_format.h>
-#include <vclib/processing/engine/action_interfaces/io_action.h>
+#include <hlmp/actions/interfaces/io_action.h>
 #include <vclib/space/core/vector/polymorphic_object_vector.h>
 
 #include <map>

@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_ACTIONS_FILTER_MESH_CREATE_CREATE_CONE_FILTER_H
 #define VCL_PROCESSING_ACTIONS_FILTER_MESH_CREATE_CREATE_CONE_FILTER_H
 
-#include <vclib/processing/engine.h>
+#include <hlmp/actions/interfaces/filter_action_t.h>
 
 #include <vclib/algorithms/mesh.h>
 

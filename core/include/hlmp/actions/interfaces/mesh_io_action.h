@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ENGINE_ACTION_INTERFACES_MESH_IO_ACTION_H
-#define VCL_PROCESSING_ENGINE_ACTION_INTERFACES_MESH_IO_ACTION_H
+#ifndef HLMP_ACTIONS_INTERFACES_MESH_IO_ACTION_H
+#define HLMP_ACTIONS_INTERFACES_MESH_IO_ACTION_H
 
 #include "io_action.h"
 
@@ -128,4 +128,4 @@ protected:
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ENGINE_ACTION_INTERFACES_MESH_IO_ACTION_H
+#endif // HLMP_ACTIONS_INTERFACES_MESH_IO_ACTION_H

@@ -28,8 +28,6 @@
 #include "image_io_manager.h"
 #include "mesh_io_manager.h"
 
-#include <vclib/processing/engine/action_interfaces.h>
-
 namespace vcl::proc {
 
 std::vector<std::shared_ptr<Action>> actionInstances();

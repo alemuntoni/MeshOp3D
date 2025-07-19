@@ -25,7 +25,7 @@
 
 #include "io_action_container.h"
 
-#include <vclib/processing/engine/action_interfaces.h>
+#include <hlmp/actions/interfaces/image_io_action.h>
 
 namespace vcl::proc::detail {
 

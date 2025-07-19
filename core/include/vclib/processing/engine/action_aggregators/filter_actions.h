@@ -25,7 +25,7 @@
 
 #include "fill_actions.h"
 
-#include <vclib/processing/engine/action_interfaces/filter_action_t.h>
+#include <hlmp/actions/interfaces/filter_action_t.h>
 
 namespace vcl::proc {
 

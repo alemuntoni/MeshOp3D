@@ -23,7 +23,7 @@
 #ifndef VCL_PROCESSING_ACTIONS_CONVERT_POLY_EDGE_MESH_H
 #define VCL_PROCESSING_ACTIONS_CONVERT_POLY_EDGE_MESH_H
 
-#include <vclib/processing/engine.h>
+#include <hlmp/actions/interfaces/convert_action_t.h>
 
 namespace vcl::proc {
 

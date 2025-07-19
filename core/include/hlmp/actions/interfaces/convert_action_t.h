@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,19 +20,20 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ENGINE_ACTION_INTERFACES_IO_ACTION_H
-#define VCL_PROCESSING_ENGINE_ACTION_INTERFACES_IO_ACTION_H
+#ifndef HLMP_ACTIONS_INTERFACES_CONVERT_ACTION_T_H
+#define HLMP_ACTIONS_INTERFACES_CONVERT_ACTION_T_H
 
-#include "action.h"
+#include "convert_action.h"
 
-#include <vclib/io/file_format.h>
+#include <vclib/concepts/mesh.h>
 
 namespace vcl::proc {
 
-class IOAction : public Action
+template<MeshConcept Mesh>
+class ConvertActionT : public ConvertAction
 {
 public:
-    enum class IOSupport { LOAD, SAVE, BOTH };
+    using MeshType = Mesh;
 
     /* ******************************************************************** *
      * Member functions that must/may be implemented by the derived classes *
@@ -42,33 +43,28 @@ public:
 
     virtual std::string name() const = 0;
 
-    virtual Type type() const = 0;
-
-    virtual MeshTypeId meshType() const = 0;
-
     /**
-     * @brief Returns the type of support for input/output operations.
+     * @brief Converts a mesh from the templated MeshType of the action to
+     * a target mesh type.
      *
-     * Possible values are:
-     * - LOAD: the action supports only loading images;
-     * - SAVE: the action supports only saving images;
-     * - BOTH: the action supports both loading and saving images.
+     * The converted mesh is returned in a std::pair. The first element
+     * is the MeshTypeId of the output mesh, and the second element is the
+     * output mesh itself, contained in a std::any object.
      *
-     * @return the type of support for input/output operations
+     * @param inputMesh
+     * @param log
      */
-    virtual IOSupport ioSupport() const = 0;
+    virtual std::pair<MeshTypeId, std::any> convert(
+        const MeshType& inputMesh,
+        AbstractLogger& log = logger()) const = 0;
 
-    /**
-     * @brief Returns the list of file formats supported by the action.
-     *
-     * Each file format is defined by a list of extensions (all the possible
-     * extensions that a file format could have) and a description.
-     *
-     * @return the list of file formats supported by the action
-     */
-    virtual std::vector<FileFormat> supportedFormats() const = 0;
+    /* ************************************ *
+     * Member functions already implemented *
+     * ************************************ */
+
+    MeshTypeId meshType() const final { return meshTypeId<MeshType>(); }
 };
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ENGINE_ACTION_INTERFACES_IO_ACTION_H
+#endif // HLMP_ACTIONS_INTERFACES_CONVERT_ACTION_T_H
