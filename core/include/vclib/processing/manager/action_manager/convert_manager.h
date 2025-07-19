@@ -25,7 +25,7 @@
 
 #include "id_action_container.h"
 
-#include <vclib/processing/engine/action_aggregators.h>
+#include <hlmp/actions/aggregators/convert_actions.h>
 
 namespace vcl::proc::detail {
 

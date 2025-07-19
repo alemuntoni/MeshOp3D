@@ -25,7 +25,7 @@
 
 #include <QDockWidget>
 
-#include <vclib/processing/engine/action_aggregators/filter_actions.h>
+#include <hlmp/actions/aggregators/filter_actions.h>
 
 namespace vcl::qt {
 

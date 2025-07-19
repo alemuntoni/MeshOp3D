@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,10 +20,10 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_PROCESSING_ENGINE_ACTION_AGGREGATORS_MESH_IO_ACTIONS_H
-#define VCL_PROCESSING_ENGINE_ACTION_AGGREGATORS_MESH_IO_ACTIONS_H
+#ifndef HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H
+#define HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H
 
-#include "fill_actions.h"
+#include "detail/fill_actions.h"
 
 #include <hlmp/actions/interfaces/mesh_io_action_t.h>
 
@@ -218,4 +218,4 @@ private:
 
 } // namespace vcl::proc
 
-#endif // VCL_PROCESSING_ENGINE_ACTION_AGGREGATORS_MESH_IO_ACTIONS_H
+#endif // HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H

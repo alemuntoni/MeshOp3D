@@ -26,7 +26,7 @@
 #include "fill_actions.h"
 
 #include <vclib/processing/actions/convert.h>
-#include <vclib/processing/engine/action_aggregators/convert_actions.h>
+#include <hlmp/actions/aggregators/convert_actions.h>
 
 #include <memory>
 #include <vector>

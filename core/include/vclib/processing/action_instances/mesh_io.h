@@ -26,7 +26,7 @@
 #include "fill_actions.h"
 
 #include <vclib/processing/actions/mesh_io.h>
-#include <vclib/processing/engine/action_aggregators/mesh_io_actions.h>
+#include <hlmp/actions/aggregators/mesh_io_actions.h>
 
 #include <memory>
 #include <vector>

@@ -26,7 +26,7 @@
 #include "fill_actions.h"
 
 #include <vclib/processing/actions/filter_mesh.h>
-#include <vclib/processing/engine/action_aggregators.h>
+#include <hlmp/actions/aggregators/filter_actions.h>
 
 #include <memory>
 #include <vector>
