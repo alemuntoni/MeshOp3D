@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>vcl::qt::MeshProcessingMainWindow</class>
- <widget class="QMainWindow" name="vcl::qt::MeshProcessingMainWindow">
+ <class>hlmp::HLMPMainWindow</class>
+ <widget class="QMainWindow" name="hlmp::HLMPMainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>

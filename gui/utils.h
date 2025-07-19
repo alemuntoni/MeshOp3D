@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,31 +20,12 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-
 #ifndef UTILS_H
 #define UTILS_H
 
 #include <hlmp/settings.h>
 #include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
-
-template<vcl::MeshConcept MeshType>
-void setMeshInfo(MeshType& mesh)
-{
-    std::string info;
-    if constexpr (vcl::HasTriangles<MeshType>) {
-        info += "TriMesh\n";
-    }
-    else if constexpr (vcl::HasPolygons<MeshType>) {
-        info += "PolyMesh\n";
-    }
-
-    info += "Vertices: " + std::to_string(mesh.vertexNumber()) + "\n";
-    if constexpr (vcl::HasFaces<MeshType>) {
-        info += "Faces: " + std::to_string(mesh.faceNumber()) + "\n";
-    }
-    mesh.info() = info;
-}
 
 template<vcl::MeshConcept MeshType>
 std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
@@ -54,7 +35,6 @@ std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
 
     std::shared_ptr<vcl::DrawableMesh<MT>> m =
         std::make_shared<vcl::DrawableMesh<MT>>(std::move(mesh));
-    setMeshInfo(*m);
     return m;
 }
 

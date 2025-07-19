@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,15 +20,15 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
-#define VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
+#ifndef HLMP_GUI_HLMP_MAIN_WINDOW_H
+#define HLMP_GUI_HLMP_MAIN_WINDOW_H
 
 #include <hlmp/actions/aggregators/convert_actions.h>
 #include <hlmp/actions/aggregators/filter_actions.h>
 
 #include "utils.h"
 
-#include "ui_mesh_processing_main_window.h"
+#include "ui_hlmp_main_window.h"
 
 #include <vclib/qt/gui/text_edit_logger.h>
 #include <vclib/render/drawable/drawable_mesh.h>
@@ -36,17 +36,17 @@
 
 #include <QMainWindow>
 
-namespace vcl::qt {
+namespace hlmp {
 
 namespace Ui {
-class MeshProcessingMainWindow;
+class HLMPMainWindow;
 } // namespace Ui
 
-class MeshProcessingMainWindow : public QMainWindow
+class HLMPMainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    Ui::MeshProcessingMainWindow* mUI;
+    Ui::HLMPMainWindow* mUI;
 
     //proc::ActionManager mActionManager;
 
@@ -54,8 +54,8 @@ class MeshProcessingMainWindow : public QMainWindow
         std::make_shared<vcl::DrawableObjectVector>();
 
 public:
-    explicit MeshProcessingMainWindow(QWidget* parent = nullptr);
-    ~MeshProcessingMainWindow();
+    explicit HLMPMainWindow(QWidget* parent = nullptr);
+    ~HLMPMainWindow();
 
 public slots:
     void openMesh();
@@ -65,28 +65,28 @@ public slots:
     void openFilterDialog(bool);
 
     void applyFilter(
-        const std::shared_ptr<proc::FilterActions>& action,
-        const proc::ParameterVector&                params);
+        const std::shared_ptr<vcl::proc::FilterActions>& action,
+        const vcl::proc::ParameterVector&                params);
 
     void convertCurrentMesh(bool);
 
 private:
-    TextEditLogger& logger();
+    vcl::qt::TextEditLogger& logger();
 
     void populateFilterMenu();
 
     void openFilterDialog(
-        const std::shared_ptr<proc::FilterActions>& action);
+        const std::shared_ptr<vcl::proc::FilterActions>& action);
 
-    proc::MeshTypeId getFilterMeshType(
-        const std::shared_ptr<proc::FilterActions>& action,
-        const proc::ParameterVector&                params,
+    vcl::proc::MeshTypeId getFilterMeshType(
+        const std::shared_ptr<vcl::proc::FilterActions>& action,
+        const vcl::proc::ParameterVector&                params,
         uint selectedMesh);
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void executeFilter(
-        const std::shared_ptr<proc::FilterActions>& action,
-        const proc::ParameterVector&                params)
+        const std::shared_ptr<vcl::proc::FilterActions>& action,
+        const vcl::proc::ParameterVector&                params)
     {
         std::vector<const MeshType*> inputMeshes;
         std::vector<MeshType*>       inputOutputMeshes;
@@ -112,7 +112,7 @@ private:
         logger().stopTimer();
 
         logger().log(
-            TextEditLogger::MESSAGE_LOG,
+            vcl::qt::TextEditLogger::MESSAGE_LOG,
             action->name() + " applied in " +
                 std::to_string(logger().time()) + " seconds.");
 
@@ -125,16 +125,16 @@ private:
         mUI->meshViewer->updateGUI();
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void convertAndAddMesh(
-        const std::shared_ptr<proc::ConvertActions>& action,
+        const std::shared_ptr<vcl::proc::ConvertActions>& action,
         const MeshType& mesh)
     {
         logger().startTimer();
         auto [id, anyMesh] = action->convert(mesh, logger());
         logger().stopTimer();
         logger().log(
-            TextEditLogger::MESSAGE_LOG,
+            vcl::qt::TextEditLogger::MESSAGE_LOG,
             action->name() + " applied in " + std::to_string(logger().time()) +
                 " seconds.");
 
@@ -152,7 +152,7 @@ private:
         mUI->meshViewer->updateGUI();
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     std::shared_ptr<vcl::DrawableMesh<MeshType>> toDrawableMesh(
         const std::shared_ptr<vcl::DrawableObject>& drawable)
     {
@@ -160,6 +160,6 @@ private:
     }
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
-#endif // VCL_QT_MESH_PROCESSING_MAIN_WINDOW_H
+#endif // HLMP_GUI_HLMP_MAIN_WINDOW_H

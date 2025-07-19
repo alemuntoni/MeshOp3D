@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,7 +20,7 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#include "mesh_processing_main_window.h"
+#include "hlmp_main_window.h"
 
 // #include "gui/action_file_dialog.h"
 #include "gui/filter_dock_widget.h"
@@ -34,10 +34,12 @@
 #include <QFileDialog>
 #include <QPushButton>
 
-namespace vcl::qt {
+using namespace vcl;
 
-MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
-        QMainWindow(parent), mUI(new Ui::MeshProcessingMainWindow)
+namespace hlmp {
+
+HLMPMainWindow::HLMPMainWindow(QWidget* parent) :
+        QMainWindow(parent), mUI(new Ui::HLMPMainWindow)
 {
     mUI->setupUi(this);
 
@@ -49,13 +51,13 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
         mUI->actionOpenMesh,
         &QAction::triggered,
         this,
-        &MeshProcessingMainWindow::openMesh);
+        &HLMPMainWindow::openMesh);
 
     connect(
         mUI->actionSaveMeshAs,
         &QAction::triggered,
         this,
-        &MeshProcessingMainWindow::saveMeshAs);
+        &HLMPMainWindow::saveMeshAs);
 
     // set this function to mesh viewer
     auto f = [](const DrawableObject& obj) {
@@ -79,15 +81,15 @@ MeshProcessingMainWindow::MeshProcessingMainWindow(QWidget* parent) :
     mUI->meshViewer->setDrawVectorIconFunction(f);
 }
 
-MeshProcessingMainWindow::~MeshProcessingMainWindow()
+HLMPMainWindow::~HLMPMainWindow()
 {
     delete mUI;
 }
 
-void MeshProcessingMainWindow::openMesh()
+void HLMPMainWindow::openMesh()
 {
     std::vector<FileFormat> formats = proc::ActionManager::loadMeshFormats();
-    QString                 filter  = filterFormatsToQString(formats, true);
+    QString                 filter  = qt::filterFormatsToQString(formats, true);
 
     QString f = QFileDialog::getOpenFileName(
         nullptr, QObject::tr("Open Document"), QDir::currentPath(), filter);
@@ -115,7 +117,7 @@ void MeshProcessingMainWindow::openMesh()
         auto [m, id] = proc::loadMeshBestFit(filename, params, logger());
         logger().stopTimer();
         logger().log(
-            TextEditLogger::MESSAGE_LOG,
+            qt::TextEditLogger::MESSAGE_LOG,
             pfn + " loaded in " + std::to_string(logger().time()) +
                 " seconds.");
 
@@ -136,7 +138,7 @@ void MeshProcessingMainWindow::openMesh()
     }
 }
 
-void MeshProcessingMainWindow::saveMeshAs()
+void HLMPMainWindow::saveMeshAs()
 {
     uint i = mUI->meshViewer->selectedDrawableObject();
 
@@ -154,7 +156,7 @@ void MeshProcessingMainWindow::saveMeshAs()
 
     std::vector<FileFormat> formats =
         proc::ActionManager::saveMeshFormats(type);
-    QString filter = filterFormatsToQString(formats);
+    QString filter = qt::filterFormatsToQString(formats);
 
     QString fs;
     QString f = QFileDialog::getSaveFileName(
@@ -169,7 +171,7 @@ void MeshProcessingMainWindow::saveMeshAs()
         std::string pfn      = FileInfo::fileNameWithExtension(filename);
         std::string format   = FileInfo::extension(filename);
         // get selected filter
-        FileFormat f = formatFromQStringFilter(fs);
+        FileFormat f = qt::formatFromQStringFilter(fs);
         if (f != FileFormat(format)) {
             filename += "." + f.extensions().front();
         }
@@ -207,12 +209,12 @@ void MeshProcessingMainWindow::saveMeshAs()
         }
         logger().stopTimer();
         logger().log(
-            TextEditLogger::MESSAGE_LOG,
+            qt::TextEditLogger::MESSAGE_LOG,
             pfn + " saved in " + std::to_string(logger().time()) + " seconds.");
     }
 }
 
-void MeshProcessingMainWindow::openFilterDialog(bool)
+void HLMPMainWindow::openFilterDialog(bool)
 {
     QAction* sender = qobject_cast<QAction*>(QObject::sender());
 
@@ -225,7 +227,7 @@ void MeshProcessingMainWindow::openFilterDialog(bool)
     }
 }
 
-void MeshProcessingMainWindow::applyFilter(
+void HLMPMainWindow::applyFilter(
     const std::shared_ptr<proc::FilterActions>& action,
     const proc::ParameterVector&                params)
 {
@@ -246,7 +248,7 @@ void MeshProcessingMainWindow::applyFilter(
     }
 }
 
-void MeshProcessingMainWindow::convertCurrentMesh(bool)
+void HLMPMainWindow::convertCurrentMesh(bool)
 {
     using enum vcl::proc::MeshTypeId;
 
@@ -285,12 +287,12 @@ void MeshProcessingMainWindow::convertCurrentMesh(bool)
     }
 }
 
-TextEditLogger& MeshProcessingMainWindow::logger()
+qt::TextEditLogger& HLMPMainWindow::logger()
 {
     return mUI->meshViewer->logger();
 }
 
-void MeshProcessingMainWindow::populateFilterMenu()
+void HLMPMainWindow::populateFilterMenu()
 {
     using enum proc::FilterAction::Category;
 
@@ -342,21 +344,21 @@ void MeshProcessingMainWindow::populateFilterMenu()
     }
 }
 
-void MeshProcessingMainWindow::openFilterDialog(
+void HLMPMainWindow::openFilterDialog(
     const std::shared_ptr<proc::FilterActions>& action)
 {
-    FilterDockWidget* dock = new FilterDockWidget(action, this);
+    qt::FilterDockWidget* dock = new qt::FilterDockWidget(action, this);
 
     connect(
         dock,
-        &FilterDockWidget::applyFilter,
+        &qt::FilterDockWidget::applyFilter,
         this,
-        &MeshProcessingMainWindow::applyFilter);
+        &HLMPMainWindow::applyFilter);
 
     dock->show();
 }
 
-proc::MeshTypeId MeshProcessingMainWindow::getFilterMeshType(
+proc::MeshTypeId HLMPMainWindow::getFilterMeshType(
     const std::shared_ptr<proc::FilterActions>& action,
     const proc::ParameterVector&                params,
     uint                                        selectedMesh)
@@ -382,4 +384,4 @@ proc::MeshTypeId MeshProcessingMainWindow::getFilterMeshType(
     }
 }
 
-} // namespace vcl::qt
+} // namespace hlmp
