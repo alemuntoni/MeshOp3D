@@ -20,7 +20,7 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#include "hlmp_main_window.h"
+#include "main_window.h"
 
 // #include "gui/action_file_dialog.h"
 #include "gui/filter_dock_widget.h"
@@ -38,8 +38,8 @@ using namespace vcl;
 
 namespace hlmp {
 
-HLMPMainWindow::HLMPMainWindow(QWidget* parent) :
-        QMainWindow(parent), mUI(new Ui::HLMPMainWindow)
+MainWindow::MainWindow(QWidget* parent) :
+        QMainWindow(parent), mUI(new Ui::MainWindow)
 {
     mUI->setupUi(this);
 
@@ -51,13 +51,13 @@ HLMPMainWindow::HLMPMainWindow(QWidget* parent) :
         mUI->actionOpenMesh,
         &QAction::triggered,
         this,
-        &HLMPMainWindow::openMesh);
+        &MainWindow::openMesh);
 
     connect(
         mUI->actionSaveMeshAs,
         &QAction::triggered,
         this,
-        &HLMPMainWindow::saveMeshAs);
+        &MainWindow::saveMeshAs);
 
     // set this function to mesh viewer
     auto f = [](const DrawableObject& obj) {
@@ -81,12 +81,12 @@ HLMPMainWindow::HLMPMainWindow(QWidget* parent) :
     mUI->meshViewer->setDrawVectorIconFunction(f);
 }
 
-HLMPMainWindow::~HLMPMainWindow()
+MainWindow::~MainWindow()
 {
     delete mUI;
 }
 
-void HLMPMainWindow::openMesh()
+void MainWindow::openMesh()
 {
     std::vector<FileFormat> formats = proc::ActionManager::loadMeshFormats();
     QString                 filter  = qt::filterFormatsToQString(formats, true);
@@ -138,7 +138,7 @@ void HLMPMainWindow::openMesh()
     }
 }
 
-void HLMPMainWindow::saveMeshAs()
+void MainWindow::saveMeshAs()
 {
     uint i = mUI->meshViewer->selectedDrawableObject();
 
@@ -214,7 +214,7 @@ void HLMPMainWindow::saveMeshAs()
     }
 }
 
-void HLMPMainWindow::openFilterDialog(bool)
+void MainWindow::openFilterDialog(bool)
 {
     QAction* sender = qobject_cast<QAction*>(QObject::sender());
 
@@ -227,7 +227,7 @@ void HLMPMainWindow::openFilterDialog(bool)
     }
 }
 
-void HLMPMainWindow::applyFilter(
+void MainWindow::applyFilter(
     const std::shared_ptr<proc::FilterActions>& action,
     const proc::ParameterVector&                params)
 {
@@ -248,7 +248,7 @@ void HLMPMainWindow::applyFilter(
     }
 }
 
-void HLMPMainWindow::convertCurrentMesh(bool)
+void MainWindow::convertCurrentMesh(bool)
 {
     using enum vcl::proc::MeshTypeId;
 
@@ -287,12 +287,12 @@ void HLMPMainWindow::convertCurrentMesh(bool)
     }
 }
 
-qt::TextEditLogger& HLMPMainWindow::logger()
+qt::TextEditLogger& MainWindow::logger()
 {
     return mUI->meshViewer->logger();
 }
 
-void HLMPMainWindow::populateFilterMenu()
+void MainWindow::populateFilterMenu()
 {
     using enum proc::FilterAction::Category;
 
@@ -344,7 +344,7 @@ void HLMPMainWindow::populateFilterMenu()
     }
 }
 
-void HLMPMainWindow::openFilterDialog(
+void MainWindow::openFilterDialog(
     const std::shared_ptr<proc::FilterActions>& action)
 {
     qt::FilterDockWidget* dock = new qt::FilterDockWidget(action, this);
@@ -353,12 +353,12 @@ void HLMPMainWindow::openFilterDialog(
         dock,
         &qt::FilterDockWidget::applyFilter,
         this,
-        &HLMPMainWindow::applyFilter);
+        &MainWindow::applyFilter);
 
     dock->show();
 }
 
-proc::MeshTypeId HLMPMainWindow::getFilterMeshType(
+proc::MeshTypeId MainWindow::getFilterMeshType(
     const std::shared_ptr<proc::FilterActions>& action,
     const proc::ParameterVector&                params,
     uint                                        selectedMesh)

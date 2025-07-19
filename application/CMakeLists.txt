@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(hlmp-gui)
+project(HLMP-application)
 
 if (NOT TARGET vclib-3rd-qt)
     message(FATAL_ERROR "Qt6 not found. Please set Qt6_DIR to the Qt6Config.cmake file.")

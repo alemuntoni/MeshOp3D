@@ -14,4 +14,4 @@ add_subdirectory(vclib)
 set(HLMP_ASSETS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
 
 add_subdirectory(core)
-add_subdirectory(gui)
+add_subdirectory(application)

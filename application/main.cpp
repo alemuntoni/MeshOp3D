@@ -20,7 +20,7 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#include "hlmp_main_window.h"
+#include "main_window.h"
 
 #include <QApplication>
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
 
-    hlmp::HLMPMainWindow mw;
+    hlmp::MainWindow mw;
 
     mw.show();
     mw.showMaximized();

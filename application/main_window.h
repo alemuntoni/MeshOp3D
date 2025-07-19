@@ -20,15 +20,15 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_GUI_HLMP_MAIN_WINDOW_H
-#define HLMP_GUI_HLMP_MAIN_WINDOW_H
+#ifndef HLMP_MAIN_WINDOW_H
+#define HLMP_MAIN_WINDOW_H
 
 #include <hlmp/actions/aggregators/convert_actions.h>
 #include <hlmp/actions/aggregators/filter_actions.h>
 
 #include "utils.h"
 
-#include "ui_hlmp_main_window.h"
+#include "ui_main_window.h"
 
 #include <vclib/qt/gui/text_edit_logger.h>
 #include <vclib/render/drawable/drawable_mesh.h>
@@ -39,14 +39,14 @@
 namespace hlmp {
 
 namespace Ui {
-class HLMPMainWindow;
+class MainWindow;
 } // namespace Ui
 
-class HLMPMainWindow : public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    Ui::HLMPMainWindow* mUI;
+    Ui::MainWindow* mUI;
 
     //proc::ActionManager mActionManager;
 
@@ -54,8 +54,8 @@ class HLMPMainWindow : public QMainWindow
         std::make_shared<vcl::DrawableObjectVector>();
 
 public:
-    explicit HLMPMainWindow(QWidget* parent = nullptr);
-    ~HLMPMainWindow();
+    explicit MainWindow(QWidget* parent = nullptr);
+    ~MainWindow();
 
 public slots:
     void openMesh();
@@ -162,4 +162,4 @@ private:
 
 } // namespace hlmp
 
-#endif // HLMP_GUI_HLMP_MAIN_WINDOW_H
+#endif // HLMP_MAIN_WINDOW_H

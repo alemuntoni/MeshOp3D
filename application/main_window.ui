@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>hlmp::HLMPMainWindow</class>
- <widget class="QMainWindow" name="hlmp::HLMPMainWindow">
+ <class>hlmp::MainWindow</class>
+ <widget class="QMainWindow" name="hlmp::MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>

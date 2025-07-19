@@ -20,12 +20,14 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef HLMP_UTILS_H
+#define HLMP_UTILS_H
 
 #include <hlmp/settings.h>
 #include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
+
+namespace hlmp {
 
 template<vcl::MeshConcept MeshType>
 std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
@@ -64,4 +66,6 @@ inline vcl::proc::MeshTypeId meshId(
     return vcl::proc::MeshTypeId::COUNT;
 }
 
-#endif // UTILS_H
+} // namespace hlmp
+
+#endif // HLMP_UTILS_H
