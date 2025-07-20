@@ -25,16 +25,16 @@
 
 #include "io_action_container.h"
 
-#include <hlmp/actions/aggregators/mesh_io_actions.h>
+#include <hlmp/actions/aggregators/mesh_io_actions_aggregator.h>
 
 namespace hlmp::detail {
 
 class MeshIOManager
 {
-    IOActionContainer<MeshIOActions> mMeshIOActions;
+    IOActionContainer<MeshIOActionsAggregator> mMeshIOActions;
 
 protected:
-    void add(const std::shared_ptr<MeshIOActions>& action)
+    void add(const std::shared_ptr<MeshIOActionsAggregator>& action)
     {
         mMeshIOActions.add(action);
     }
@@ -52,7 +52,7 @@ public:
         return loadMeshActions(fmt)->parametersLoad(fmt);
     }
 
-    std::shared_ptr<MeshIOActions> loadMeshActions(vcl::FileFormat fmt) const
+    std::shared_ptr<MeshIOActionsAggregator> loadMeshActions(vcl::FileFormat fmt) const
     {
         return mMeshIOActions.loadAction(fmt);
     }
@@ -61,7 +61,7 @@ public:
     std::shared_ptr<MeshIOActionT<MeshType>> loadMeshAction(
         vcl::FileFormat fmt) const
     {
-        std::shared_ptr<MeshIOActions> actions = loadMeshActions(fmt);
+        std::shared_ptr<MeshIOActionsAggregator> actions = loadMeshActions(fmt);
         return actions->action<MeshType>();
     }
 
@@ -82,7 +82,7 @@ public:
         return saveMeshActions(fmt)->parametersSave(fmt);
     }
 
-    std::shared_ptr<MeshIOActions> saveMeshActions(vcl::FileFormat fmt) const
+    std::shared_ptr<MeshIOActionsAggregator> saveMeshActions(vcl::FileFormat fmt) const
     {
         return mMeshIOActions.saveAction(fmt);
     }
@@ -91,7 +91,7 @@ public:
     std::shared_ptr<MeshIOActionT<MeshType>> saveMeshAction(
         vcl::FileFormat fmt) const
     {
-        std::shared_ptr<MeshIOActions> actions = saveMeshActions(fmt);
+        std::shared_ptr<MeshIOActionsAggregator> actions = saveMeshActions(fmt);
         return actions->action<MeshType>();
     }
 };

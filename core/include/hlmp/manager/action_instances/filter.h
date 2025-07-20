@@ -26,7 +26,7 @@
 #include "detail/fill_actions.h"
 
 #include <hlmp/actions/actions/filter_mesh.h>
-#include <hlmp/actions/aggregators/filter_actions.h>
+#include <hlmp/actions/aggregators/filter_actions_aggregator.h>
 
 #include <memory>
 #include <vector>
@@ -41,7 +41,7 @@ inline std::vector<std::shared_ptr<Action>> applyFilterActions()
 
     using Actions = vcl::TemplatedTypeWrapper<LaplacianSmoothingFilter>;
 
-    fillAggregatedActions<FilterActions>(vec, Actions());
+    fillAggregatedActions<FilterActionsAggregator>(vec, Actions());
 
     return vec;
 }
@@ -52,7 +52,7 @@ inline std::vector<std::shared_ptr<Action>> createFilterActions()
 
     using Actions = vcl::TemplatedTypeWrapper<CreateConeFilter>;
 
-    fillAggregatedActions<FilterActions>(vec, Actions());
+    fillAggregatedActions<FilterActionsAggregator>(vec, Actions());
 
     return vec;
 }
@@ -63,7 +63,7 @@ inline std::vector<std::shared_ptr<Action>> generateFilterActions()
 
     using Actions = vcl::TemplatedTypeWrapper<ConvexHullFilter>;
 
-    fillAggregatedActions<FilterActions>(vec, Actions());
+    fillAggregatedActions<FilterActionsAggregator>(vec, Actions());
 
     return vec;
 }

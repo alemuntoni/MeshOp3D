@@ -26,7 +26,7 @@
 #include "detail/fill_actions.h"
 
 #include <hlmp/actions/actions/convert.h>
-#include <hlmp/actions/aggregators/convert_actions.h>
+#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
 
 #include <memory>
 #include <vector>
@@ -40,7 +40,7 @@ inline std::vector<std::shared_ptr<Action>> convertActions()
     using Actions =
         vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
 
-    fillAggregatedActions<ConvertActions>(vec, Actions());
+    fillAggregatedActions<ConvertActionsAggregator>(vec, Actions());
 
     return vec;
 }

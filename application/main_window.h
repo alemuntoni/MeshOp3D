@@ -23,8 +23,8 @@
 #ifndef HLMP_APPLICATION_MAIN_WINDOW_H
 #define HLMP_APPLICATION_MAIN_WINDOW_H
 
-#include <hlmp/actions/aggregators/convert_actions.h>
-#include <hlmp/actions/aggregators/filter_actions.h>
+#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
+#include <hlmp/actions/aggregators/filter_actions_aggregator.h>
 
 #include "utils.h"
 
@@ -65,7 +65,7 @@ public slots:
     void openFilterDialog(bool);
 
     void applyFilter(
-        const std::shared_ptr<FilterActions>& action,
+        const std::shared_ptr<FilterActionsAggregator>& action,
         const ParameterVector&                params);
 
     void convertCurrentMesh(bool);
@@ -75,16 +75,16 @@ private:
 
     void populateFilterMenu();
 
-    void openFilterDialog(const std::shared_ptr<FilterActions>& action);
+    void openFilterDialog(const std::shared_ptr<FilterActionsAggregator>& action);
 
     MeshTypeId getFilterMeshType(
-        const std::shared_ptr<FilterActions>& action,
+        const std::shared_ptr<FilterActionsAggregator>& action,
         const ParameterVector&                params,
         vcl::uint                             selectedMesh);
 
     template<vcl::MeshConcept MeshType>
     void executeFilter(
-        const std::shared_ptr<FilterActions>& action,
+        const std::shared_ptr<FilterActionsAggregator>& action,
         const ParameterVector&                params)
     {
         std::vector<const MeshType*> inputMeshes;
@@ -126,7 +126,7 @@ private:
 
     template<vcl::MeshConcept MeshType>
     void convertAndAddMesh(
-        const std::shared_ptr<ConvertActions>& action,
+        const std::shared_ptr<ConvertActionsAggregator>& action,
         const MeshType&                        mesh)
     {
         logger().startTimer();

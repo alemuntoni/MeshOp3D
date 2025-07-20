@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_ACTIONS_AGGREGATORS_DETAIL_FILL_ACTIONS_H
-#define HLMP_ACTIONS_AGGREGATORS_DETAIL_FILL_ACTIONS_H
+#ifndef HLMP_ACTIONS_AGGREGATORS_DETAIL_AGGREGATORS_UTILS_H
+#define HLMP_ACTIONS_AGGREGATORS_DETAIL_AGGREGATORS_UTILS_H
 
 #include <hlmp/settings.h>
 
@@ -30,7 +30,9 @@
 namespace hlmp::detail {
 
 template<template<typename> typename Act>
-void fillWithSupportedMeshTypes(auto& array, vcl::uint& firstMeshType)
+void fillActionArrayWithSupportedMeshTypes(
+    auto&      array,
+    vcl::uint& firstMeshType)
 {
     firstMeshType = vcl::toUnderlying(MeshTypeId::COUNT);
 
@@ -51,4 +53,4 @@ void fillWithSupportedMeshTypes(auto& array, vcl::uint& firstMeshType)
 
 } // namespace hlmp::detail
 
-#endif // HLMP_ACTIONS_AGGREGATORS_DETAIL_FILL_ACTIONS_H
+#endif // HLMP_ACTIONS_AGGREGATORS_DETAIL_AGGREGATORS_UTILS_H

@@ -20,16 +20,21 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H
-#define HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H
+#ifndef HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_AGGREGATOR_H
+#define HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_AGGREGATOR_H
 
-#include "detail/fill_actions.h"
+#include "detail/aggregators_utils.h"
 
 #include <hlmp/actions/interfaces/mesh_io_action_t.h>
 
 namespace hlmp {
 
-class MeshIOActions : public MeshIOAction
+/**
+ * @brief The MeshIOActionsAggregator class is a special class that aggregates
+ * MeshIOActionT instances for different mesh types (only the ones that are
+ * supported by the MeshIOActionT).
+ */
+class MeshIOActionsAggregator : public MeshIOAction
 {
     static const vcl::uint MESH_TYPE_NUMBER =
         vcl::toUnderlying(MeshTypeId::COUNT);
@@ -41,7 +46,8 @@ public:
     template<template<typename> typename Act>
     void fillWithSupportedMeshTypes()
     {
-        detail::fillWithSupportedMeshTypes<Act>(mMeshIOActions, mFirstMeshType);
+        detail::fillActionArrayWithSupportedMeshTypes<Act>(
+            mMeshIOActions, mFirstMeshType);
     }
 
     std::string name() const final
@@ -220,4 +226,4 @@ private:
 
 } // namespace hlmp
 
-#endif // HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H
+#endif // HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_AGGREGATOR_H

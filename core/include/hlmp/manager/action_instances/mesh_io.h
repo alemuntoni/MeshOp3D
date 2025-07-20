@@ -26,7 +26,7 @@
 #include "detail/fill_actions.h"
 
 #include <hlmp/actions/actions/mesh_io.h>
-#include <hlmp/actions/aggregators/mesh_io_actions.h>
+#include <hlmp/actions/aggregators/mesh_io_actions_aggregator.h>
 
 #include <memory>
 #include <vector>
@@ -39,7 +39,7 @@ inline std::vector<std::shared_ptr<Action>> meshIOActions()
 
     using Actions = vcl::TemplatedTypeWrapper<BaseMeshIO>;
 
-    fillAggregatedActions<MeshIOActions>(vec, Actions());
+    fillAggregatedActions<MeshIOActionsAggregator>(vec, Actions());
 
     return vec;
 }

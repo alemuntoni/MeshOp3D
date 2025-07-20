@@ -28,7 +28,7 @@
 namespace hlmp {
 
 FilterDockWidget::FilterDockWidget(
-    const std::shared_ptr<FilterActions>& action,
+    const std::shared_ptr<FilterActionsAggregator>& action,
     QWidget*                                    parent) :
         QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
@@ -84,7 +84,7 @@ void FilterDockWidget::onCancelButtonClicked()
 
 void FilterDockWidget::addOutputMeshTypeParameter(
     ParameterVector&                      params,
-    const std::shared_ptr<FilterActions>& action)
+    const std::shared_ptr<FilterActionsAggregator>& action)
 {
     auto arr = meshTypeNames();
 

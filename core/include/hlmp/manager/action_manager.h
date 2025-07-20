@@ -80,7 +80,7 @@ public:
         return instance().loadMeshParameters(fmt);
     }
 
-    static std::shared_ptr<MeshIOActions> loadMeshActions(vcl::FileFormat fmt)
+    static std::shared_ptr<MeshIOActionsAggregator> loadMeshActions(vcl::FileFormat fmt)
     {
         return instance().loadMeshActions(fmt);
     }
@@ -109,7 +109,7 @@ public:
         return instance().saveMeshParameters(fmt);
     }
 
-    static std::shared_ptr<MeshIOActions> saveMeshActions(vcl::FileFormat fmt)
+    static std::shared_ptr<MeshIOActionsAggregator> saveMeshActions(vcl::FileFormat fmt)
     {
         return instance().saveMeshActions(fmt);
     }
@@ -123,7 +123,7 @@ public:
 
     // filter
 
-    static std::shared_ptr<FilterActions> filterActions(const std::string& name)
+    static std::shared_ptr<FilterActionsAggregator> filterActions(const std::string& name)
     {
         return instance().filterActions(name);
     }
@@ -145,7 +145,7 @@ public:
 
     // convert
 
-    static std::shared_ptr<ConvertActions> convertActions(
+    static std::shared_ptr<ConvertActionsAggregator> convertActions(
         const std::string& name)
     {
         return instance().convertActions(name);

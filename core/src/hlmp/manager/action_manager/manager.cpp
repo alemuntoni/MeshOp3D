@@ -37,18 +37,18 @@ void Manager::add(const std::shared_ptr<Action>& action)
 
     vcl::uint mt;
 
-    std::shared_ptr<ConvertActions> convertActions;
-    std::shared_ptr<FilterActions>  filterActions;
+    std::shared_ptr<ConvertActionsAggregator> convertActions;
+    std::shared_ptr<FilterActionsAggregator>  filterActions;
     std::shared_ptr<ImageIOAction>  imageIOAction;
-    std::shared_ptr<MeshIOActions>  meshIOActions;
+    std::shared_ptr<MeshIOActionsAggregator>  meshIOActions;
 
     switch (action->type()) {
     case CONVERT_ACTION:
-        convertActions = std::dynamic_pointer_cast<ConvertActions>(action);
+        convertActions = std::dynamic_pointer_cast<ConvertActionsAggregator>(action);
         ConvertManager::add(convertActions);
         break;
     case FILTER_ACTION:
-        filterActions = std::dynamic_pointer_cast<FilterActions>(action);
+        filterActions = std::dynamic_pointer_cast<FilterActionsAggregator>(action);
         FilterManager::add(filterActions);
         break;
     case IMAGE_IO_ACTION:
@@ -56,7 +56,7 @@ void Manager::add(const std::shared_ptr<Action>& action)
         ImageIOManager::add(imageIOAction);
         break;
     case MESH_IO_ACTION:
-        meshIOActions = std::dynamic_pointer_cast<MeshIOActions>(action);
+        meshIOActions = std::dynamic_pointer_cast<MeshIOActionsAggregator>(action);
         MeshIOManager::add(meshIOActions);
         break;
     default: throw std::runtime_error("Action type not supported");
