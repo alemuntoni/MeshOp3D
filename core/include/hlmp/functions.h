@@ -49,6 +49,7 @@ std::pair<std::any, MeshTypeId> loadMeshBestFit(
 
     if (isTriangleMesh(mesh)) {
         vcl::TriEdgeMesh m;
+        m.enableSameOptionalComponentsOf(mesh);
         m.importFrom(mesh);
         res = std::move(m);
         return {res, MeshTypeId::TRIANGLE_MESH};
