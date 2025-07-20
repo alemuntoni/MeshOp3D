@@ -20,15 +20,27 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
-#define HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#include <hlmp/manager/action_instances/convert.h>
 
-#include <hlmp/actions/interfaces/action.h>
+#include <hlmp/actions/actions/convert.h>
+#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
+#include <hlmp/manager/action_instances/detail/fill_actions.h>
+
+#include <memory>
+#include <vector>
 
 namespace hlmp {
 
-std::vector<std::shared_ptr<Action>> filterActions();
+std::vector<std::shared_ptr<Action>> convertActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    using Actions =
+        vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
+
+    fillAggregatedActions<ConvertActionsAggregator>(vec, Actions());
+
+    return vec;
+}
 
 } // namespace hlmp
-
-#endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H

@@ -20,15 +20,70 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
-#define HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#include <hlmp/manager/action_instances/filter.h>
 
-#include <hlmp/actions/interfaces/action.h>
+#include <hlmp/actions/actions/filter_mesh.h>
+#include <hlmp/actions/aggregators/filter_actions_aggregator.h>
+#include <hlmp/manager/action_instances/detail/fill_actions.h>
+
+#include <memory>
+#include <vector>
 
 namespace hlmp {
 
-std::vector<std::shared_ptr<Action>> filterActions();
+namespace detail {
+
+inline std::vector<std::shared_ptr<Action>> applyFilterActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    using Actions = vcl::TemplatedTypeWrapper<LaplacianSmoothingFilter>;
+
+    fillAggregatedActions<FilterActionsAggregator>(vec, Actions());
+
+    return vec;
+}
+
+inline std::vector<std::shared_ptr<Action>> createFilterActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    using Actions = vcl::TemplatedTypeWrapper<CreateConeFilter>;
+
+    fillAggregatedActions<FilterActionsAggregator>(vec, Actions());
+
+    return vec;
+}
+
+inline std::vector<std::shared_ptr<Action>> generateFilterActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    using Actions = vcl::TemplatedTypeWrapper<ConvexHullFilter>;
+
+    fillAggregatedActions<FilterActionsAggregator>(vec, Actions());
+
+    return vec;
+}
+
+} // namespace detail
+
+std::vector<std::shared_ptr<Action>> filterActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    auto a = detail::applyFilterActions();
+    vec.insert(vec.begin(), a.begin(), a.end());
+
+    auto c = detail::createFilterActions();
+    vec.insert(vec.begin(), c.begin(), c.end());
+
+    auto g = detail::generateFilterActions();
+    vec.insert(vec.begin(), g.begin(), g.end());
+
+    return vec;
+}
+
+// namespace detail
 
 } // namespace hlmp
-
-#endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H

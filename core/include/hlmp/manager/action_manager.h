@@ -32,10 +32,7 @@ class ActionManager
 public:
     // add action functions
 
-    static void add(const std::shared_ptr<Action>& action)
-    {
-        instance().add(action);
-    }
+    static void add(const std::shared_ptr<Action>& action);
 
     template<vcl::Range R>
     requires vcl::RangeOf<R, std::shared_ptr<Action>>
@@ -46,44 +43,24 @@ public:
 
     // load image
 
-    static std::vector<vcl::FileFormat> loadImageFormats()
-    {
-        return instance().loadImageFormats();
-    }
+    static std::vector<vcl::FileFormat> loadImageFormats();
 
-    static std::shared_ptr<ImageIOAction> loadImageAction(vcl::FileFormat fmt)
-    {
-        return instance().loadImageAction(fmt);
-    }
+    static std::shared_ptr<ImageIOAction> loadImageAction(vcl::FileFormat fmt);
 
     // save image
 
-    static std::vector<vcl::FileFormat> saveImageFormats()
-    {
-        return instance().saveImageFormats();
-    }
+    static std::vector<vcl::FileFormat> saveImageFormats();
 
-    static std::shared_ptr<ImageIOAction> saveImageAction(vcl::FileFormat fmt)
-    {
-        return instance().saveImageAction(fmt);
-    }
+    static std::shared_ptr<ImageIOAction> saveImageAction(vcl::FileFormat fmt);
 
     // load mesh
 
-    static std::vector<vcl::FileFormat> loadMeshFormats()
-    {
-        return instance().loadMeshFormats();
-    }
+    static std::vector<vcl::FileFormat> loadMeshFormats();
 
-    static ParameterVector loadMeshParameters(vcl::FileFormat fmt)
-    {
-        return instance().loadMeshParameters(fmt);
-    }
+    static ParameterVector loadMeshParameters(vcl::FileFormat fmt);
 
-    static std::shared_ptr<MeshIOActionsAggregator> loadMeshActions(vcl::FileFormat fmt)
-    {
-        return instance().loadMeshActions(fmt);
-    }
+    static std::shared_ptr<MeshIOActionsAggregator> loadMeshActions(
+        vcl::FileFormat fmt);
 
     template<vcl::MeshConcept MeshType>
     static std::shared_ptr<MeshIOActionT<MeshType>> loadMeshAction(
@@ -94,25 +71,14 @@ public:
 
     // save mesh
 
-    static std::vector<vcl::FileFormat> saveMeshFormats()
-    {
-        return instance().saveMeshFormats();
-    }
+    static std::vector<vcl::FileFormat> saveMeshFormats();
 
-    static std::vector<vcl::FileFormat> saveMeshFormats(MeshTypeId m)
-    {
-        return instance().saveMeshFormats(m);
-    }
+    static std::vector<vcl::FileFormat> saveMeshFormats(MeshTypeId m);
 
-    static ParameterVector saveMeshParameters(vcl::FileFormat fmt)
-    {
-        return instance().saveMeshParameters(fmt);
-    }
+    static ParameterVector saveMeshParameters(vcl::FileFormat fmt);
 
-    static std::shared_ptr<MeshIOActionsAggregator> saveMeshActions(vcl::FileFormat fmt)
-    {
-        return instance().saveMeshActions(fmt);
-    }
+    static std::shared_ptr<MeshIOActionsAggregator> saveMeshActions(
+        vcl::FileFormat fmt);
 
     template<vcl::MeshConcept MeshType>
     static std::shared_ptr<MeshIOActionT<MeshType>> saveMeshAction(
@@ -123,10 +89,8 @@ public:
 
     // filter
 
-    static std::shared_ptr<FilterActionsAggregator> filterActions(const std::string& name)
-    {
-        return instance().filterActions(name);
-    }
+    static std::shared_ptr<FilterActionsAggregator> filterActions(
+        const std::string& name);
 
     static auto filterActions() { return instance().filterActions(); }
 
@@ -146,10 +110,7 @@ public:
     // convert
 
     static std::shared_ptr<ConvertActionsAggregator> convertActions(
-        const std::string& name)
-    {
-        return instance().convertActions(name);
-    }
+        const std::string& name);
 
     static auto convertActions() { return instance().convertActions(); }
 
@@ -167,11 +128,7 @@ public:
     }
 
 private:
-    static detail::Manager& instance()
-    {
-        static detail::Manager instance;
-        return instance;
-    }
+    static detail::Manager& instance();
 };
 
 } // namespace hlmp

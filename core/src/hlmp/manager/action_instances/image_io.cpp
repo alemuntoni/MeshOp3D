@@ -20,15 +20,22 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
-#define HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#include <hlmp/manager/action_instances/image_io.h>
 
-#include <hlmp/actions/interfaces/action.h>
+#include <hlmp/actions/actions/image_io.h>
+
+#include <memory>
+#include <vector>
 
 namespace hlmp {
 
-std::vector<std::shared_ptr<Action>> filterActions();
+std::vector<std::shared_ptr<Action>> imageIOActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    vec.push_back(std::make_shared<BaseImageIO>());
+
+    return vec;
+}
 
 } // namespace hlmp
-
-#endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H

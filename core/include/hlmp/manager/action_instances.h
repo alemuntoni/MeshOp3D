@@ -23,35 +23,11 @@
 #ifndef HLMP_MANAGER_ACTION_INSTANCES_H
 #define HLMP_MANAGER_ACTION_INSTANCES_H
 
-#include "action_instances/convert.h"
-#include "action_instances/filter.h"
-#include "action_instances/image_io.h"
-#include "action_instances/mesh_io.h"
+#include <hlmp/actions/interfaces/action.h>
 
 namespace hlmp {
 
-inline std::vector<std::shared_ptr<Action>> actionInstances()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    // Convert actions
-    auto convertVector = convertActions();
-    vec.insert(vec.end(), convertVector.begin(), convertVector.end());
-
-    // Filter actions
-    auto filterVector = filterActions();
-    vec.insert(vec.end(), filterVector.begin(), filterVector.end());
-
-    // ImageIO actions
-    auto imgIOVector = imageIOActions();
-    vec.insert(vec.end(), imgIOVector.begin(), imgIOVector.end());
-
-    // MeshIO actions
-    auto meshIOVector = meshIOActions();
-    vec.insert(vec.end(), meshIOVector.begin(), meshIOVector.end());
-
-    return vec;
-}
+std::vector<std::shared_ptr<Action>> actionInstances();
 
 } // namespace hlmp
 

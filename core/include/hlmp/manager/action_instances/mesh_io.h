@@ -23,26 +23,11 @@
 #ifndef HLMP_MANAGER_ACTION_INSTANCES_MESH_IO_H
 #define HLMP_MANAGER_ACTION_INSTANCES_MESH_IO_H
 
-#include "detail/fill_actions.h"
-
-#include <hlmp/actions/actions/mesh_io.h>
-#include <hlmp/actions/aggregators/mesh_io_actions_aggregator.h>
-
-#include <memory>
-#include <vector>
+#include <hlmp/actions/interfaces/action.h>
 
 namespace hlmp {
 
-inline std::vector<std::shared_ptr<Action>> meshIOActions()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    using Actions = vcl::TemplatedTypeWrapper<BaseMeshIO>;
-
-    fillAggregatedActions<MeshIOActionsAggregator>(vec, Actions());
-
-    return vec;
-}
+std::vector<std::shared_ptr<Action>> meshIOActions();
 
 } // namespace hlmp
 

@@ -20,15 +20,26 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
-#define HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#include <hlmp/manager/action_instances/mesh_io.h>
 
-#include <hlmp/actions/interfaces/action.h>
+#include <hlmp/actions/actions/mesh_io.h>
+#include <hlmp/actions/aggregators/mesh_io_actions_aggregator.h>
+#include <hlmp/manager/action_instances/detail/fill_actions.h>
+
+#include <memory>
+#include <vector>
 
 namespace hlmp {
 
-std::vector<std::shared_ptr<Action>> filterActions();
+std::vector<std::shared_ptr<Action>> meshIOActions()
+{
+    std::vector<std::shared_ptr<Action>> vec;
 
-} // namespace hlmp
+    using Actions = vcl::TemplatedTypeWrapper<BaseMeshIO>;
 
-#endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+    fillAggregatedActions<MeshIOActionsAggregator>(vec, Actions());
+
+    return vec;
+}
+
+}

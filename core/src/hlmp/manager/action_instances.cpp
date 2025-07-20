@@ -20,15 +20,36 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
-#define HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#include <hlmp/manager/action_instances.h>
 
-#include <hlmp/actions/interfaces/action.h>
+#include <hlmp/manager/action_instances/convert.h>
+#include <hlmp/manager/action_instances/filter.h>
+#include <hlmp/manager/action_instances/image_io.h>
+#include <hlmp/manager/action_instances/mesh_io.h>
 
 namespace hlmp {
 
-std::vector<std::shared_ptr<Action>> filterActions();
+std::vector<std::shared_ptr<Action>> actionInstances()
+{
+    std::vector<std::shared_ptr<Action>> vec;
+
+    // Convert actions
+    auto convertVector = convertActions();
+    vec.insert(vec.end(), convertVector.begin(), convertVector.end());
+
+    // Filter actions
+    auto filterVector = filterActions();
+    vec.insert(vec.end(), filterVector.begin(), filterVector.end());
+
+    // ImageIO actions
+    auto imgIOVector = imageIOActions();
+    vec.insert(vec.end(), imgIOVector.begin(), imgIOVector.end());
+
+    // MeshIO actions
+    auto meshIOVector = meshIOActions();
+    vec.insert(vec.end(), meshIOVector.begin(), meshIOVector.end());
+
+    return vec;
+}
 
 } // namespace hlmp
-
-#endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H

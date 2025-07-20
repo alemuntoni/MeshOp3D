@@ -23,21 +23,11 @@
 #ifndef HLMP_MANAGER_ACTION_INSTANCES_IMAGE_IO_H
 #define HLMP_MANAGER_ACTION_INSTANCES_IMAGE_IO_H
 
-#include <hlmp/actions/actions/image_io.h>
-
-#include <memory>
-#include <vector>
+#include <hlmp/actions/interfaces/action.h>
 
 namespace hlmp {
 
-inline std::vector<std::shared_ptr<Action>> imageIOActions()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    vec.push_back(std::make_shared<BaseImageIO>());
-
-    return vec;
-}
+std::vector<std::shared_ptr<Action>> imageIOActions();
 
 } // namespace hlmp
 

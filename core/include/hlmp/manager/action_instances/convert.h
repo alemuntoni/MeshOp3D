@@ -23,27 +23,11 @@
 #ifndef HLMP_MANAGER_ACTION_INSTANCES_CONVERT_H
 #define HLMP_MANAGER_ACTION_INSTANCES_CONVERT_H
 
-#include "detail/fill_actions.h"
-
-#include <hlmp/actions/actions/convert.h>
-#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
-
-#include <memory>
-#include <vector>
+#include <hlmp/actions/interfaces/action.h>
 
 namespace hlmp {
 
-inline std::vector<std::shared_ptr<Action>> convertActions()
-{
-    std::vector<std::shared_ptr<Action>> vec;
-
-    using Actions =
-        vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
-
-    fillAggregatedActions<ConvertActionsAggregator>(vec, Actions());
-
-    return vec;
-}
+std::vector<std::shared_ptr<Action>> convertActions();
 
 } // namespace hlmp
 
