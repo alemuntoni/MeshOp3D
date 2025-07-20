@@ -20,35 +20,35 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H
-#define HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H
+#ifndef HLMP_ACTIONS_ACTION_TYPES_LISTS_H
+#define HLMP_ACTIONS_ACTION_TYPES_LISTS_H
 
-#include <hlmp/actions/interfaces/action.h>
+#include "actions/convert.h"
+#include "actions/filter_mesh.h"
+#include "actions/image_io.h"
+#include "actions/mesh_io.h"
 
 namespace hlmp {
 
-/**
- * @brief @brief Given a list of actions in a TemplatedTypeWrapper, this
- * function fills the given vector with instances of Aggregator type (one for
- * each action type) - see hlmp/actions/action_aggregators.
- * Each Aggregator contains the action instances that can be instantiated for
- * the supported mesh types.
- * @param vec
- */
-template<typename Aggregator, template<typename> typename... Actions>
-void fillAggregatedActions(
-    std::vector<std::shared_ptr<Action>>& vec,
-    vcl::TemplatedTypeWrapper<Actions...>)
-{
-    auto fAct = [&]<template<typename> typename Act>() {
-        std::shared_ptr<Aggregator> a = std::make_shared<Aggregator>();
-        a->template fillWithSupportedMeshTypes<Act>();
-        vec.push_back(a);
-    };
+using ConvertActionsList =
+    vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
 
-    (fAct.template operator()<Actions>(), ...);
-}
+using FilterActionsList = vcl::TemplatedTypeWrapper<
+    // apply filters
+    LaplacianSmoothingFilter,
+
+    // create filters
+    CreateConeFilter,
+
+    // generate filters
+    ConvexHullFilter>;
+
+using ImageIOActionsList =
+    vcl::TypeWrapper<BaseImageIO>;
+
+using MeshIOActionsList =
+    vcl::TemplatedTypeWrapper<BaseMeshIO>;
 
 } // namespace hlmp
 
-#endif // HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H
+#endif // HLMP_ACTIONS_ACTION_TYPES_LISTS_H

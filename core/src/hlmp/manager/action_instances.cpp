@@ -22,10 +22,8 @@
 
 #include <hlmp/manager/action_instances.h>
 
-#include <hlmp/manager/action_instances/convert.h>
-#include <hlmp/manager/action_instances/filter.h>
-#include <hlmp/manager/action_instances/image_io.h>
-#include <hlmp/manager/action_instances/mesh_io.h>
+#include <hlmp/actions/action_types_lists.h>
+#include <hlmp/manager/detail/fill_actions.h>
 
 namespace hlmp {
 
@@ -34,20 +32,21 @@ std::vector<std::shared_ptr<Action>> actionInstances()
     std::vector<std::shared_ptr<Action>> vec;
 
     // Convert actions
-    auto convertVector = convertActions();
-    vec.insert(vec.end(), convertVector.begin(), convertVector.end());
+    fillAggregatedActionInstances<ConvertActionsAggregator>(vec, ConvertActionsList());
 
     // Filter actions
-    auto filterVector = filterActions();
-    vec.insert(vec.end(), filterVector.begin(), filterVector.end());
+    fillAggregatedActionInstances<FilterActionsAggregator>(vec, FilterActionsList());
 
     // ImageIO actions
-    auto imgIOVector = imageIOActions();
-    vec.insert(vec.end(), imgIOVector.begin(), imgIOVector.end());
+    // TODO make a function fillActions
+    auto f = [&vec]<typename Act>() {
+        vec.push_back(std::make_shared<Act>());
+    };
+
+    vcl::ForEachType<ImageIOActionsList>::apply(f);
 
     // MeshIO actions
-    auto meshIOVector = meshIOActions();
-    vec.insert(vec.end(), meshIOVector.begin(), meshIOVector.end());
+    fillAggregatedActionInstances<MeshIOActionsAggregator>(vec, MeshIOActionsList());
 
     return vec;
 }

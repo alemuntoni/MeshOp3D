@@ -20,15 +20,35 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
-#define HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#ifndef HLMP_MANAGER_DETAIL_FILL_ACTIONS_H
+#define HLMP_MANAGER_DETAIL_FILL_ACTIONS_H
 
 #include <hlmp/actions/interfaces/action.h>
 
 namespace hlmp {
 
-std::vector<std::shared_ptr<Action>> filterActions();
+/**
+ * @brief @brief Given a list of actions in a TemplatedTypeWrapper, this
+ * function fills the given vector with instances of Aggregator type (one for
+ * each action type) - see hlmp/actions/action_aggregators.
+ * Each Aggregator contains the action instances that can be instantiated for
+ * the supported mesh types.
+ * @param vec
+ */
+template<typename Aggregator, template<typename> typename... Actions>
+void fillAggregatedActionInstances(
+    std::vector<std::shared_ptr<Action>>& vec,
+    vcl::TemplatedTypeWrapper<Actions...>)
+{
+    auto fAct = [&]<template<typename> typename Act>() {
+        std::shared_ptr<Aggregator> a = std::make_shared<Aggregator>();
+        a->template fillWithSupportedMeshTypes<Act>();
+        vec.push_back(a);
+    };
+
+    (fAct.template operator()<Actions>(), ...);
+}
 
 } // namespace hlmp
 
-#endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H
+#endif // HLMP_MANAGER_DETAIL_FILL_ACTIONS_H
