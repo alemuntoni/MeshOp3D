@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef CUSTOM_MESH_VIEWER_RENDER_APP_H
-#define CUSTOM_MESH_VIEWER_RENDER_APP_H
+#ifndef HLMP_APPLICATION_CUSTOM_MESH_VIEWER_RENDER_APP_H
+#define HLMP_APPLICATION_CUSTOM_MESH_VIEWER_RENDER_APP_H
 
 #include <vclib/imgui/imgui_drawer.h>
 #include <vclib/imgui/imgui_stats_drawer.h>
@@ -41,4 +41,4 @@ using MeshViewerRenderApp = vcl::RenderApp<
 
 } // namespace vcl::qt
 
-#endif // CUSTOM_MESH_VIEWER_RENDER_APP_H
+#endif // HLMP_APPLICATION_CUSTOM_MESH_VIEWER_RENDER_APP_H

@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_QT_GUI_PROCESSING_PARAMETERS_GRID_LAYOUT_H
-#define VCL_QT_GUI_PROCESSING_PARAMETERS_GRID_LAYOUT_H
+#ifndef HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#define HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
 
 #include <QGridLayout>
 
@@ -54,4 +54,4 @@ private:
 
 } // namespace vcl::qt
 
-#endif // VCL_QT_GUI_PROCESSING_PARAMETERS_GRID_LAYOUT_H
+#endif // HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H

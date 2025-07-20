@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MAIN_WINDOW_H
-#define HLMP_MAIN_WINDOW_H
+#ifndef HLMP_APPLICATION_MAIN_WINDOW_H
+#define HLMP_APPLICATION_MAIN_WINDOW_H
 
 #include <hlmp/actions/aggregators/convert_actions.h>
 #include <hlmp/actions/aggregators/filter_actions.h>
@@ -162,4 +162,4 @@ private:
 
 } // namespace hlmp
 
-#endif // HLMP_MAIN_WINDOW_H
+#endif // HLMP_APPLICATION_MAIN_WINDOW_H

@@ -1,6 +1,6 @@
 /*****************************************************************************
- * VCLib                                                                     *
- * Visual Computing Library                                                  *
+ * HLMP                                                                      *
+ * HighLevelMeshProcessing                                                   *
  *                                                                           *
  * Copyright(C) 2021-2025                                                    *
  * Visual Computing Lab                                                      *
@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef VCL_QT_GUI_PROCESSING_MULTI_PARAMETER_FRAME_H
-#define VCL_QT_GUI_PROCESSING_MULTI_PARAMETER_FRAME_H
+#ifndef HLMP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
+#define HLMP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
 
 #include <QFrame>
 
@@ -92,4 +92,4 @@ private:
 
 } // namespace vcl::qt
 
-#endif // VCL_QT_GUI_PROCESSING_MULTI_PARAMETER_FRAME_H
+#endif // HLMP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
