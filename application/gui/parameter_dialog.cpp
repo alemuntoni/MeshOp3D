@@ -24,19 +24,21 @@
 
 #include <QPushButton>
 
+namespace hlmp {
+
 ParameterDialog::ParameterDialog(QWidget* parent) : QDialog(parent)
 {
     setWindowTitle("Parameters");
 }
 
 ParameterDialog::ParameterDialog(
-    const hlmp::ParameterVector& vec,
+    const ParameterVector& vec,
     const std::string&                title,
     QWidget*                          parent) : QDialog(parent)
 {
     setWindowTitle(title.c_str());
 
-    hlmp::ParametersGridLayout* layout = new hlmp::ParametersGridLayout(this);
+    ParametersGridLayout* layout = new ParametersGridLayout(this);
     layout->setParameters(vec);
 
     setLayout(layout);
@@ -52,12 +54,14 @@ ParameterDialog::ParameterDialog(
     layout->addWidget(okButton);
 }
 
-hlmp::ParameterVector ParameterDialog::parameters()
+ParameterVector ParameterDialog::parameters()
 {
-    hlmp::ParameterVector vec;
-    auto layout = dynamic_cast<hlmp::ParametersGridLayout*>(this->layout());
+    ParameterVector vec;
+    auto layout = dynamic_cast<ParametersGridLayout*>(this->layout());
     if (layout) {
         vec = layout->parameters();
     }
     return vec;
 }
+
+} // namespace hlmp

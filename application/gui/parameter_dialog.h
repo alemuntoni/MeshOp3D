@@ -27,17 +27,21 @@
 
 #include <QDialog>
 
+namespace hlmp {
+
 class ParameterDialog : public QDialog
 {
 public:
     ParameterDialog(QWidget* parent = nullptr);
 
     ParameterDialog(
-        const hlmp::ParameterVector& vec,
-        const std::string&                title  = "",
-        QWidget*                          parent = nullptr);
+        const ParameterVector& vec,
+        const std::string&     title  = "",
+        QWidget*               parent = nullptr);
 
-    hlmp::ParameterVector parameters();
+    ParameterVector parameters();
 };
+
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETER_DIALOG_H
