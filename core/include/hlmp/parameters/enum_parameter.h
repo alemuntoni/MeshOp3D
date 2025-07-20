@@ -27,7 +27,7 @@
 
 #include <vclib/concepts/ranges/range.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class EnumParameter : public Parameter
 {
@@ -120,6 +120,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_PARAMETERS_ENUM_PARAMETER_H

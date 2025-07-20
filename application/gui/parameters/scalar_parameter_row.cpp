@@ -26,7 +26,7 @@
 
 namespace vcl::qt {
 
-ScalarParameterRow::ScalarParameterRow(const proc::ScalarParameter& param) :
+ScalarParameterRow::ScalarParameterRow(const hlmp::ScalarParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mLineEdit = new QLineEdit();
@@ -44,7 +44,7 @@ QWidget* ScalarParameterRow::parameterWidget()
     return mLineEdit;
 }
 
-std::shared_ptr<proc::Parameter> ScalarParameterRow::parameterFromWidget() const
+std::shared_ptr<hlmp::Parameter> ScalarParameterRow::parameterFromWidget() const
 {
     auto p = mParam.clone();
     p->setScalarValue(mLineEdit->text().toDouble());

@@ -27,14 +27,15 @@
 
 #include <hlmp/actions/interfaces/filter_action_t.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class FilterActions : public FilterAction
 {
-    static const uint MESH_TYPE_NUMBER = toUnderlying(MeshTypeId::COUNT);
+    static const vcl::uint MESH_TYPE_NUMBER =
+        vcl::toUnderlying(MeshTypeId::COUNT);
 
     std::array<std::shared_ptr<FilterAction>, MESH_TYPE_NUMBER> mFilterActions;
-    uint mFirstMeshType = MESH_TYPE_NUMBER;
+    vcl::uint mFirstMeshType = MESH_TYPE_NUMBER;
 
 public:
     template<template<typename> typename Act>
@@ -81,11 +82,11 @@ public:
         return mFilterActions[mFirstMeshType]->parameters();
     }
 
-    BitSet32 supportedMeshTypes() const
+    vcl::BitSet32 supportedMeshTypes() const
     {
         checkActionHasBeenFilled();
-        BitSet32 bitset;
-        for (uint i = 0; i < MESH_TYPE_NUMBER; i++) {
+        vcl::BitSet32 bitset;
+        for (vcl::uint i = 0; i < MESH_TYPE_NUMBER; i++) {
             if (mFilterActions[i] != nullptr) {
                 bitset[i] = true;
             }
@@ -93,21 +94,21 @@ public:
         return bitset;
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     std::shared_ptr<FilterActionT<MeshType>> action() const
     {
         checkActionForMeshType<MeshType>();
         return std::dynamic_pointer_cast<FilterActionT<MeshType>>(
-            mFilterActions[toUnderlying(meshTypeId<MeshType>())]);
+            mFilterActions[vcl::toUnderlying(meshTypeId<MeshType>())]);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<const MeshType*>& inputMeshes,
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
         const ParameterVector&              parameters,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         checkActionForMeshType<MeshType>();
         return action<MeshType>()->execute(
@@ -115,45 +116,45 @@ public:
     }
 
     // without parameters override
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<const MeshType*>& inputMeshes,
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         return execute(
             inputMeshes, inputOutputMeshes, outputMeshes, parameters(), log);
     }
 
     // without inputOutputMeshes override
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<const MeshType*>& inputMeshes,
         std::vector<MeshType>&              outputMeshes,
         const ParameterVector&              parameters,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         checkInputOutputMeshes(0);
         return execute(inputMeshes, {}, outputMeshes, parameters, log);
     }
 
     // without inputOutputMeshes and parameters override
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<const MeshType*>& inputMeshes,
         std::vector<MeshType>&              outputMeshes,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         return execute(inputMeshes, outputMeshes, parameters(), log);
     }
 
     // without inputOutputMeshes and outputMeshes override
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<const MeshType*>& inputMeshes,
         const ParameterVector&              parameters,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         std::vector<MeshType> outputMeshes;
         auto out = execute(inputMeshes, outputMeshes, parameters, log);
@@ -162,38 +163,38 @@ public:
     }
 
     // without inputOutputMeshes, outputMeshes and parameters override
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<const MeshType*>& inputMeshes,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         return execute(inputMeshes, parameters(), log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&        outputMeshes,
         const ParameterVector&        parameters,
-        AbstractLogger&               log = logger()) const
+        vcl::AbstractLogger&          log = logger()) const
     {
         return execute({}, inputOutputMeshes, outputMeshes, parameters, log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&        outputMeshes,
-        AbstractLogger&               log = logger()) const
+        vcl::AbstractLogger&          log = logger()) const
     {
         return execute(inputOutputMeshes, outputMeshes, parameters(), log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<MeshType*>& inputOutputMeshes,
         const ParameterVector&        parameters,
-        AbstractLogger&               log = logger()) const
+        vcl::AbstractLogger&          log = logger()) const
     {
         std::vector<MeshType> outputMeshes;
         auto out = execute(inputOutputMeshes, outputMeshes, parameters, log);
@@ -201,19 +202,19 @@ public:
         return out;
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         const std::vector<MeshType*>& inputOutputMeshes,
-        AbstractLogger&               log = logger()) const
+        vcl::AbstractLogger&          log = logger()) const
     {
         return execute(inputOutputMeshes, parameters(), log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         std::vector<MeshType>& outputMeshes,
         const ParameterVector& parameters,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
         return execute(
             std::vector<const MeshType*>(),
@@ -223,10 +224,10 @@ public:
             log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     OutputValues execute(
         std::vector<MeshType>& outputMeshes,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
         return execute(outputMeshes, parameters(), log);
     }
@@ -239,12 +240,12 @@ private:
         }
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void checkActionForMeshType() const
     {
         checkActionHasBeenFilled();
         checkMeshTypeId<MeshType>();
-        uint id = toUnderlying(meshTypeId<MeshType>());
+        vcl::uint id = vcl::toUnderlying(meshTypeId<MeshType>());
         if (mFilterActions[id] == nullptr) {
             throw std::runtime_error(
                 "The action cannot be instantiated for the given MeshType.");
@@ -252,6 +253,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_AGGREGATORS_FILTER_ACTIONS_H

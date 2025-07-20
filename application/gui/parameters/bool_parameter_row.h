@@ -31,17 +31,17 @@ namespace vcl::qt {
 
 class BoolParameterRow : public ParameterRow
 {
-    proc::BoolParameter mParam;
+    hlmp::BoolParameter mParam;
 
     QCheckBox* mCheckBox = nullptr;
 
 public:
-    BoolParameterRow(const proc::BoolParameter& param);
+    BoolParameterRow(const hlmp::BoolParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<proc::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
 };
 
 } // namespace vcl::qt

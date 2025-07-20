@@ -27,7 +27,7 @@
 
 #include <vclib/io/file_format.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class IOAction : public Action
 {
@@ -66,9 +66,9 @@ public:
      *
      * @return the list of file formats supported by the action
      */
-    virtual std::vector<FileFormat> supportedFormats() const = 0;
+    virtual std::vector<vcl::FileFormat> supportedFormats() const = 0;
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_IO_ACTION_H

@@ -30,7 +30,7 @@
 #include <vclib/io/file_format.h>
 #include <vclib/space/complex/mesh_info.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class MeshIOAction : public IOAction
 {
@@ -62,8 +62,8 @@ public:
      * @return the vectir of file formats supported by the action and their
      * capabilities
      */
-    virtual std::vector<std::pair<FileFormat, MeshInfo>> supportedMeshFormats()
-        const = 0;
+    virtual std::vector<std::pair<vcl::FileFormat, vcl::MeshInfo>>
+    supportedMeshFormats() const = 0;
 
     /**
      * @brief Returns the parameters to load the mesh.
@@ -77,7 +77,7 @@ public:
      *
      * @return The parameters for loading the mesh with the given file format.
      */
-    virtual ParameterVector parametersLoad(const FileFormat& format) const
+    virtual ParameterVector parametersLoad(const vcl::FileFormat& format) const
     {
         return ParameterVector();
     }
@@ -94,7 +94,7 @@ public:
      *
      * @return The parameters for saving the mesh with the given file format.
      */
-    virtual ParameterVector parametersSave(const FileFormat& format) const
+    virtual ParameterVector parametersSave(const vcl::FileFormat& format) const
     {
         return ParameterVector();
     }
@@ -105,9 +105,9 @@ public:
 
     Type type() const final { return Type::MESH_IO_ACTION; }
 
-    std::vector<FileFormat> supportedFormats() const final
+    std::vector<vcl::FileFormat> supportedFormats() const final
     {
-        std::vector<FileFormat> formats;
+        std::vector<vcl::FileFormat> formats;
         for (const auto& [f, _] : supportedMeshFormats()) {
             formats.push_back(f);
         }
@@ -115,17 +115,17 @@ public:
     }
 
 protected:
-    MeshInfo formatCapability(const FileFormat& format) const
+    vcl::MeshInfo formatCapability(const vcl::FileFormat& format) const
     {
         for (const auto& [f, info] : supportedMeshFormats()) {
             if (f == format) {
                 return info;
             }
         }
-        return MeshInfo();
+        return vcl::MeshInfo();
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_MESH_IO_ACTION_H

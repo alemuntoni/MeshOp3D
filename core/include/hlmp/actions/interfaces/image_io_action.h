@@ -30,7 +30,7 @@
 
 #include <vector>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class ImageIOAction : public IOAction
 {
@@ -47,7 +47,7 @@ public:
 
     virtual IOSupport ioSupport() const = 0;
 
-    virtual std::vector<FileFormat> supportedFormats() const = 0;
+    virtual std::vector<vcl::FileFormat> supportedFormats() const = 0;
 
     /**
      * @brief Loads an image from the given file.
@@ -60,9 +60,9 @@ public:
      * @param[in] log: the logger to use
      * @return the image loaded from the file
      */
-    virtual Image load(
+    virtual vcl::Image load(
         const std::string& filename,
-        AbstractLogger&    log = logger()) const
+        vcl::AbstractLogger&    log = logger()) const
     {
         if (ioSupport() == IOSupport::SAVE) {
             throw std::runtime_error(
@@ -71,7 +71,7 @@ public:
         // This should never be reached - the action declared that is able to
         // load images, but it does not implement the load method.
         assert(0);
-        return Image();
+        return vcl::Image();
     }
 
     /**
@@ -86,9 +86,9 @@ public:
      * @param[in] log: the logger to use
      */
     virtual void save(
-        const std::string& filename,
-        const Image&       image,
-        AbstractLogger&    log = logger()) const
+        const std::string&   filename,
+        const vcl::Image&    image,
+        vcl::AbstractLogger& log = logger()) const
     {
         if (ioSupport() == IOSupport::LOAD) {
             throw std::runtime_error(
@@ -108,6 +108,6 @@ public:
     MeshTypeId meshType() const final { return MeshTypeId::COUNT; }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_IMAGE_IO_ACTION_H

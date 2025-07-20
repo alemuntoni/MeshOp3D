@@ -27,17 +27,17 @@
 
 #include <vclib/types.h>
 
-namespace vcl::proc::detail {
+namespace hlmp::detail {
 
 template<template<typename> typename Act>
-void fillWithSupportedMeshTypes(auto& array, uint& firstMeshType)
+void fillWithSupportedMeshTypes(auto& array, vcl::uint& firstMeshType)
 {
-    firstMeshType = toUnderlying(MeshTypeId::COUNT);
+    firstMeshType = vcl::toUnderlying(MeshTypeId::COUNT);
 
-    uint i    = 0;
+    vcl::uint i    = 0;
     auto fAct = [&]<typename MeshType>() {
-        if constexpr (IsInstantiable<Act, MeshType>) {
-            array[toUnderlying(meshTypeId<MeshType>())] =
+        if constexpr (vcl::IsInstantiable<Act, MeshType>) {
+            array[vcl::toUnderlying(meshTypeId<MeshType>())] =
                 std::make_shared<Act<MeshType>>();
             if (i < firstMeshType) {
                 firstMeshType = i;
@@ -49,6 +49,6 @@ void fillWithSupportedMeshTypes(auto& array, uint& firstMeshType)
     vcl::ForEachType<MeshTypes>::apply(fAct);
 }
 
-} // namespace vcl::proc::detail
+} // namespace hlmp::detail
 
 #endif // HLMP_ACTIONS_AGGREGATORS_DETAIL_FILL_ACTIONS_H

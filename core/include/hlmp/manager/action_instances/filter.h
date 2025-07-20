@@ -31,7 +31,7 @@
 #include <memory>
 #include <vector>
 
-namespace vcl::proc {
+namespace hlmp {
 
 namespace detail {
 
@@ -39,7 +39,7 @@ inline std::vector<std::shared_ptr<Action>> applyFilterActions()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
-    using Actions = TemplatedTypeWrapper<LaplacianSmoothingFilter>;
+    using Actions = vcl::TemplatedTypeWrapper<LaplacianSmoothingFilter>;
 
     fillAggregatedActions<FilterActions>(vec, Actions());
 
@@ -50,7 +50,7 @@ inline std::vector<std::shared_ptr<Action>> createFilterActions()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
-    using Actions = TemplatedTypeWrapper<CreateConeFilter>;
+    using Actions = vcl::TemplatedTypeWrapper<CreateConeFilter>;
 
     fillAggregatedActions<FilterActions>(vec, Actions());
 
@@ -61,7 +61,7 @@ inline std::vector<std::shared_ptr<Action>> generateFilterActions()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
-    using Actions = TemplatedTypeWrapper<ConvexHullFilter>;
+    using Actions = vcl::TemplatedTypeWrapper<ConvexHullFilter>;
 
     fillAggregatedActions<FilterActions>(vec, Actions());
 
@@ -86,6 +86,6 @@ inline std::vector<std::shared_ptr<Action>> filterActions()
     return vec;
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_INSTANCES_FILTER_H

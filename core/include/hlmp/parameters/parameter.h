@@ -32,7 +32,7 @@
 #include <memory>
 #include <string>
 
-namespace vcl::proc {
+namespace hlmp {
 
 enum class ParameterType {
     // native parameters - the std::any mValue member is one of these types
@@ -103,16 +103,16 @@ public:
         return std::any_cast<bool>(mValue);
     }
 
-    virtual void setUintValue(uint v)
+    virtual void setUintValue(vcl::uint v)
     {
         checkParameterType(ParameterType::UINT);
-        std::any_cast<uint&>(mValue) = v;
+        std::any_cast<vcl::uint&>(mValue) = v;
     }
 
-    uint uintValue() const
+    vcl::uint uintValue() const
     {
         checkParameterType(ParameterType::UINT);
-        return std::any_cast<uint>(mValue);
+        return std::any_cast<vcl::uint>(mValue);
     }
 
     virtual void setIntValue(int v)
@@ -163,16 +163,16 @@ public:
         return std::any_cast<const vcl::Color&>(mValue);
     }
 
-    void setPoint3Value(const Point3<ScalarType>& v)
+    void setPoint3Value(const vcl::Point3<ScalarType>& v)
     {
         checkParameterType(ParameterType::POINT3);
-        std::any_cast<Point3<ScalarType>&>(mValue) = v;
+        std::any_cast<vcl::Point3<ScalarType>&>(mValue) = v;
     }
 
-    const Point3<ScalarType>& point3Value() const
+    const vcl::Point3<ScalarType>& point3Value() const
     {
         checkParameterType(ParameterType::POINT3);
-        return std::any_cast<const Point3<ScalarType>&>(mValue);
+        return std::any_cast<const vcl::Point3<ScalarType>&>(mValue);
     }
 
 protected:
@@ -209,10 +209,11 @@ private:
 
     static ParameterType nativeType(ParameterType t)
     {
+        using enum hlmp::ParameterType;
         switch (t) {
-        case vcl::proc::ParameterType::ENUM: return ParameterType::UINT;
-        case vcl::proc::ParameterType::USCALAR: return ParameterType::SCALAR;
-        case vcl::proc::ParameterType::MESH: return ParameterType::UINT;
+        case ENUM: return ParameterType::UINT;
+        case USCALAR: return ParameterType::SCALAR;
+        case MESH: return ParameterType::UINT;
         default: return t;
         }
     }
@@ -235,6 +236,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_PARAMETERS_PARAMETER_H

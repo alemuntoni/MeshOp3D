@@ -27,7 +27,7 @@
 
 #include <hlmp/actions/aggregators/convert_actions.h>
 
-namespace vcl::proc::detail {
+namespace hlmp::detail {
 
 class ConvertManager
 {
@@ -60,6 +60,6 @@ public:
     auto convertActions() { return mConvertActions.actions(); }
 };
 
-} // namespace vcl::proc::detail
+} // namespace hlmp::detail
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H

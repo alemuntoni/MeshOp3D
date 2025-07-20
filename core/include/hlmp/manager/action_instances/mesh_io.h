@@ -31,19 +31,19 @@
 #include <memory>
 #include <vector>
 
-namespace vcl::proc {
+namespace hlmp {
 
 inline std::vector<std::shared_ptr<Action>> meshIOActions()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
-    using Actions = TemplatedTypeWrapper<BaseMeshIO>;
+    using Actions = vcl::TemplatedTypeWrapper<BaseMeshIO>;
 
     fillAggregatedActions<MeshIOActions>(vec, Actions());
 
     return vec;
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_INSTANCES_MESH_IO_H

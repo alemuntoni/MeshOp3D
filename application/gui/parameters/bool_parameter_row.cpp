@@ -24,7 +24,7 @@
 
 namespace vcl::qt {
 
-BoolParameterRow::BoolParameterRow(const proc::BoolParameter& param) :
+BoolParameterRow::BoolParameterRow(const hlmp::BoolParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mCheckBox = new QCheckBox("");
@@ -40,7 +40,7 @@ QWidget* BoolParameterRow::parameterWidget()
     return mCheckBox;
 }
 
-std::shared_ptr<proc::Parameter> BoolParameterRow::parameterFromWidget() const
+std::shared_ptr<hlmp::Parameter> BoolParameterRow::parameterFromWidget() const
 {
     auto p = mParam.clone();
     p->setBoolValue(mCheckBox->isChecked());

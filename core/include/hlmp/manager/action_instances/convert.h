@@ -31,20 +31,20 @@
 #include <memory>
 #include <vector>
 
-namespace vcl::proc {
+namespace hlmp {
 
 inline std::vector<std::shared_ptr<Action>> convertActions()
 {
     std::vector<std::shared_ptr<Action>> vec;
 
     using Actions =
-        TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
+        vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
 
     fillAggregatedActions<ConvertActions>(vec, Actions());
 
     return vec;
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_INSTANCES_CONVERT_H

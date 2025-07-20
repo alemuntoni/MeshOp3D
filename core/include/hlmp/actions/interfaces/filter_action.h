@@ -28,7 +28,7 @@
 #include <hlmp/parameter_vector.h>
 #include <hlmp/parameters.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class FilterAction : public Action
 {
@@ -42,7 +42,7 @@ public:
         COUNT,
     };
 
-    using CategoryBitSet = BitSet<uint>;
+    using CategoryBitSet = vcl::BitSet<vcl::uint>;
 
     /* ******************************************************************** *
      * Member functions that must/may be implemented by the derived classes *
@@ -126,9 +126,9 @@ public:
     Type type() const final { return Type::FILTER_ACTION; }
 
 protected:
-    void checkInputMeshes(uint provided) const
+    void checkInputMeshes(vcl::uint provided) const
     {
-        uint n = inputMeshes().size();
+        vcl::uint n = inputMeshes().size();
         if (n != provided) {
             throw std::runtime_error(
                 "The action " + name() + " requires " + std::to_string(n) +
@@ -137,9 +137,9 @@ protected:
         }
     }
 
-    void checkInputOutputMeshes(uint provided) const
+    void checkInputOutputMeshes(vcl::uint provided) const
     {
-        uint n = inputOutputMeshes().size();
+        vcl::uint n = inputOutputMeshes().size();
         if (n != provided) {
             throw std::runtime_error(
                 "The action " + name() + " requires " + std::to_string(n) +
@@ -148,10 +148,10 @@ protected:
         }
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void warnOutputMeshesVector(
         const std::vector<MeshType>& outputMeshes,
-        AbstractLogger&              log) const
+        vcl::AbstractLogger&         log) const
     {
         if (!outputMeshes.empty()) {
             log.log(
@@ -163,7 +163,7 @@ protected:
         }
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void checkInputVectors(
         const std::vector<const MeshType*>& inputMeshes,
         const std::vector<MeshType*>&       inputOutputMeshes) const
@@ -173,6 +173,6 @@ protected:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_FILTER_ACTION_H

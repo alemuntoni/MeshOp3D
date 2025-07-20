@@ -26,7 +26,7 @@
 
 namespace vcl::qt {
 
-UintParameterRow::UintParameterRow(const proc::UintParameter& param) :
+UintParameterRow::UintParameterRow(const hlmp::UintParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mLineEdit = new QLineEdit();
@@ -41,7 +41,7 @@ QWidget* UintParameterRow::parameterWidget()
     return mLineEdit;
 }
 
-std::shared_ptr<proc::Parameter> UintParameterRow::parameterFromWidget() const
+std::shared_ptr<hlmp::Parameter> UintParameterRow::parameterFromWidget() const
 {
     auto p = mParam.clone();
     p->setUintValue(mLineEdit->text().toUInt());

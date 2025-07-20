@@ -27,7 +27,7 @@
 
 #include <hlmp/actions/interfaces/image_io_action.h>
 
-namespace vcl::proc::detail {
+namespace hlmp::detail {
 
 class ImageIOManager
 {
@@ -42,29 +42,29 @@ protected:
 public:
     // load image
 
-    std::vector<FileFormat> loadImageFormats() const
+    std::vector<vcl::FileFormat> loadImageFormats() const
     {
         return mImageIOActions.loadFormats();
     }
 
-    std::shared_ptr<ImageIOAction> loadImageAction(FileFormat fmt) const
+    std::shared_ptr<ImageIOAction> loadImageAction(vcl::FileFormat fmt) const
     {
         return mImageIOActions.loadAction(fmt);
     }
 
     // save image
 
-    std::vector<FileFormat> saveImageFormats() const
+    std::vector<vcl::FileFormat> saveImageFormats() const
     {
         return mImageIOActions.saveFormats();
     }
 
-    std::shared_ptr<ImageIOAction> saveImageAction(FileFormat fmt) const
+    std::shared_ptr<ImageIOAction> saveImageAction(vcl::FileFormat fmt) const
     {
         return mImageIOActions.saveAction(fmt);
     }
 };
 
-} // namespace vcl::proc::detail
+} // namespace hlmp::detail
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_IMAGE_IO_MANAGER_H

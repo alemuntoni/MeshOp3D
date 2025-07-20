@@ -27,15 +27,16 @@
 
 #include <hlmp/actions/interfaces/convert_action_t.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class ConvertActions : public ConvertAction
 {
-    static const uint MESH_TYPE_NUMBER = toUnderlying(MeshTypeId::COUNT);
+    static const vcl::uint MESH_TYPE_NUMBER =
+        vcl::toUnderlying(MeshTypeId::COUNT);
 
     std::array<std::shared_ptr<ConvertAction>, MESH_TYPE_NUMBER>
          mConvertActions;
-    uint mFirstMeshType = MESH_TYPE_NUMBER;
+    vcl::uint mFirstMeshType = MESH_TYPE_NUMBER;
 
 public:
     template<template<typename> typename Act>
@@ -53,11 +54,11 @@ public:
 
     MeshTypeId meshType() const final { return MeshTypeId::COUNT; }
 
-    BitSet32 supportedMeshTypes() const
+    vcl::BitSet32 supportedMeshTypes() const
     {
         checkActionHasBeenFilled();
-        BitSet32 bitset;
-        for (uint i = 0; i < MESH_TYPE_NUMBER; i++) {
+        vcl::BitSet32 bitset;
+        for (vcl::uint i = 0; i < MESH_TYPE_NUMBER; i++) {
             if (mConvertActions[i] != nullptr) {
                 bitset[i] = true;
             }
@@ -65,18 +66,18 @@ public:
         return bitset;
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     std::shared_ptr<ConvertActionT<MeshType>> action() const
     {
         checkActionForMeshType<MeshType>();
         return std::dynamic_pointer_cast<ConvertActionT<MeshType>>(
-            mConvertActions[toUnderlying(meshTypeId<MeshType>())]);
+            mConvertActions[vcl::toUnderlying(meshTypeId<MeshType>())]);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     std::pair<MeshTypeId, std::any> convert(
         const MeshType& inputMesh,
-        AbstractLogger& log = logger()) const
+        vcl::AbstractLogger& log = logger()) const
     {
         checkActionForMeshType<MeshType>();
         return action<MeshType>()->convert(inputMesh, log);
@@ -90,12 +91,12 @@ private:
         }
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void checkActionForMeshType() const
     {
         checkActionHasBeenFilled();
         checkMeshTypeId<MeshType>();
-        uint id = toUnderlying(meshTypeId<MeshType>());
+        vcl::uint id = vcl::toUnderlying(meshTypeId<MeshType>());
         if (mConvertActions[id] == nullptr) {
             throw std::runtime_error(
                 "The action cannot be instantiated for the given MeshType.");
@@ -103,6 +104,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_AGGREGATORS_CONVERT_ACTIONS_H

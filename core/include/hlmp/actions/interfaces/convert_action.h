@@ -25,7 +25,7 @@
 
 #include "action.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
 class ConvertAction : public Action
 {
@@ -47,6 +47,6 @@ public:
     Type type() const final { return Type::CONVERT_ACTION; }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_CONVERT_ACTION_H

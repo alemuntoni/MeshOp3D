@@ -24,7 +24,7 @@
 
 #include <hlmp/manager/action_instances.h>
 
-namespace vcl::proc::detail {
+namespace hlmp::detail {
 
 Manager::Manager()
 {
@@ -35,7 +35,7 @@ void Manager::add(const std::shared_ptr<Action>& action)
 {
     using enum Action::Type;
 
-    uint mt;
+    vcl::uint mt;
 
     std::shared_ptr<ConvertActions> convertActions;
     std::shared_ptr<FilterActions>  filterActions;
@@ -63,9 +63,9 @@ void Manager::add(const std::shared_ptr<Action>& action)
     }
 }
 
-void vcl::proc::detail::Manager::addDefaultActions()
+void Manager::addDefaultActions()
 {
     add(actionInstances());
 }
 
-} // namespace vcl::proc
+} // namespace hlmp::detail

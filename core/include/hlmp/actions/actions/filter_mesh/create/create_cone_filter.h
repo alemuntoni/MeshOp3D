@@ -27,9 +27,9 @@
 
 #include <vclib/algorithms/mesh.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept MeshType>
+template<vcl::MeshConcept MeshType>
 class CreateConeFilter : public FilterActionT<MeshType>
 {
     using Base = FilterActionT<MeshType>;
@@ -39,7 +39,7 @@ public:
 
     std::string description() const final { return "Creates a cone mesh."; }
 
-    vcl::BitSet<uint> categories() const override
+    vcl::BitSet<vcl::uint> categories() const override
     {
         return {Base::Category::CREATE};
     }
@@ -67,7 +67,7 @@ public:
         const std::vector<MeshType*>&,
         std::vector<MeshType>& outputMeshes,
         const ParameterVector& parameters,
-        AbstractLogger&        log = Base::logger()) const final
+        vcl::AbstractLogger&   log = Base::logger()) const final
     {
         auto bottomRadius = parameters.get("bottom_radius")->scalarValue();
         auto topRadius    = parameters.get("top_radius")->scalarValue();
@@ -87,6 +87,6 @@ public:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_CREATE_CREATE_CONE_FILTER_H

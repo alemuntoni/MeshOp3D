@@ -28,7 +28,7 @@
 #include "image_io_manager.h"
 #include "mesh_io_manager.h"
 
-namespace vcl::proc::detail {
+namespace hlmp::detail {
 
 class Manager :
         public ConvertManager,
@@ -53,6 +53,6 @@ public:
     void addDefaultActions();
 };
 
-} // namespace vcl::proc::detail
+} // namespace hlmp::detail
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_MANAGER_H

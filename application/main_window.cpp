@@ -48,10 +48,7 @@ MainWindow::MainWindow(QWidget* parent) :
     populateFilterMenu();
 
     connect(
-        mUI->actionOpenMesh,
-        &QAction::triggered,
-        this,
-        &MainWindow::openMesh);
+        mUI->actionOpenMesh, &QAction::triggered, this, &MainWindow::openMesh);
 
     connect(
         mUI->actionSaveMeshAs,
@@ -88,7 +85,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::openMesh()
 {
-    std::vector<FileFormat> formats = proc::ActionManager::loadMeshFormats();
+    std::vector<FileFormat> formats = ActionManager::loadMeshFormats();
     QString                 filter  = qt::filterFormatsToQString(formats, true);
 
     QString f = QFileDialog::getOpenFileName(
@@ -99,7 +96,7 @@ void MainWindow::openMesh()
         std::string pfn      = FileInfo::fileNameWithExtension(filename);
         FileFormat  format   = FileInfo::extension(filename);
 
-        auto params = proc::ActionManager::loadMeshParameters(format);
+        auto params = ActionManager::loadMeshParameters(format);
 
         if (!params.empty()) {
             ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
@@ -114,7 +111,7 @@ void MainWindow::openMesh()
         }
 
         logger().startTimer();
-        auto [m, id] = proc::loadMeshBestFit(filename, params, logger());
+        auto [m, id] = loadMeshBestFit(filename, params, logger());
         logger().stopTimer();
         logger().log(
             qt::TextEditLogger::MESSAGE_LOG,
@@ -122,11 +119,11 @@ void MainWindow::openMesh()
                 " seconds.");
 
         switch (id) {
-        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
+        case MeshTypeId::TRIANGLE_MESH:
             mMeshVector->pushBack(makeMeshDrawable(
                 std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
             break;
-        case vcl::proc::MeshTypeId::POLYGON_MESH:
+        case MeshTypeId::POLYGON_MESH:
             mMeshVector->pushBack(makeMeshDrawable(
                 std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
             break;
@@ -148,23 +145,18 @@ void MainWindow::saveMeshAs()
 
     auto obj = mMeshVector->at(i);
 
-    vcl::proc::MeshTypeId type = meshId(obj);
+    MeshTypeId type = meshId(obj);
 
-    if (type == vcl::proc::MeshTypeId::COUNT) {
+    if (type == MeshTypeId::COUNT) {
         return;
     }
 
-    std::vector<FileFormat> formats =
-        proc::ActionManager::saveMeshFormats(type);
-    QString filter = qt::filterFormatsToQString(formats);
+    std::vector<FileFormat> formats = ActionManager::saveMeshFormats(type);
+    QString                 filter  = qt::filterFormatsToQString(formats);
 
     QString fs;
     QString f = QFileDialog::getSaveFileName(
-        nullptr,
-        QObject::tr("Save Mesh"),
-        QDir::currentPath(),
-        filter,
-        &fs);
+        nullptr, QObject::tr("Save Mesh"), QDir::currentPath(), filter, &fs);
 
     if (!f.isEmpty()) {
         std::string filename = f.toStdString();
@@ -176,8 +168,8 @@ void MainWindow::saveMeshAs()
             filename += "." + f.extensions().front();
         }
 
-        auto                  actions = proc::ActionManager::saveMeshActions(f);
-        proc::ParameterVector params  = actions->parametersSave(f);
+        auto            actions = ActionManager::saveMeshActions(f);
+        ParameterVector params  = actions->parametersSave(f);
 
         if (!params.empty()) {
             ParameterDialog* dialog = new ParameterDialog(params, "Save Mesh");
@@ -193,13 +185,13 @@ void MainWindow::saveMeshAs()
 
         logger().startTimer();
         switch (type) {
-        case vcl::proc::MeshTypeId::TRIANGLE_MESH: {
+        case MeshTypeId::TRIANGLE_MESH: {
             auto m =
                 std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(
                     obj);
             actions->save<vcl::TriEdgeMesh>(filename, *m, params, logger());
         } break;
-        case vcl::proc::MeshTypeId::POLYGON_MESH: {
+        case MeshTypeId::POLYGON_MESH: {
             auto m =
                 std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(
                     obj);
@@ -220,7 +212,7 @@ void MainWindow::openFilterDialog(bool)
 
     std::string actionId =
         sender->property("action_id").toString().toStdString();
-    auto filter = proc::ActionManager::filterActions(actionId);
+    auto filter = ActionManager::filterActions(actionId);
     assert(filter);
     if (filter) {
         openFilterDialog(filter);
@@ -228,59 +220,55 @@ void MainWindow::openFilterDialog(bool)
 }
 
 void MainWindow::applyFilter(
-    const std::shared_ptr<proc::FilterActions>& action,
-    const proc::ParameterVector&                params)
+    const std::shared_ptr<FilterActions>& action,
+    const ParameterVector&                params)
 {
-    proc::MeshTypeId filterMeshType = getFilterMeshType(
-        action,
-        params,
-        mUI->meshViewer->selectedDrawableObject());
+    MeshTypeId filterMeshType = getFilterMeshType(
+        action, params, mUI->meshViewer->selectedDrawableObject());
 
-    switch(filterMeshType) {
-        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
-            executeFilter<vcl::TriEdgeMesh>(action, params);
-            break;
-        case vcl::proc::MeshTypeId::POLYGON_MESH:
-            executeFilter<vcl::PolyEdgeMesh>(action, params);
-            break;
-        default:
-            break;
+    switch (filterMeshType) {
+    case MeshTypeId::TRIANGLE_MESH:
+        executeFilter<vcl::TriEdgeMesh>(action, params);
+        break;
+    case MeshTypeId::POLYGON_MESH:
+        executeFilter<vcl::PolyEdgeMesh>(action, params);
+        break;
+    default: break;
     }
 }
 
 void MainWindow::convertCurrentMesh(bool)
 {
-    using enum vcl::proc::MeshTypeId;
+    using enum MeshTypeId;
 
     QAction* sender = qobject_cast<QAction*>(QObject::sender());
 
     std::string actionId =
         sender->property("action_id").toString().toStdString();
 
-    auto convert = proc::ActionManager::convertActions(actionId);
+    auto convert = ActionManager::convertActions(actionId);
     assert(convert);
     if (convert) {
         auto i = mUI->meshViewer->selectedDrawableObject();
         if (i != UINT_NULL) {
-            auto obj = mMeshVector->at(i);
+            auto obj  = mMeshVector->at(i);
             auto type = meshId(obj);
 
             if (type != COUNT) {
-                switch(type) {
-                    case TRIANGLE_MESH:
-                        convertAndAddMesh<vcl::TriEdgeMesh>(
-                            convert,
-                            *std::dynamic_pointer_cast<
-                                vcl::DrawableMesh<vcl::TriEdgeMesh>>(obj));
-                        break;
-                    case POLYGON_MESH:
-                        convertAndAddMesh<vcl::PolyEdgeMesh>(
-                            convert,
-                            *std::dynamic_pointer_cast<
-                                vcl::DrawableMesh<vcl::PolyEdgeMesh>>(obj));
-                        break;
-                    default:
-                        break;
+                switch (type) {
+                case TRIANGLE_MESH:
+                    convertAndAddMesh<vcl::TriEdgeMesh>(
+                        convert,
+                        *std::dynamic_pointer_cast<
+                            vcl::DrawableMesh<vcl::TriEdgeMesh>>(obj));
+                    break;
+                case POLYGON_MESH:
+                    convertAndAddMesh<vcl::PolyEdgeMesh>(
+                        convert,
+                        *std::dynamic_pointer_cast<
+                            vcl::DrawableMesh<vcl::PolyEdgeMesh>>(obj));
+                    break;
+                default: break;
                 }
             }
         }
@@ -294,9 +282,9 @@ qt::TextEditLogger& MainWindow::logger()
 
 void MainWindow::populateFilterMenu()
 {
-    using enum proc::FilterAction::Category;
+    using enum FilterAction::Category;
 
-    auto filters = proc::ActionManager::filterActions();
+    auto filters = ActionManager::filterActions();
 
     std::array<QMenu*, vcl::toUnderlying(COUNT)> menus;
     menus[toUnderlying(CREATE)] = new QMenu("Create", mUI->menuFilter);
@@ -310,7 +298,7 @@ void MainWindow::populateFilterMenu()
         mUI->menuFilter->addMenu(menus[i]);
     }
 
-    for (const std::shared_ptr<proc::FilterActions>& f : filters) {
+    for (const std::shared_ptr<FilterActions>& f : filters) {
         QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(f->name())));
@@ -328,9 +316,9 @@ void MainWindow::populateFilterMenu()
             SLOT(openFilterDialog(bool)));
     }
 
-    auto convert = proc::ActionManager::convertActions();
+    auto convert = ActionManager::convertActions();
 
-    for (const std::shared_ptr<proc::ConvertActions>& c : convert) {
+    for (const std::shared_ptr<ConvertActions>& c : convert) {
         QAction* action = new QAction(c->name().c_str(), mUI->menuConvert);
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(c->name())));
@@ -344,8 +332,7 @@ void MainWindow::populateFilterMenu()
     }
 }
 
-void MainWindow::openFilterDialog(
-    const std::shared_ptr<proc::FilterActions>& action)
+void MainWindow::openFilterDialog(const std::shared_ptr<FilterActions>& action)
 {
     qt::FilterDockWidget* dock = new qt::FilterDockWidget(action, this);
 
@@ -358,10 +345,10 @@ void MainWindow::openFilterDialog(
     dock->show();
 }
 
-proc::MeshTypeId MainWindow::getFilterMeshType(
-    const std::shared_ptr<proc::FilterActions>& action,
-    const proc::ParameterVector&                params,
-    uint                                        selectedMesh)
+MeshTypeId MainWindow::getFilterMeshType(
+    const std::shared_ptr<FilterActions>& action,
+    const ParameterVector&                params,
+    uint                                  selectedMesh)
 {
     uint niMeshes  = action->inputMeshes().size();
     uint nioMeshes = action->inputOutputMeshes().size();
@@ -370,7 +357,7 @@ proc::MeshTypeId MainWindow::getFilterMeshType(
         // no input meshes, the type of the mesh is given by the user trough
         // the parameters
         uint t = params.get("output_mesh_type")->uintValue();
-        return static_cast<proc::MeshTypeId>(t);
+        return static_cast<MeshTypeId>(t);
     }
     else if (niMeshes + nioMeshes == 1) {
         assert(selectedMesh != UINT_NULL);
@@ -380,7 +367,7 @@ proc::MeshTypeId MainWindow::getFilterMeshType(
     }
     else {
         // TODO: implement
-        return proc::MeshTypeId::COUNT;
+        return MeshTypeId::COUNT;
     }
 }
 

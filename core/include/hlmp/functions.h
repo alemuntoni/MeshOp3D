@@ -27,10 +27,10 @@
 
 #include <any>
 
-namespace vcl::proc {
+namespace hlmp {
 
 template<template<typename> typename Action, typename MeshType>
-auto actionDownCast(const std::shared_ptr<vcl::proc::Action>& action)
+auto actionDownCast(const std::shared_ptr<hlmp::Action>& action)
 {
     return std::dynamic_pointer_cast<Action<MeshType>>(action);
 }
@@ -41,13 +41,14 @@ std::pair<std::any, MeshTypeId> loadMeshBestFit(
     auto&                  logger)
 {
     std::any    res;
-    std::string ext = FileInfo::extension(filename);
+    std::string ext = vcl::FileInfo::extension(filename);
 
-    PolyEdgeMesh mesh = ActionManager::loadMeshActions(ext)->load<PolyEdgeMesh>(
-        filename, parameters, logger);
+    vcl::PolyEdgeMesh mesh =
+        ActionManager::loadMeshActions(ext)->load<vcl::PolyEdgeMesh>(
+            filename, parameters, logger);
 
     if (isTriangleMesh(mesh)) {
-        TriEdgeMesh m;
+        vcl::TriEdgeMesh m;
         m.importFrom(mesh);
         res = std::move(m);
         return {res, MeshTypeId::TRIANGLE_MESH};
@@ -58,6 +59,6 @@ std::pair<std::any, MeshTypeId> loadMeshBestFit(
     }
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_FUNCTIONS_H

@@ -39,19 +39,19 @@ class FilterDockWidget : public QDockWidget
 
     Ui::FilterDockWidget* mUI;
 
-    const std::shared_ptr<proc::FilterActions> mAction;
+    const std::shared_ptr<hlmp::FilterActions> mAction;
 
 public:
     explicit FilterDockWidget(
-        const std::shared_ptr<proc::FilterActions>& action,
+        const std::shared_ptr<hlmp::FilterActions>& action,
         QWidget*                                    parent = nullptr);
 
     ~FilterDockWidget();
 
 signals:
     void applyFilter(
-        const std::shared_ptr<proc::FilterActions>& action,
-        const proc::ParameterVector&                parmas);
+        const std::shared_ptr<hlmp::FilterActions>& action,
+        const hlmp::ParameterVector&                parmas);
 
 private slots:
     void onApplyButtonClicked();
@@ -60,8 +60,8 @@ private slots:
 
 private:
     void addOutputMeshTypeParameter(
-        proc::ParameterVector&                      vec,
-        const std::shared_ptr<proc::FilterActions>& action);
+        hlmp::ParameterVector&                      vec,
+        const std::shared_ptr<hlmp::FilterActions>& action);
 };
 
 } // namespace vcl::qt

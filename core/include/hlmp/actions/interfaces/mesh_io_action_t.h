@@ -29,9 +29,9 @@
 #include <vclib/algorithms/mesh/update.h>
 #include <vclib/io/file_info.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept Mesh>
+template<vcl::MeshConcept Mesh>
 class MeshIOActionT : public MeshIOAction
 {
 public:
@@ -51,15 +51,15 @@ public:
 
     // From MeshIOAction class
 
-    virtual std::vector<std::pair<FileFormat, MeshInfo>> supportedMeshFormats()
-        const = 0;
+    virtual std::vector<std::pair<vcl::FileFormat, vcl::MeshInfo>>
+    supportedMeshFormats() const = 0;
 
-    virtual ParameterVector parametersLoad(const FileFormat& format) const
+    virtual ParameterVector parametersLoad(const vcl::FileFormat& format) const
     {
         return ParameterVector();
     }
 
-    virtual ParameterVector parametersSave(const FileFormat& format) const
+    virtual ParameterVector parametersSave(const vcl::FileFormat& format) const
     {
         return ParameterVector();
     }
@@ -80,10 +80,10 @@ public:
      */
     virtual MeshType load(
         const std::string&     filename,
-        const FileFormat&      format,
+        const vcl::FileFormat& format,
         const ParameterVector& parameters,
         vcl::MeshInfo&         loadedInfo,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
         if (ioSupport() == IOSupport::SAVE) {
             throw std::runtime_error(
@@ -112,11 +112,11 @@ public:
      */
     virtual void save(
         const std::string&     filename,
-        const FileFormat&      format,
+        const vcl::FileFormat& format,
         const MeshType&        mesh,
-        const MeshInfo&        info,
+        const vcl::MeshInfo&   info,
         const ParameterVector& parameters,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
         if (ioSupport() == IOSupport::LOAD) {
             throw std::runtime_error(
@@ -134,9 +134,9 @@ public:
     MeshTypeId meshType() const final { return meshTypeId<MeshType>(); }
 
 protected:
-    void postLoad(MeshType& mesh, const MeshInfo& loadedInfo) const
+    void postLoad(MeshType& mesh, const vcl::MeshInfo& loadedInfo) const
     {
-        if constexpr (HasFaces<MeshType>) {
+        if constexpr (vcl::HasFaces<MeshType>) {
             if (!loadedInfo.hasPerFaceNormal()) {
                 vcl::updatePerFaceNormals(mesh);
             }
@@ -148,6 +148,6 @@ protected:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_MESH_IO_ACTION_T_H

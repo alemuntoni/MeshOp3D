@@ -28,7 +28,7 @@
 namespace vcl::qt {
 
 FilterDockWidget::FilterDockWidget(
-    const std::shared_ptr<proc::FilterActions>& action,
+    const std::shared_ptr<hlmp::FilterActions>& action,
     QWidget*                                    parent) :
         QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
@@ -83,10 +83,10 @@ void FilterDockWidget::onCancelButtonClicked()
 }
 
 void FilterDockWidget::addOutputMeshTypeParameter(
-    proc::ParameterVector&                      params,
-    const std::shared_ptr<proc::FilterActions>& action)
+    hlmp::ParameterVector&                      params,
+    const std::shared_ptr<hlmp::FilterActions>& action)
 {
-    auto arr = proc::meshTypeNames();
+    auto arr = hlmp::meshTypeNames();
 
     std::vector<std::string> enumValues(arr.begin(), arr.end());
 
@@ -97,7 +97,7 @@ void FilterDockWidget::addOutputMeshTypeParameter(
             break;
         }
     }
-    proc::EnumParameter param(
+    hlmp::EnumParameter param(
         "output_mesh_type",
         i,
         enumValues,

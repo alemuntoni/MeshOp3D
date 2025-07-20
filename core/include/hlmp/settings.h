@@ -26,7 +26,7 @@
 #include <vclib/algorithms/mesh/type_name.h>
 #include <vclib/meshes.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 /**
  * @brief Scalar type used in the processing module.
@@ -48,18 +48,18 @@ enum class MeshTypeId : vcl::uint {
 /**
  * @brief List of supported mesh types supported by the processing module.
  */
-using MeshTypes = TypeWrapper<
+using MeshTypes = vcl::TypeWrapper<
     vcl::TriEdgeMeshT<ScalarType, INDEXED_MESHES>,
     vcl::PolyEdgeMeshT<ScalarType, INDEXED_MESHES>>;
 
 template<MeshTypeId MESH_ID>
-using GetMeshType = TypeAt<toUnderlying(MESH_ID), MeshTypes>::type;
+using GetMeshType = vcl::TypeAt<vcl::toUnderlying(MESH_ID), MeshTypes>::type;
 
 template<typename MeshType>
 constexpr MeshTypeId meshTypeId()
 {
-    constexpr uint id = IndexInTypes<MeshType, MeshTypes>::value;
-    if constexpr (id == UINT_NULL) {
+    constexpr uint id = vcl::IndexInTypes<MeshType, MeshTypes>::value;
+    if constexpr (id == vcl::UINT_NULL) {
         return MeshTypeId::COUNT;
     }
     return static_cast<MeshTypeId>(id);
@@ -68,23 +68,23 @@ constexpr MeshTypeId meshTypeId()
 template<typename MeshType>
 constexpr void checkMeshTypeId()
 {
-    constexpr uint id = toUnderlying(meshTypeId<MeshType>());
-    static_assert(id != UINT_NULL, "Mesh type not supported.");
+    constexpr uint id = vcl::toUnderlying(meshTypeId<MeshType>());
+    static_assert(id != vcl::UINT_NULL, "Mesh type not supported.");
     static_assert(
-        id >= 0 && id < toUnderlying(MeshTypeId::COUNT),
+        id >= 0 && id < vcl::toUnderlying(MeshTypeId::COUNT),
         "Invalid mesh type id.");
 }
 
-constexpr std::array<std::string, toUnderlying(MeshTypeId::COUNT)>
+constexpr std::array<std::string, vcl::toUnderlying(MeshTypeId::COUNT)>
 meshTypeNames()
 {
-    std::array<std::string, toUnderlying(MeshTypeId::COUNT)> array = {
+    std::array<std::string, vcl::toUnderlying(MeshTypeId::COUNT)> array = {
         vcl::meshTypeName<GetMeshType<MeshTypeId::TRIANGLE_MESH>>(),
         vcl::meshTypeName<GetMeshType<MeshTypeId::POLYGON_MESH>>()};
 
     return array;
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_SETTINGS_H

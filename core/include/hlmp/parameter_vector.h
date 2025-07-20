@@ -27,9 +27,9 @@
 
 #include <vclib/space/core/vector/polymorphic_object_vector.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-class ParameterVector : public PolymorphicObjectVector<Parameter>
+class ParameterVector : public vcl::PolymorphicObjectVector<Parameter>
 {
 public:
     std::shared_ptr<const Parameter> get(const std::string& name) const
@@ -57,6 +57,6 @@ public:
 
 using OutputValues = ParameterVector;
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_PARAMETER_VECTOR_H

@@ -29,12 +29,12 @@
 
 #include <map>
 
-namespace vcl::proc {
+namespace hlmp {
 
 template<typename ActionType>
 class IOActionContainer
 {
-    using FormatMap = std::map<FileFormat, std::shared_ptr<ActionType>>;
+    using FormatMap = std::map<vcl::FileFormat, std::shared_ptr<ActionType>>;
 
     FormatMap mLoadFormatMap;
     FormatMap mSaveFormatMap;
@@ -47,7 +47,7 @@ public:
         if (!action) {
             throw std::runtime_error("Action is nullptr.");
         }
-        std::vector<FileFormat> formats = action->supportedFormats();
+        std::vector<vcl::FileFormat> formats = action->supportedFormats();
 
         for (const auto& format : formats) {
             checkFormatDoesNotExist(format);
@@ -61,59 +61,59 @@ public:
         }
     }
 
-    bool loadFormatExists(const FileFormat& format) const
+    bool loadFormatExists(const vcl::FileFormat& format) const
     {
         return mLoadFormatMap.find(format) != mLoadFormatMap.end();
     }
 
-    std::shared_ptr<ActionType> loadAction(const FileFormat& format) const
+    std::shared_ptr<ActionType> loadAction(const vcl::FileFormat& format) const
     {
         auto it = findLoadFormatExists(format);
         return it->second;
     }
 
-    std::vector<FileFormat> loadFormats() const
+    std::vector<vcl::FileFormat> loadFormats() const
     {
-        std::vector<FileFormat> formats;
+        std::vector<vcl::FileFormat> formats;
         for (const auto& [format, _] : mLoadFormatMap) {
             formats.push_back(format);
         }
         return formats;
     }
 
-    bool saveFormatExists(const FileFormat& format) const
+    bool saveFormatExists(const vcl::FileFormat& format) const
     {
         return mSaveFormatMap.find(format) != mSaveFormatMap.end();
     }
 
-    std::shared_ptr<ActionType> saveAction(const FileFormat& format) const
+    std::shared_ptr<ActionType> saveAction(const vcl::FileFormat& format) const
     {
         auto it = findSaveFormatExists(format);
         return it->second;
     }
 
-    std::vector<FileFormat> saveFormats() const
+    std::vector<vcl::FileFormat> saveFormats() const
     {
-        std::vector<FileFormat> formats;
+        std::vector<vcl::FileFormat> formats;
         for (const auto& [format, _] : mSaveFormatMap) {
             formats.push_back(format);
         }
         return formats;
     }
 
-    std::vector<FileFormat> saveFormats(MeshTypeId m) const
+    std::vector<vcl::FileFormat> saveFormats(MeshTypeId m) const
     {
         // available only if ActionType is MeshIOActions
-        std::vector<FileFormat> formats;
+        std::vector<vcl::FileFormat> formats;
         for (const auto& [format, action] : mSaveFormatMap) {
-            if (action->supportedMeshTypes()[toUnderlying(m)])
+            if (action->supportedMeshTypes()[vcl::toUnderlying(m)])
                 formats.push_back(format);
         }
         return formats;
     }
 
 private:
-    void checkFormatDoesNotExist(const FileFormat& format) const
+    void checkFormatDoesNotExist(const vcl::FileFormat& format) const
     {
         if (mLoadFormatMap.find(format) != mLoadFormatMap.end()) {
             throw std::runtime_error("Format already registered for loading.");
@@ -124,7 +124,7 @@ private:
     }
 
     FormatMap::const_iterator findLoadFormatExists(
-        const FileFormat& format) const
+        const vcl::FileFormat& format) const
     {
         auto it = mLoadFormatMap.find(format);
         if (it == mLoadFormatMap.end()) {
@@ -134,7 +134,7 @@ private:
     }
 
     FormatMap::const_iterator findSaveFormatExists(
-        const FileFormat& format) const
+        const vcl::FileFormat& format) const
     {
         auto it = mSaveFormatMap.find(format);
         if (it == mSaveFormatMap.end()) {
@@ -144,6 +144,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_IO_ACTION_CONTAINER_H

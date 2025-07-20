@@ -49,13 +49,13 @@ public:
 
     uint addSubFrame(
         const std::string&           name,
-        const proc::ParameterVector& parameters);
+        const hlmp::ParameterVector& parameters);
 
     void setSubFrameName(uint i, const std::string& name);
 
-    void setSubFramePatameters(uint i, const proc::ParameterVector& parameters);
+    void setSubFramePatameters(uint i, const hlmp::ParameterVector& parameters);
 
-    proc::ParameterVector parameters(uint i) const;
+    hlmp::ParameterVector parameters(uint i) const;
 
     uint subFramesNumber() const { return mParamGrids.size(); }
 

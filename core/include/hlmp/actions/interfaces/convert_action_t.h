@@ -27,9 +27,9 @@
 
 #include <vclib/concepts/mesh.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept Mesh>
+template<vcl::MeshConcept Mesh>
 class ConvertActionT : public ConvertAction
 {
 public:
@@ -56,7 +56,7 @@ public:
      */
     virtual std::pair<MeshTypeId, std::any> convert(
         const MeshType& inputMesh,
-        AbstractLogger& log = logger()) const = 0;
+        vcl::AbstractLogger& log = logger()) const = 0;
 
     /* ************************************ *
      * Member functions already implemented *
@@ -65,6 +65,6 @@ public:
     MeshTypeId meshType() const final { return meshTypeId<MeshType>(); }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_CONVERT_ACTION_T_H

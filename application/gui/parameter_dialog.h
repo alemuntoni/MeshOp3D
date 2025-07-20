@@ -11,11 +11,11 @@ public:
     ParameterDialog(QWidget* parent = nullptr);
 
     ParameterDialog(
-        const vcl::proc::ParameterVector& vec,
+        const hlmp::ParameterVector& vec,
         const std::string&                title  = "",
         QWidget*                          parent = nullptr);
 
-    vcl::proc::ParameterVector parameters();
+    hlmp::ParameterVector parameters();
 };
 
 #endif // PARAMETER_DIALOG_H

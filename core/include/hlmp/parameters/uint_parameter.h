@@ -25,14 +25,14 @@
 
 #include "parameter.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
 class UintParameter : public Parameter
 {
 public:
     UintParameter(
         const std::string& name,
-        uint               value,
+        vcl::uint          value,
         const std::string& description = "",
         const std::string& tooltip     = "",
         const std::string& category    = "") :
@@ -48,6 +48,6 @@ public:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_PARAMETERS_UINT_PARAMETER_H

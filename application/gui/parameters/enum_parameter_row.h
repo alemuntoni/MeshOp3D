@@ -31,17 +31,17 @@ namespace vcl::qt {
 
 class EnumParameterRow : public ParameterRow
 {
-    proc::EnumParameter mParam;
+    hlmp::EnumParameter mParam;
 
     QComboBox* mComboBox = nullptr;
 
 public:
-    EnumParameterRow(const proc::EnumParameter& param);
+    EnumParameterRow(const hlmp::EnumParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<proc::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
 };
 
 } // namespace vcl::qt

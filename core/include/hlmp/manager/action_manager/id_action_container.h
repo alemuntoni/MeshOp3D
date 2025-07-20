@@ -27,7 +27,7 @@
 
 #include <map>
 
-namespace vcl::proc {
+namespace hlmp {
 
 template<typename ActionType>
 class IDActionContainer
@@ -80,6 +80,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_ID_ACTION_CONTAINER_H

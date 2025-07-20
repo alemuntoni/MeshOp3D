@@ -32,11 +32,11 @@
 #include <algorithm>
 #include <memory>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class Action
 {
-    inline static ConsoleLogger log;
+    inline static vcl::ConsoleLogger log;
 
 public:
     enum class Type {
@@ -90,7 +90,7 @@ public:
     std::string identifier() const { return identifierFromName(name()); }
 
 protected:
-    static ConsoleLogger& logger() { return log; }
+    static vcl::ConsoleLogger& logger() { return log; }
 
     static std::string identifierFromName(const std::string& name)
     {
@@ -103,6 +103,6 @@ protected:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_ACTION_H

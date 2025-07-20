@@ -29,9 +29,9 @@
 #include <vclib/algorithms/mesh.h>
 #include <vclib/io.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept MeshType>
+template<vcl::MeshConcept MeshType>
 class BaseMeshIO : public MeshIOActionT<MeshType>
 {
     using Base = MeshIOActionT<MeshType>;
@@ -45,18 +45,18 @@ public:
 
     Base::IOSupport ioSupport() const final { return Base::IOSupport::BOTH; }
 
-    std::vector<std::pair<FileFormat, MeshInfo>> supportedMeshFormats()
+    std::vector<std::pair<vcl::FileFormat, vcl::MeshInfo>> supportedMeshFormats()
         const final
     {
         return {
-            {objFileFormat(), objFormatCapability()},
-            {offFileFormat(), offFormatCapability()},
-            {plyFileFormat(), plyFormatCapability()},
-            {stlFileFormat(), stlFormatCapability()},
+            {vcl::objFileFormat(), vcl::objFormatCapability()},
+            {vcl::offFileFormat(), vcl::offFormatCapability()},
+            {vcl::plyFileFormat(), vcl::plyFormatCapability()},
+            {vcl::stlFileFormat(), vcl::stlFormatCapability()},
         };
     }
 
-    ParameterVector parametersLoad(const FileFormat& format) const final
+    ParameterVector parametersLoad(const vcl::FileFormat& format) const final
     {
         ParameterVector params;
 
@@ -72,13 +72,13 @@ public:
                 "vertices will be logged."));
         }
         else if (format != "obj" && format != "off" && format != "ply") {
-            throw UnknownFileFormatException(format.description());
+            throw vcl::UnknownFileFormatException(format.description());
         }
 
         return params;
     }
 
-    ParameterVector parametersSave(const FileFormat& format) const final
+    ParameterVector parametersSave(const vcl::FileFormat& format) const final
     {
         ParameterVector params;
 
@@ -112,7 +112,7 @@ public:
             }
         }
         else if (format != "off") {
-            throw UnknownFileFormatException(format.description());
+            throw vcl::UnknownFileFormatException(format.description());
         }
 
         return params;
@@ -120,29 +120,29 @@ public:
 
     MeshType load(
         const std::string&     filename,
-        const FileFormat&      format,
+        const vcl::FileFormat& format,
         const ParameterVector& parameters,
         vcl::MeshInfo&         loadedInfo,
-        AbstractLogger&        log = Base::logger()) const final
+        vcl::AbstractLogger&   log = Base::logger()) const final
     {
         MeshType     mesh;
-        LoadSettings settings;
+        vcl::LoadSettings settings;
 
-        std::string basePath = FileInfo::pathWithoutFileName(filename);
+        std::string basePath = vcl::FileInfo::pathWithoutFileName(filename);
 
         if (format == "obj") {
-            loadObj(mesh, filename, loadedInfo, settings, log);
+            vcl::loadObj(mesh, filename, loadedInfo, settings, log);
             loadTexturesUsingManager(mesh, basePath);
         }
         else if (format == "off") {
-            loadOff(mesh, filename, loadedInfo, settings, log);
+            vcl::loadOff(mesh, filename, loadedInfo, settings, log);
         }
         else if (format == "ply") {
-            loadPly(mesh, filename, loadedInfo, settings, log);
+            vcl::loadPly(mesh, filename, loadedInfo, settings, log);
             loadTexturesUsingManager(mesh, basePath);
         }
         else if (format == "stl") {
-            loadStl(mesh, filename, loadedInfo, settings, log);
+            vcl::loadStl(mesh, filename, loadedInfo, settings, log);
 
             if (parameters.get("unify_duplicate_vertices")->boolValue()) {
                 vcl::removeDuplicatedVertices(mesh);
@@ -151,7 +151,7 @@ public:
             }
         }
         else {
-            throw UnknownFileFormatException(format.description());
+            throw vcl::UnknownFileFormatException(format.description());
         }
 
         // update necessary data (e.g. normals) only if not loaded
@@ -162,15 +162,15 @@ public:
 
     void save(
         const std::string&     filename,
-        const FileFormat&      format,
+        const vcl::FileFormat& format,
         const MeshType&        mesh,
-        const MeshInfo&        info,
+        const vcl::MeshInfo&   info,
         const ParameterVector& parameters,
-        AbstractLogger&        log = Base::logger()) const final
+        vcl::AbstractLogger&   log = Base::logger()) const final
     {
-        std::string basePath = FileInfo::pathWithoutFileName(filename);
+        std::string basePath = vcl::FileInfo::pathWithoutFileName(filename);
 
-        SaveSettings settings;
+        vcl::SaveSettings settings;
         settings.info = info;
         if (format == "obj" || format == "ply" || format == "stl") {
             if (format != "obj") { // ply and stl
@@ -197,7 +197,7 @@ public:
         }
         else if (format == "stl") {
             if (!isTriangleMesh(mesh)) {
-                throw MissingTriangularRequirementException(
+                throw vcl::MissingTriangularRequirementException(
                     "STL format can save only triangular meshes, but the given "
                     "mesh is a polygonal mesh. You should triangulate it "
                     "before saving it.");
@@ -205,11 +205,11 @@ public:
             saveStl(mesh, filename, settings, log);
         }
         else {
-            throw UnknownFileFormatException(format.description());
+            throw vcl::UnknownFileFormatException(format.description());
         }
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_ACTIONS_MESH_IO_BASE_MESH_IO_H

@@ -25,7 +25,7 @@
 
 #include "parameter.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
 class BoolParameter : public Parameter
 {
@@ -48,6 +48,6 @@ public:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_PARAMETERS_BOOL_PARAMETER_H

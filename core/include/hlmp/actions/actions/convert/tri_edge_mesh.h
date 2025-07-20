@@ -25,10 +25,9 @@
 
 #include <hlmp/actions/interfaces/convert_action_t.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept MeshType>
-
+template<vcl::MeshConcept MeshType>
 class TriEdgeMeshConvert : public ConvertActionT<MeshType>
 {
     using Base = ConvertActionT<MeshType>;
@@ -36,8 +35,8 @@ class TriEdgeMeshConvert : public ConvertActionT<MeshType>
     std::string name() const final { return "Convert to TriEdgeMesh"; }
 
     std::pair<MeshTypeId, std::any> convert(
-        const MeshType& inputMesh,
-        AbstractLogger& log) const final
+        const MeshType&      inputMesh,
+        vcl::AbstractLogger& log) const final
     {
         using TriEdgeMeshType = GetMeshType<MeshTypeId::TRIANGLE_MESH>;
 
@@ -48,6 +47,6 @@ class TriEdgeMeshConvert : public ConvertActionT<MeshType>
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_ACTIONS_CONVERT_TRI_EDGE_MESH_H

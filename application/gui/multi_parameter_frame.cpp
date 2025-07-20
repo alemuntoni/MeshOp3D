@@ -50,7 +50,7 @@ MultiParameterFrame::~MultiParameterFrame()
 
 uint MultiParameterFrame::addSubFrame(
     const std::string&           name,
-    const proc::ParameterVector& parameters)
+    const hlmp::ParameterVector& parameters)
 {
     ParametersGridLayout* layout = new ParametersGridLayout(this);
     layout->setParameters(parameters);
@@ -64,14 +64,14 @@ void MultiParameterFrame::setSubFrameName(uint i, const std::string& name)
 
 void MultiParameterFrame::setSubFramePatameters(
     uint                         i,
-    const proc::ParameterVector& parameters)
+    const hlmp::ParameterVector& parameters)
 {
     ParametersGridLayout* layout = new ParametersGridLayout(this);
     layout->setParameters(parameters);
     setSubFrameLayout(i, layout);
 }
 
-proc::ParameterVector MultiParameterFrame::parameters(uint i) const
+hlmp::ParameterVector MultiParameterFrame::parameters(uint i) const
 {
     return mParamGrids.at(i)->parameters();
 }

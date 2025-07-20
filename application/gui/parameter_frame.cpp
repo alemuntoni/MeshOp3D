@@ -33,18 +33,18 @@ ParameterFrame::ParameterFrame(QWidget* parent) : MultiParameterFrame(parent)
 }
 
 ParameterFrame::ParameterFrame(
-    const proc::ParameterVector& parameters,
+    const hlmp::ParameterVector& parameters,
     QWidget*                     parent) : ParameterFrame(parent)
 {
     setParameters(parameters);
 }
 
-proc::ParameterVector ParameterFrame::parameters() const
+hlmp::ParameterVector ParameterFrame::parameters() const
 {
     return MultiParameterFrame::parameters(0);
 }
 
-void ParameterFrame::setParameters(const proc::ParameterVector& parameters)
+void ParameterFrame::setParameters(const hlmp::ParameterVector& parameters)
 {
     if (subFramesNumber() == 0) {
         addSubFrame("", parameters);

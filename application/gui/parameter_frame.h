@@ -46,12 +46,12 @@ public:
     explicit ParameterFrame(QWidget* parent = nullptr);
 
     explicit ParameterFrame(
-        const proc::ParameterVector& parameters,
+        const hlmp::ParameterVector& parameters,
         QWidget*                     parent = nullptr);
 
-    proc::ParameterVector parameters() const;
+    hlmp::ParameterVector parameters() const;
 
-    void setParameters(const proc::ParameterVector& parameters);
+    void setParameters(const hlmp::ParameterVector& parameters);
 };
 
 } // namespace vcl::qt

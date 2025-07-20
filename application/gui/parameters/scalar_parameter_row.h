@@ -31,17 +31,17 @@ namespace vcl::qt {
 
 class ScalarParameterRow : public ParameterRow
 {
-    proc::ScalarParameter mParam;
+    hlmp::ScalarParameter mParam;
 
     QLineEdit* mLineEdit = nullptr;
 
 public:
-    ScalarParameterRow(const proc::ScalarParameter& param);
+    ScalarParameterRow(const hlmp::ScalarParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<proc::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
 };
 
 } // namespace vcl::qt

@@ -28,7 +28,7 @@
 #include "action_instances/image_io.h"
 #include "action_instances/mesh_io.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
 inline std::vector<std::shared_ptr<Action>> actionInstances()
 {
@@ -53,6 +53,6 @@ inline std::vector<std::shared_ptr<Action>> actionInstances()
     return vec;
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_INSTANCES_H

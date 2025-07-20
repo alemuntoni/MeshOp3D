@@ -31,17 +31,17 @@ namespace vcl::qt {
 
 class UintParameterRow : public ParameterRow
 {
-    proc::UintParameter mParam;
+    hlmp::UintParameter mParam;
 
     QLineEdit* mLineEdit = nullptr;
 
 public:
-    UintParameterRow(const proc::UintParameter& param);
+    UintParameterRow(const hlmp::UintParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<proc::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
 };
 
 } // namespace vcl::qt

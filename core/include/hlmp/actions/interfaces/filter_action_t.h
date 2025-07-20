@@ -29,9 +29,9 @@
 #include <vclib/algorithms/mesh/update.h>
 #include <vclib/space/complex/mesh_info.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept Mesh>
+template<vcl::MeshConcept Mesh>
 class FilterActionT : public FilterAction
 {
 public:
@@ -93,7 +93,7 @@ protected:
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
         const ParameterVector&              parameters,
-        AbstractLogger&                     log = logger()) const = 0;
+        vcl::AbstractLogger&                log = logger()) const = 0;
 
 public:
     /* ************************************ *
@@ -107,7 +107,7 @@ public:
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
         const ParameterVector&              parameters,
-        AbstractLogger&                     log = logger()) const
+        vcl::AbstractLogger&                log = logger()) const
     {
         checkInputVectors(inputMeshes, inputOutputMeshes);
         auto res = executeFilter(
@@ -124,13 +124,13 @@ public:
 protected:
     void postExecute(MeshType& mesh) const
     {
-        if constexpr (HasFaces<MeshType>) {
+        if constexpr (vcl::HasFaces<MeshType>) {
             vcl::updatePerVertexAndFaceNormals(mesh);
         }
         vcl::updateBoundingBox(mesh);
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_INTERFACES_FILTER_ACTION_T_H

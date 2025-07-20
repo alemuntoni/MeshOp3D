@@ -24,7 +24,7 @@
 
 namespace vcl::qt {
 
-ParameterRow::ParameterRow(const proc::Parameter& param) :
+ParameterRow::ParameterRow(const hlmp::Parameter& param) :
         mVisible(true), mHelpVisible(false)
 {
     QString dl = param.description().c_str();

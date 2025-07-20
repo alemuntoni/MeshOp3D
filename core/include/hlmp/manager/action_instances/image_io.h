@@ -28,7 +28,7 @@
 #include <memory>
 #include <vector>
 
-namespace vcl::proc {
+namespace hlmp {
 
 inline std::vector<std::shared_ptr<Action>> imageIOActions()
 {
@@ -39,6 +39,6 @@ inline std::vector<std::shared_ptr<Action>> imageIOActions()
     return vec;
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_INSTANCES_IMAGE_IO_H

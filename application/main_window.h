@@ -65,8 +65,8 @@ public slots:
     void openFilterDialog(bool);
 
     void applyFilter(
-        const std::shared_ptr<vcl::proc::FilterActions>& action,
-        const vcl::proc::ParameterVector&                params);
+        const std::shared_ptr<FilterActions>& action,
+        const ParameterVector&                params);
 
     void convertCurrentMesh(bool);
 
@@ -76,17 +76,17 @@ private:
     void populateFilterMenu();
 
     void openFilterDialog(
-        const std::shared_ptr<vcl::proc::FilterActions>& action);
+        const std::shared_ptr<FilterActions>& action);
 
-    vcl::proc::MeshTypeId getFilterMeshType(
-        const std::shared_ptr<vcl::proc::FilterActions>& action,
-        const vcl::proc::ParameterVector&                params,
+    MeshTypeId getFilterMeshType(
+        const std::shared_ptr<FilterActions>& action,
+        const ParameterVector&                params,
         uint selectedMesh);
 
     template<vcl::MeshConcept MeshType>
     void executeFilter(
-        const std::shared_ptr<vcl::proc::FilterActions>& action,
-        const vcl::proc::ParameterVector&                params)
+        const std::shared_ptr<FilterActions>& action,
+        const ParameterVector&                params)
     {
         std::vector<const MeshType*> inputMeshes;
         std::vector<MeshType*>       inputOutputMeshes;
@@ -127,7 +127,7 @@ private:
 
     template<vcl::MeshConcept MeshType>
     void convertAndAddMesh(
-        const std::shared_ptr<vcl::proc::ConvertActions>& action,
+        const std::shared_ptr<ConvertActions>& action,
         const MeshType& mesh)
     {
         logger().startTimer();
@@ -139,11 +139,11 @@ private:
                 " seconds.");
 
         switch (id) {
-        case vcl::proc::MeshTypeId::TRIANGLE_MESH:
+        case MeshTypeId::TRIANGLE_MESH:
             mMeshVector->pushBack(makeMeshDrawable(std::move(
                 std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh)))));
             break;
-        case vcl::proc::MeshTypeId::POLYGON_MESH:
+        case MeshTypeId::POLYGON_MESH:
             mMeshVector->pushBack(makeMeshDrawable(std::move(
                 std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh)))));
             break;

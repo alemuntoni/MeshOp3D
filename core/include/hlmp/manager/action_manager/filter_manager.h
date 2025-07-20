@@ -27,7 +27,7 @@
 
 #include <hlmp/actions/aggregators/filter_actions.h>
 
-namespace vcl::proc::detail {
+namespace hlmp::detail {
 
 class FilterManager
 {
@@ -59,6 +59,6 @@ public:
     auto filterActions() { return mFilterActions.actions(); }
 };
 
-} // namespace vcl::proc::detail
+} // namespace hlmp::detail
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H

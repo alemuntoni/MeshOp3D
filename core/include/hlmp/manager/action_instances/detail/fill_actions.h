@@ -25,7 +25,7 @@
 
 #include <hlmp/actions/interfaces/action.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 /**
  * @brief @brief Given a list of actions in a TemplatedTypeWrapper, this
@@ -38,7 +38,7 @@ namespace vcl::proc {
 template<typename Aggregator, template<typename> typename... Actions>
 void fillAggregatedActions(
     std::vector<std::shared_ptr<Action>>& vec,
-    TemplatedTypeWrapper<Actions...>)
+    vcl::TemplatedTypeWrapper<Actions...>)
 {
     auto fAct = [&]<template<typename> typename Act>() {
         std::shared_ptr<Aggregator> a = std::make_shared<Aggregator>();
@@ -49,6 +49,6 @@ void fillAggregatedActions(
     (fAct.template operator()<Actions>(), ...);
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_INSTANCES_DETAIL_FILL_ACTIONS_H

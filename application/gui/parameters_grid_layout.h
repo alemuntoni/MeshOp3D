@@ -33,16 +33,16 @@ namespace vcl::qt {
 
 class ParametersGridLayout : public QGridLayout
 {
-    proc::ParameterVector mParameters;
+    hlmp::ParameterVector mParameters;
 
     std::vector<std::shared_ptr<ParameterRow>> mRows;
 
 public:
     ParametersGridLayout(QWidget* parent);
 
-    void setParameters(const proc::ParameterVector& parameters);
+    void setParameters(const hlmp::ParameterVector& parameters);
 
-    proc::ParameterVector parameters() const;
+    hlmp::ParameterVector parameters() const;
 
     void setHelpVisible(bool b);
 

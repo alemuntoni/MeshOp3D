@@ -27,9 +27,9 @@
 
 #include <vclib/algorithms/mesh/smooth.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept MeshType>
+template<vcl::MeshConcept MeshType>
 class LaplacianSmoothingFilter : public FilterActionT<MeshType>
 {
     using Base = FilterActionT<MeshType>;
@@ -47,7 +47,7 @@ public:
                "egst.20051044</a>";
     }
 
-    vcl::BitSet<uint> categories() const final
+    vcl::BitSet<vcl::uint> categories() const final
     {
         return {Base::Category::SMOOTHING};
     }
@@ -91,9 +91,9 @@ public:
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&,
         const ParameterVector& parameters,
-        AbstractLogger&        log = Base::logger()) const final
+        vcl::AbstractLogger&   log = Base::logger()) const final
     {
-        uint smoothingSteps = parameters.get("smoothing_steps")->uintValue();
+        vcl::uint smoothingSteps = parameters.get("smoothing_steps")->uintValue();
         bool cotangentWeighting =
             parameters.get("cotangent_weighting")->boolValue();
         bool onlySelected = parameters.get("only_selected")->boolValue();
@@ -107,6 +107,6 @@ public:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_APPLY_LAPLACIAN_SMOOTHING_FILTER_H

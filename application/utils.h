@@ -40,30 +40,30 @@ std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
     return m;
 }
 
-inline vcl::proc::MeshTypeId meshId(
+inline MeshTypeId meshId(
     const std::shared_ptr<vcl::DrawableObject>& obj)
 {
     auto m = std::dynamic_pointer_cast<vcl::AbstractDrawableMesh>(obj);
 
     if (!m) {
         assert(0);
-        return vcl::proc::MeshTypeId::COUNT;
+        return MeshTypeId::COUNT;
     }
 
     auto tm = std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(m);
 
     if (tm) {
-        return vcl::proc::MeshTypeId::TRIANGLE_MESH;
+        return MeshTypeId::TRIANGLE_MESH;
     }
 
     auto pm = std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(m);
 
     if (pm) {
-        return vcl::proc::MeshTypeId::POLYGON_MESH;
+        return MeshTypeId::POLYGON_MESH;
     }
 
     assert(0);
-    return vcl::proc::MeshTypeId::COUNT;
+    return MeshTypeId::COUNT;
 }
 
 } // namespace hlmp

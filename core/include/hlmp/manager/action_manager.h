@@ -25,7 +25,7 @@
 
 #include "action_manager/manager.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
 class ActionManager
 {
@@ -46,77 +46,77 @@ public:
 
     // load image
 
-    static std::vector<FileFormat> loadImageFormats()
+    static std::vector<vcl::FileFormat> loadImageFormats()
     {
         return instance().loadImageFormats();
     }
 
-    static std::shared_ptr<ImageIOAction> loadImageAction(FileFormat fmt)
+    static std::shared_ptr<ImageIOAction> loadImageAction(vcl::FileFormat fmt)
     {
         return instance().loadImageAction(fmt);
     }
 
     // save image
 
-    static std::vector<FileFormat> saveImageFormats()
+    static std::vector<vcl::FileFormat> saveImageFormats()
     {
         return instance().saveImageFormats();
     }
 
-    static std::shared_ptr<ImageIOAction> saveImageAction(FileFormat fmt)
+    static std::shared_ptr<ImageIOAction> saveImageAction(vcl::FileFormat fmt)
     {
         return instance().saveImageAction(fmt);
     }
 
     // load mesh
 
-    static std::vector<FileFormat> loadMeshFormats()
+    static std::vector<vcl::FileFormat> loadMeshFormats()
     {
         return instance().loadMeshFormats();
     }
 
-    static ParameterVector loadMeshParameters(FileFormat fmt)
+    static ParameterVector loadMeshParameters(vcl::FileFormat fmt)
     {
         return instance().loadMeshParameters(fmt);
     }
 
-    static std::shared_ptr<MeshIOActions> loadMeshActions(FileFormat fmt)
+    static std::shared_ptr<MeshIOActions> loadMeshActions(vcl::FileFormat fmt)
     {
         return instance().loadMeshActions(fmt);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     static std::shared_ptr<MeshIOActionT<MeshType>> loadMeshAction(
-        FileFormat fmt)
+        vcl::FileFormat fmt)
     {
         return instance().loadMeshAction<MeshType>(fmt);
     }
 
     // save mesh
 
-    static std::vector<FileFormat> saveMeshFormats()
+    static std::vector<vcl::FileFormat> saveMeshFormats()
     {
         return instance().saveMeshFormats();
     }
 
-    static std::vector<FileFormat> saveMeshFormats(MeshTypeId m)
+    static std::vector<vcl::FileFormat> saveMeshFormats(MeshTypeId m)
     {
         return instance().saveMeshFormats(m);
     }
 
-    static ParameterVector saveMeshParameters(FileFormat fmt)
+    static ParameterVector saveMeshParameters(vcl::FileFormat fmt)
     {
         return instance().saveMeshParameters(fmt);
     }
 
-    static std::shared_ptr<MeshIOActions> saveMeshActions(FileFormat fmt)
+    static std::shared_ptr<MeshIOActions> saveMeshActions(vcl::FileFormat fmt)
     {
         return instance().saveMeshActions(fmt);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     static std::shared_ptr<MeshIOActionT<MeshType>> saveMeshAction(
-        FileFormat fmt)
+        vcl::FileFormat fmt)
     {
         return instance().saveMeshAction<MeshType>(fmt);
     }
@@ -174,6 +174,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_ACTION_MANAGER_H

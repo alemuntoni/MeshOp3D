@@ -27,7 +27,7 @@
 
 #include <vclib/io/image.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class BaseImageIO : public ImageIOAction
 {
@@ -36,35 +36,36 @@ public:
 
     IOSupport ioSupport() const final { return IOSupport::BOTH; }
 
-    std::vector<FileFormat> supportedFormats() const final
+    std::vector<vcl::FileFormat> supportedFormats() const final
     {
-        std::vector<FileFormat> formats;
-        formats.push_back(FileFormat("png", "Portable Network Graphics"));
-        formats.push_back(FileFormat("bmp", "Bitmap"));
-        formats.push_back(FileFormat("tga", "Truevision TGA"));
-        formats.push_back(FileFormat(
+        std::vector<vcl::FileFormat> formats;
+        formats.push_back(vcl::FileFormat("png", "Portable Network Graphics"));
+        formats.push_back(vcl::FileFormat("bmp", "Bitmap"));
+        formats.push_back(vcl::FileFormat("tga", "Truevision TGA"));
+        formats.push_back(vcl::FileFormat(
             std::vector<std::string> {"jpg", "jpeg"},
             "Joint Photographic Experts Group"));
 
         return formats;
     }
 
-    Image load(const std::string& filename, AbstractLogger& log = logger())
-        const final
+    vcl::Image load(
+        const std::string&   filename,
+        vcl::AbstractLogger& log = logger()) const final
     {
-        return loadImage(filename);
+        return vcl::loadImage(filename);
     }
 
     void save(
         const std::string& filename,
-        const Image&       image,
-        AbstractLogger&    log = logger()) const final
+        const vcl::Image&       image,
+        vcl::AbstractLogger&    log = logger()) const final
     {
         assert(!image.isNull());
-        saveImage(image, filename);
+        vcl::saveImage(image, filename);
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_ACTIONS_IMAGE_IO_BASE_IMAGE_IO_H

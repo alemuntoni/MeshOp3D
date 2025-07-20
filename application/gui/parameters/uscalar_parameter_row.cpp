@@ -26,7 +26,7 @@
 
 namespace vcl::qt {
 
-UscalarParameterRow::UscalarParameterRow(const proc::UscalarParameter& param) :
+UscalarParameterRow::UscalarParameterRow(const hlmp::UscalarParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mLineEdit = new QLineEdit();
@@ -41,7 +41,7 @@ QWidget* UscalarParameterRow::parameterWidget()
     return mLineEdit;
 }
 
-std::shared_ptr<proc::Parameter> UscalarParameterRow::parameterFromWidget()
+std::shared_ptr<hlmp::Parameter> UscalarParameterRow::parameterFromWidget()
     const
 {
     auto p = mParam.clone();

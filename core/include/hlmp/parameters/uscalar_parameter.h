@@ -25,7 +25,7 @@
 
 #include "parameter.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
 class UscalarParameter : public Parameter
 {
@@ -63,6 +63,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_PARAMETERS_USCALAR_PARAMETER_H

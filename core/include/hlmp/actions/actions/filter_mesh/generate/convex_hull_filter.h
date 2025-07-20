@@ -27,9 +27,9 @@
 
 #include <vclib/algorithms/mesh/convex_hull.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept MeshType>
+template<vcl::MeshConcept MeshType>
 class ConvexHullFilter : public FilterActionT<MeshType>
 {
     using Base = FilterActionT<MeshType>;
@@ -61,22 +61,22 @@ public:
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
         const ParameterVector&              parameters,
-        AbstractLogger&                     log = Base::logger()) const final
+        vcl::AbstractLogger&                log = Base::logger()) const final
     {
         const MeshType& input = *inputMeshes.front();
         std::string     name  = "Convex Hull";
-        if constexpr (HasName<MeshType>) {
+        if constexpr (vcl::HasName<MeshType>) {
             name = input.name() + " " + name;
         }
         outputMeshes.push_back(convexHull<MeshType>(
             input.vertices() | vcl::views::positions, log));
-        if constexpr (HasName<MeshType>) {
+        if constexpr (vcl::HasName<MeshType>) {
             outputMeshes.back().name() = name;
         }
         return OutputValues();
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_GENERATE_CONVEX_HULL_FILTER_H

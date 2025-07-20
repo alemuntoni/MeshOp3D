@@ -25,14 +25,14 @@
 
 #include "action_manager.h"
 
-namespace vcl::proc {
+namespace hlmp {
 
-template<MeshConcept MeshType>
+template<vcl::MeshConcept MeshType>
 void saveTexturesUsingManager(const MeshType& mesh, const std::string& basePath)
 {
-    if constexpr (HasTextureImages<MeshType>) {
+    if constexpr (vcl::HasTextureImages<MeshType>) {
         for (const vcl::Texture& texture : mesh.textures()) {
-            std::string ext = FileInfo::extension(texture.path());
+            std::string ext = vcl::FileInfo::extension(texture.path());
 
             try {
                 auto act = ActionManager::saveImageAction(ext);
@@ -46,12 +46,12 @@ void saveTexturesUsingManager(const MeshType& mesh, const std::string& basePath)
     }
 }
 
-template<MeshConcept MeshType>
+template<vcl::MeshConcept MeshType>
 void loadTexturesUsingManager(MeshType& mesh, const std::string& basePath)
 {
-    if constexpr (HasTextureImages<MeshType>) {
+    if constexpr (vcl::HasTextureImages<MeshType>) {
         for (vcl::Texture& texture : mesh.textures()) {
-            std::string ext = FileInfo::extension(texture.path());
+            std::string ext = vcl::FileInfo::extension(texture.path());
 
             try {
                 auto act        = ActionManager::loadImageAction(ext);
@@ -65,6 +65,6 @@ void loadTexturesUsingManager(MeshType& mesh, const std::string& basePath)
     }
 }
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_MANAGER_LOAD_SAVE_TEXTURES_H

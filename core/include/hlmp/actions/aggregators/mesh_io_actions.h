@@ -27,14 +27,15 @@
 
 #include <hlmp/actions/interfaces/mesh_io_action_t.h>
 
-namespace vcl::proc {
+namespace hlmp {
 
 class MeshIOActions : public MeshIOAction
 {
-    static const uint MESH_TYPE_NUMBER = toUnderlying(MeshTypeId::COUNT);
+    static const vcl::uint MESH_TYPE_NUMBER =
+        vcl::toUnderlying(MeshTypeId::COUNT);
 
     std::array<std::shared_ptr<MeshIOAction>, MESH_TYPE_NUMBER> mMeshIOActions;
-    uint mFirstMeshType = MESH_TYPE_NUMBER;
+    vcl::uint mFirstMeshType = MESH_TYPE_NUMBER;
 
 public:
     template<template<typename> typename Act>
@@ -57,30 +58,30 @@ public:
         return mMeshIOActions[mFirstMeshType]->ioSupport();
     }
 
-    std::vector<std::pair<FileFormat, MeshInfo>> supportedMeshFormats()
+    std::vector<std::pair<vcl::FileFormat, vcl::MeshInfo>> supportedMeshFormats()
         const final
     {
         checkActionHasBeenFilled();
         return mMeshIOActions[mFirstMeshType]->supportedMeshFormats();
     }
 
-    ParameterVector parametersLoad(const FileFormat& format) const final
+    ParameterVector parametersLoad(const vcl::FileFormat& format) const final
     {
         checkActionHasBeenFilled();
         return mMeshIOActions[mFirstMeshType]->parametersLoad(format);
     }
 
-    ParameterVector parametersSave(const FileFormat& format) const final
+    ParameterVector parametersSave(const vcl::FileFormat& format) const final
     {
         checkActionHasBeenFilled();
         return mMeshIOActions[mFirstMeshType]->parametersSave(format);
     }
 
-    BitSet32 supportedMeshTypes() const
+    vcl::BitSet32 supportedMeshTypes() const
     {
         checkActionHasBeenFilled();
-        BitSet32 bitset;
-        for (uint i = 0; i < MESH_TYPE_NUMBER; i++) {
+        vcl::BitSet32 bitset;
+        for (vcl::uint i = 0; i < MESH_TYPE_NUMBER; i++) {
             if (mMeshIOActions[i] != nullptr) {
                 bitset[i] = true;
             }
@@ -88,102 +89,103 @@ public:
         return bitset;
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     std::shared_ptr<MeshIOActionT<MeshType>> action() const
     {
         checkActionHasBeenFilled();
         checkActionForMeshType<MeshType>();
         return std::dynamic_pointer_cast<MeshIOActionT<MeshType>>(
-            mMeshIOActions[toUnderlying(meshTypeId<MeshType>())]);
+            mMeshIOActions[vcl::toUnderlying(meshTypeId<MeshType>())]);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     MeshType load(
         const std::string&     filename,
-        const FileFormat&      format,
+        const vcl::FileFormat& format,
         const ParameterVector& parameters,
-        MeshInfo&              loadedInfo,
-        AbstractLogger&        log = logger()) const
+        vcl::MeshInfo&         loadedInfo,
+        vcl::AbstractLogger&   log = logger()) const
     {
         checkActionForMeshType<MeshType>(true);
         return action<MeshType>()->load(
             filename, format, parameters, loadedInfo, log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     MeshType load(
         const std::string&     filename,
         const ParameterVector& parameters,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
-        MeshInfo   info;
-        FileFormat format(FileInfo::extension(filename));
+        vcl::MeshInfo   info;
+        vcl::FileFormat format(vcl::FileInfo::extension(filename));
         auto mesh = load<MeshType>(filename, format, parameters, info, log);
         return mesh;
     }
 
-    template<MeshConcept MeshType>
-    MeshType load(const std::string& filename, AbstractLogger& log = logger())
-        const
+    template<vcl::MeshConcept MeshType>
+    MeshType load(
+        const std::string&   filename,
+        vcl::AbstractLogger& log = logger()) const
     {
-        FileFormat format(FileInfo::extension(filename));
+        vcl::FileFormat format(vcl::FileInfo::extension(filename));
         return load<MeshType>(filename, parametersLoad(format), log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void save(
         const std::string&     filename,
-        const FileFormat&      format,
+        const vcl::FileFormat& format,
         const MeshType&        mesh,
-        const MeshInfo&        info,
+        const vcl::MeshInfo&   info,
         const ParameterVector& parameters,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
         checkActionForMeshType<MeshType>(false, true);
         action<MeshType>()->save(filename, format, mesh, info, parameters, log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void save(
         const std::string&     filename,
         const MeshType&        mesh,
-        const MeshInfo&        info,
+        const vcl::MeshInfo&   info,
         const ParameterVector& parameters,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
-        FileFormat format(FileInfo::extension(filename));
+        vcl::FileFormat format(vcl::FileInfo::extension(filename));
         save(filename, format, mesh, info, parameters, log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void save(
-        const std::string& filename,
-        const MeshType&    mesh,
-        const MeshInfo&    info,
-        AbstractLogger&    log = logger()) const
+        const std::string&   filename,
+        const MeshType&      mesh,
+        const vcl::MeshInfo& info,
+        vcl::AbstractLogger& log = logger()) const
     {
-        FileFormat format(FileInfo::extension(filename));
+        vcl::FileFormat format(vcl::FileInfo::extension(filename));
         save(filename, mesh, info, parametersSave(format), log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void save(
         const std::string&     filename,
         const MeshType&        mesh,
         const ParameterVector& parameters,
-        AbstractLogger&        log = logger()) const
+        vcl::AbstractLogger&   log = logger()) const
     {
-        FileFormat format(FileInfo::extension(filename));
+        vcl::FileFormat format(vcl::FileInfo::extension(filename));
         save(filename, mesh, formatCapability(format), parameters, log);
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void save(
-        const std::string& filename,
-        const MeshType&    mesh,
-        AbstractLogger&    log = logger()) const
+        const std::string&   filename,
+        const MeshType&      mesh,
+        vcl::AbstractLogger& log = logger()) const
     {
-        FileFormat format(FileInfo::extension(filename));
+        vcl::FileFormat format(vcl::FileInfo::extension(filename));
         save(filename, mesh, parametersSave(format), log);
     }
 
@@ -195,12 +197,12 @@ private:
         }
     }
 
-    template<MeshConcept MeshType>
+    template<vcl::MeshConcept MeshType>
     void checkActionForMeshType(bool load = false, bool save = false) const
     {
         checkActionHasBeenFilled();
         checkMeshTypeId<MeshType>();
-        uint id = toUnderlying(meshTypeId<MeshType>());
+        vcl::uint id = vcl::toUnderlying(meshTypeId<MeshType>());
         if (mMeshIOActions[id] == nullptr) {
             throw std::runtime_error(
                 "The action cannot be instantiated for the given MeshType.");
@@ -216,6 +218,6 @@ private:
     }
 };
 
-} // namespace vcl::proc
+} // namespace hlmp
 
 #endif // HLMP_ACTIONS_AGGREGATORS_MESH_IO_ACTIONS_H

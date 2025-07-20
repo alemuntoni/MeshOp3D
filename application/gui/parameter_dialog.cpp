@@ -8,7 +8,7 @@ ParameterDialog::ParameterDialog(QWidget* parent) : QDialog(parent)
 }
 
 ParameterDialog::ParameterDialog(
-    const vcl::proc::ParameterVector& vec,
+    const hlmp::ParameterVector& vec,
     const std::string&                title,
     QWidget*                          parent) : QDialog(parent)
 {
@@ -30,9 +30,9 @@ ParameterDialog::ParameterDialog(
     layout->addWidget(okButton);
 }
 
-vcl::proc::ParameterVector ParameterDialog::parameters()
+hlmp::ParameterVector ParameterDialog::parameters()
 {
-    vcl::proc::ParameterVector vec;
+    hlmp::ParameterVector vec;
     auto layout = dynamic_cast<vcl::qt::ParametersGridLayout*>(this->layout());
     if (layout) {
         vec = layout->parameters();
