@@ -23,10 +23,10 @@
 #ifndef HLMP_MANAGER_ACTION_MANAGER_MANAGER_H
 #define HLMP_MANAGER_ACTION_MANAGER_MANAGER_H
 
-#include "convert_manager.h"
-#include "filter_manager.h"
-#include "image_io_manager.h"
-#include "mesh_io_manager.h"
+#include "managers/convert_manager.h"
+#include "managers/filter_manager.h"
+#include "managers/image_io_manager.h"
+#include "managers/mesh_io_manager.h"
 
 namespace hlmp::detail {
 

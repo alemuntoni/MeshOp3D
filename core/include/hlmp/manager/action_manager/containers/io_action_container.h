@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_MANAGER_IO_ACTION_CONTAINER_H
-#define HLMP_MANAGER_ACTION_MANAGER_IO_ACTION_CONTAINER_H
+#ifndef HLMP_MANAGER_ACTION_MANAGER_CONTAINERS_IO_ACTION_CONTAINER_H
+#define HLMP_MANAGER_ACTION_MANAGER_CONTAINERS_IO_ACTION_CONTAINER_H
 
 #include <vclib/io/file_format.h>
 #include <hlmp/actions/interfaces/io_action.h>
@@ -29,7 +29,7 @@
 
 #include <map>
 
-namespace hlmp {
+namespace hlmp::detail {
 
 template<typename ActionType>
 class IOActionContainer
@@ -144,6 +144,6 @@ private:
     }
 };
 
-} // namespace hlmp
+} // namespace hlmp::detail
 
-#endif // HLMP_MANAGER_ACTION_MANAGER_IO_ACTION_CONTAINER_H
+#endif // HLMP_MANAGER_ACTION_MANAGER_CONTAINERS_IO_ACTION_CONTAINER_H

@@ -20,10 +20,10 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H
-#define HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H
+#ifndef HLMP_MANAGER_ACTION_MANAGER_MANAGERS_FILTER_MANAGER_H
+#define HLMP_MANAGER_ACTION_MANAGER_MANAGERS_FILTER_MANAGER_H
 
-#include "id_action_container.h"
+#include "../containers/id_action_container.h"
 
 #include <hlmp/actions/aggregators/filter_actions_aggregator.h>
 
@@ -61,4 +61,4 @@ public:
 
 } // namespace hlmp::detail
 
-#endif // HLMP_MANAGER_ACTION_MANAGER_FILTER_MANAGER_H
+#endif // HLMP_MANAGER_ACTION_MANAGER_MANAGERS_FILTER_MANAGER_H

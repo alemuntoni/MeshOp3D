@@ -20,46 +20,66 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H
-#define HLMP_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H
+#ifndef HLMP_MANAGER_ACTION_MANAGER_CONTAINERS_ID_ACTION_CONTAINER_H
+#define HLMP_MANAGER_ACTION_MANAGER_CONTAINERS_ID_ACTION_CONTAINER_H
 
-#include "id_action_container.h"
+#include <hlmp/actions/interfaces/action.h>
 
-#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
+#include <map>
 
 namespace hlmp::detail {
 
-class ConvertManager
+template<typename ActionType>
+class IDActionContainer
 {
-    IDActionContainer<ConvertActionsAggregator> mConvertActions;
+    using ActionMap = std::map<std::string, std::shared_ptr<ActionType>>;
 
-protected:
-    void add(const std::shared_ptr<ConvertActionsAggregator>& action)
-    {
-        mConvertActions.add(action);
-    }
+    ActionMap mActionMap;
 
 public:
-    // convert
+    IDActionContainer() = default;
 
-    std::shared_ptr<ConvertActionsAggregator> convertActions(
-        const std::string& name) const
+    void add(std::shared_ptr<ActionType> action)
     {
-        return mConvertActions.action(name);
+        if (!action) {
+            throw std::runtime_error("Action is nullptr.");
+        }
+        checkActionDoesNotExist(action->name());
+        mActionMap[action->name()] = action;
     }
 
-    template<typename MeshType>
-    std::shared_ptr<ConvertActionT<MeshType>> convertAction(
-        const std::string& name)
+    std::shared_ptr<ActionType> action(const std::string& name) const
     {
-        std::shared_ptr<ConvertActionsAggregator> actions = convertActions(name);
-
-        return actions->action<MeshType>();
+        auto it = findActionExists(name);
+        return it->second;
     }
 
-    auto convertActions() { return mConvertActions.actions(); }
+    auto actions()
+    {
+        auto f = [](const ActionMap::value_type& p) {
+            return p.second;
+        };
+        return std::views::transform(mActionMap, f);
+    }
+
+private:
+    void checkActionDoesNotExist(const std::string& name) const
+    {
+        if (mActionMap.find(name) != mActionMap.end()) {
+            throw std::runtime_error("Action " + name + " already registered.");
+        }
+    }
+
+    ActionMap::const_iterator findActionExists(const std::string& name) const
+    {
+        auto it = mActionMap.find(name);
+        if (it == mActionMap.end()) {
+            throw std::runtime_error("Action " + name + " not registered.");
+        }
+        return it;
+    }
 };
 
 } // namespace hlmp::detail
 
-#endif // HLMP_MANAGER_ACTION_MANAGER_CONVERT_MANAGER_H
+#endif // HLMP_MANAGER_ACTION_MANAGER_CONTAINERS_ID_ACTION_CONTAINER_H
