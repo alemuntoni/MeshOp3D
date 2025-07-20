@@ -14,9 +14,6 @@ add_library(hlmp::core ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${HLMP_CORE_INCLUDE_DIR})
 
-# todo - change
-target_compile_definitions(${PROJECT_NAME} PUBLIC VCLIB_PROCESSING_MODULE)
-
 target_link_libraries(${PROJECT_NAME} PUBLIC vclib::core)
 
 target_sources(${PROJECT_NAME} PRIVATE ${HEADERS} ${SOURCES})

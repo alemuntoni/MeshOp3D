@@ -29,7 +29,7 @@
 namespace hlmp {
 
 /**
- * @brief Scalar type used in the processing module.
+ * @brief Scalar type used in HighLevelMeshProcessing.
  */
 using ScalarType = double;
 
@@ -46,7 +46,7 @@ enum class MeshTypeId : vcl::uint {
 };
 
 /**
- * @brief List of supported mesh types supported by the processing module.
+ * @brief List of mesh types supported by HighLevelMeshProcessing.
  */
 using MeshTypes = vcl::TypeWrapper<
     vcl::TriEdgeMeshT<ScalarType, INDEXED_MESHES>,
