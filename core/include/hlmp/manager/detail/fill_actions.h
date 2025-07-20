@@ -27,6 +27,18 @@
 
 namespace hlmp {
 
+template<typename... Actions>
+void fillActionInstances(
+    std::vector<std::shared_ptr<Action>>& vec,
+    vcl::TypeWrapper<Actions...>)
+{
+    auto fAct = [&]<typename Act>() {
+        vec.push_back(std::make_shared<Act>());
+    };
+
+    (fAct.template operator()<Actions>(), ...);
+}
+
 /**
  * @brief @brief Given a list of actions in a TemplatedTypeWrapper, this
  * function fills the given vector with instances of Aggregator type (one for

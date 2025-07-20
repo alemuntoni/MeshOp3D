@@ -38,12 +38,7 @@ std::vector<std::shared_ptr<Action>> actionInstances()
     fillAggregatedActionInstances<FilterActionsAggregator>(vec, FilterActionsList());
 
     // ImageIO actions
-    // TODO make a function fillActions
-    auto f = [&vec]<typename Act>() {
-        vec.push_back(std::make_shared<Act>());
-    };
-
-    vcl::ForEachType<ImageIOActionsList>::apply(f);
+    fillActionInstances(vec, ImageIOActionsList());
 
     // MeshIO actions
     fillAggregatedActionInstances<MeshIOActionsAggregator>(vec, MeshIOActionsList());
