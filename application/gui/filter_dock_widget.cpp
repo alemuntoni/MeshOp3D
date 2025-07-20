@@ -25,10 +25,10 @@
 
 #include <QPushButton>
 
-namespace vcl::qt {
+namespace hlmp {
 
 FilterDockWidget::FilterDockWidget(
-    const std::shared_ptr<hlmp::FilterActions>& action,
+    const std::shared_ptr<FilterActions>& action,
     QWidget*                                    parent) :
         QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
@@ -83,10 +83,10 @@ void FilterDockWidget::onCancelButtonClicked()
 }
 
 void FilterDockWidget::addOutputMeshTypeParameter(
-    hlmp::ParameterVector&                      params,
-    const std::shared_ptr<hlmp::FilterActions>& action)
+    ParameterVector&                      params,
+    const std::shared_ptr<FilterActions>& action)
 {
-    auto arr = hlmp::meshTypeNames();
+    auto arr = meshTypeNames();
 
     std::vector<std::string> enumValues(arr.begin(), arr.end());
 
@@ -97,7 +97,7 @@ void FilterDockWidget::addOutputMeshTypeParameter(
             break;
         }
     }
-    hlmp::EnumParameter param(
+    EnumParameter param(
         "output_mesh_type",
         i,
         enumValues,
@@ -108,4 +108,4 @@ void FilterDockWidget::addOutputMeshTypeParameter(
     params.insert(0, param);
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

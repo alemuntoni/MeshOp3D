@@ -23,7 +23,7 @@
 #include "parameter_sub_frame.h"
 #include "ui_parameter_sub_frame.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 ParameterSubFrame::ParameterSubFrame(QWidget* parent) :
         QFrame(parent), mUI(new Ui::ParameterSubFrame)
@@ -77,4 +77,4 @@ void ParameterSubFrame::showPushButtonClicked(bool checked)
         mUI->toolButton->setArrowType(Qt::ArrowType::RightArrow);
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

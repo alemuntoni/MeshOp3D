@@ -22,15 +22,15 @@
 
 #include "parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
-ParameterRow::ParameterRow(const hlmp::Parameter& param) :
+ParameterRow::ParameterRow(const Parameter& param) :
         mVisible(true), mHelpVisible(false)
 {
     QString dl = param.description().c_str();
     QString tt = param.tooltip().c_str();
 
-    mDescriptionLabel = new ClickableLabel();
+    mDescriptionLabel = new vcl::qt::ClickableLabel();
     mDescriptionLabel->setText(dl);
     mDescriptionLabel->setToolTip(tt);
     mDescriptionLabel->setSizePolicy(
@@ -95,4 +95,4 @@ void ParameterRow::setModified(bool b)
     mHasBeenModified = b;
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

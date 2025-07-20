@@ -36,7 +36,7 @@ ParameterDialog::ParameterDialog(
 {
     setWindowTitle(title.c_str());
 
-    vcl::qt::ParametersGridLayout* layout = new vcl::qt::ParametersGridLayout(this);
+    hlmp::ParametersGridLayout* layout = new hlmp::ParametersGridLayout(this);
     layout->setParameters(vec);
 
     setLayout(layout);
@@ -55,7 +55,7 @@ ParameterDialog::ParameterDialog(
 hlmp::ParameterVector ParameterDialog::parameters()
 {
     hlmp::ParameterVector vec;
-    auto layout = dynamic_cast<vcl::qt::ParametersGridLayout*>(this->layout());
+    auto layout = dynamic_cast<hlmp::ParametersGridLayout*>(this->layout());
     if (layout) {
         vec = layout->parameters();
     }

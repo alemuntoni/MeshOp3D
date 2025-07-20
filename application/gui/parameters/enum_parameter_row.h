@@ -27,23 +27,23 @@
 
 #include "parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 class EnumParameterRow : public ParameterRow
 {
-    hlmp::EnumParameter mParam;
+    EnumParameter mParam;
 
     QComboBox* mComboBox = nullptr;
 
 public:
-    EnumParameterRow(const hlmp::EnumParameter& param);
+    EnumParameterRow(const EnumParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<Parameter> parameterFromWidget() const override;
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETERS_ENUM_PARAMETER_ROW_H

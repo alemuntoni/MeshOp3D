@@ -34,8 +34,6 @@
 #include <QFileDialog>
 #include <QPushButton>
 
-using namespace vcl;
-
 namespace hlmp {
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -57,16 +55,16 @@ MainWindow::MainWindow(QWidget* parent) :
         &MainWindow::saveMeshAs);
 
     // set this function to mesh viewer
-    auto f = [](const DrawableObject& obj) {
+    auto f = [](const vcl::DrawableObject& obj) {
         const auto* tri =
-            dynamic_cast<const DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
+            dynamic_cast<const vcl::DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
         if (tri) {
             return std::make_pair(
                 QIcon(QString(HLMP_ASSETS_DIR) + "/icons/tri.png"),
                 vcl::meshTypeName<vcl::TriEdgeMesh>().c_str());
         }
         const auto* pol =
-            dynamic_cast<const DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
+            dynamic_cast<const vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
         if (pol) {
             return std::make_pair(
                 QIcon(QString(HLMP_ASSETS_DIR) + "/icons/poly.png"),
@@ -85,16 +83,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::openMesh()
 {
-    std::vector<FileFormat> formats = ActionManager::loadMeshFormats();
-    QString                 filter  = qt::filterFormatsToQString(formats, true);
+    std::vector<vcl::FileFormat> formats = ActionManager::loadMeshFormats();
+    QString filter = vcl::qt::filterFormatsToQString(formats, true);
 
     QString f = QFileDialog::getOpenFileName(
         nullptr, QObject::tr("Open Document"), QDir::currentPath(), filter);
 
     if (!f.isEmpty()) {
-        std::string filename = f.toStdString();
-        std::string pfn      = FileInfo::fileNameWithExtension(filename);
-        FileFormat  format   = FileInfo::extension(filename);
+        std::string     filename = f.toStdString();
+        std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
+        vcl::FileFormat format = vcl::FileInfo::extension(filename);
 
         auto params = ActionManager::loadMeshParameters(format);
 
@@ -114,7 +112,7 @@ void MainWindow::openMesh()
         auto [m, id] = loadMeshBestFit(filename, params, logger());
         logger().stopTimer();
         logger().log(
-            qt::TextEditLogger::MESSAGE_LOG,
+            vcl::qt::TextEditLogger::MESSAGE_LOG,
             pfn + " loaded in " + std::to_string(logger().time()) +
                 " seconds.");
 
@@ -137,9 +135,9 @@ void MainWindow::openMesh()
 
 void MainWindow::saveMeshAs()
 {
-    uint i = mUI->meshViewer->selectedDrawableObject();
+    vcl::uint i = mUI->meshViewer->selectedDrawableObject();
 
-    if (mMeshVector->size() == 0 || i == UINT_NULL) {
+    if (mMeshVector->size() == 0 || i == vcl::UINT_NULL) {
         return;
     }
 
@@ -151,8 +149,8 @@ void MainWindow::saveMeshAs()
         return;
     }
 
-    std::vector<FileFormat> formats = ActionManager::saveMeshFormats(type);
-    QString                 filter  = qt::filterFormatsToQString(formats);
+    std::vector<vcl::FileFormat> formats = ActionManager::saveMeshFormats(type);
+    QString filter = vcl::qt::filterFormatsToQString(formats);
 
     QString fs;
     QString f = QFileDialog::getSaveFileName(
@@ -160,11 +158,11 @@ void MainWindow::saveMeshAs()
 
     if (!f.isEmpty()) {
         std::string filename = f.toStdString();
-        std::string pfn      = FileInfo::fileNameWithExtension(filename);
-        std::string format   = FileInfo::extension(filename);
+        std::string pfn      = vcl::FileInfo::fileNameWithExtension(filename);
+        std::string format   = vcl::FileInfo::extension(filename);
         // get selected filter
-        FileFormat f = qt::formatFromQStringFilter(fs);
-        if (f != FileFormat(format)) {
+        vcl::FileFormat f = vcl::qt::formatFromQStringFilter(fs);
+        if (f != vcl::FileFormat(format)) {
             filename += "." + f.extensions().front();
         }
 
@@ -201,7 +199,7 @@ void MainWindow::saveMeshAs()
         }
         logger().stopTimer();
         logger().log(
-            qt::TextEditLogger::MESSAGE_LOG,
+            vcl::qt::TextEditLogger::MESSAGE_LOG,
             pfn + " saved in " + std::to_string(logger().time()) + " seconds.");
     }
 }
@@ -250,7 +248,7 @@ void MainWindow::convertCurrentMesh(bool)
     assert(convert);
     if (convert) {
         auto i = mUI->meshViewer->selectedDrawableObject();
-        if (i != UINT_NULL) {
+        if (i != vcl::UINT_NULL) {
             auto obj  = mMeshVector->at(i);
             auto type = meshId(obj);
 
@@ -275,7 +273,7 @@ void MainWindow::convertCurrentMesh(bool)
     }
 }
 
-qt::TextEditLogger& MainWindow::logger()
+vcl::qt::TextEditLogger& MainWindow::logger()
 {
     return mUI->meshViewer->logger();
 }
@@ -287,14 +285,15 @@ void MainWindow::populateFilterMenu()
     auto filters = ActionManager::filterActions();
 
     std::array<QMenu*, vcl::toUnderlying(COUNT)> menus;
-    menus[toUnderlying(CREATE)] = new QMenu("Create", mUI->menuFilter);
-    menus[toUnderlying(CLEANING_AND_REPAIRING)] =
+    menus[vcl::toUnderlying(CREATE)] = new QMenu("Create", mUI->menuFilter);
+    menus[vcl::toUnderlying(CLEANING_AND_REPAIRING)] =
         new QMenu("Cleaning and Repairing", mUI->menuFilter);
-    menus[toUnderlying(RECONSTRUCTION)] =
+    menus[vcl::toUnderlying(RECONSTRUCTION)] =
         new QMenu("Reconstruction", mUI->menuFilter);
-    menus[toUnderlying(SMOOTHING)] = new QMenu("Smoothing", mUI->menuFilter);
+    menus[vcl::toUnderlying(SMOOTHING)] =
+        new QMenu("Smoothing", mUI->menuFilter);
 
-    for (uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
+    for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
         mUI->menuFilter->addMenu(menus[i]);
     }
 
@@ -303,7 +302,7 @@ void MainWindow::populateFilterMenu()
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(f->name())));
 
-        for (uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
+        for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
             if (f->categories()[i]) {
                 menus[i]->addAction(action);
             }
@@ -334,13 +333,10 @@ void MainWindow::populateFilterMenu()
 
 void MainWindow::openFilterDialog(const std::shared_ptr<FilterActions>& action)
 {
-    qt::FilterDockWidget* dock = new qt::FilterDockWidget(action, this);
+    FilterDockWidget* dock = new FilterDockWidget(action, this);
 
     connect(
-        dock,
-        &qt::FilterDockWidget::applyFilter,
-        this,
-        &MainWindow::applyFilter);
+        dock, &FilterDockWidget::applyFilter, this, &MainWindow::applyFilter);
 
     dock->show();
 }
@@ -348,19 +344,19 @@ void MainWindow::openFilterDialog(const std::shared_ptr<FilterActions>& action)
 MeshTypeId MainWindow::getFilterMeshType(
     const std::shared_ptr<FilterActions>& action,
     const ParameterVector&                params,
-    uint                                  selectedMesh)
+    vcl::uint                             selectedMesh)
 {
-    uint niMeshes  = action->inputMeshes().size();
-    uint nioMeshes = action->inputOutputMeshes().size();
+    vcl::uint niMeshes  = action->inputMeshes().size();
+    vcl::uint nioMeshes = action->inputOutputMeshes().size();
 
     if (niMeshes + nioMeshes == 0) {
         // no input meshes, the type of the mesh is given by the user trough
         // the parameters
-        uint t = params.get("output_mesh_type")->uintValue();
+        vcl::uint t = params.get("output_mesh_type")->uintValue();
         return static_cast<MeshTypeId>(t);
     }
     else if (niMeshes + nioMeshes == 1) {
-        assert(selectedMesh != UINT_NULL);
+        assert(selectedMesh != vcl::UINT_NULL);
         // only one mesh input, the type of the mesh is the same as the
         // selectedMesh
         return meshId(mMeshVector->at(selectedMesh));

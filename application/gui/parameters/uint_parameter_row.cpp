@@ -24,9 +24,9 @@
 
 #include <QIntValidator>
 
-namespace vcl::qt {
+namespace hlmp {
 
-UintParameterRow::UintParameterRow(const hlmp::UintParameter& param) :
+UintParameterRow::UintParameterRow(const UintParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mLineEdit = new QLineEdit();
@@ -41,11 +41,11 @@ QWidget* UintParameterRow::parameterWidget()
     return mLineEdit;
 }
 
-std::shared_ptr<hlmp::Parameter> UintParameterRow::parameterFromWidget() const
+std::shared_ptr<Parameter> UintParameterRow::parameterFromWidget() const
 {
     auto p = mParam.clone();
     p->setUintValue(mLineEdit->text().toUInt());
     return p;
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

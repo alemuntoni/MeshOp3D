@@ -29,7 +29,7 @@
 
 #include "parameter_frame/parameter_sub_frame.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 namespace Ui {
 class MultiParameterFrame;
@@ -49,13 +49,13 @@ public:
 
     uint addSubFrame(
         const std::string&           name,
-        const hlmp::ParameterVector& parameters);
+        const ParameterVector& parameters);
 
     void setSubFrameName(uint i, const std::string& name);
 
-    void setSubFramePatameters(uint i, const hlmp::ParameterVector& parameters);
+    void setSubFramePatameters(uint i, const ParameterVector& parameters);
 
-    hlmp::ParameterVector parameters(uint i) const;
+    ParameterVector parameters(uint i) const;
 
     uint subFramesNumber() const { return mParamGrids.size(); }
 
@@ -90,6 +90,6 @@ private:
     ParameterSubFrame* subFrame(uint i);
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H

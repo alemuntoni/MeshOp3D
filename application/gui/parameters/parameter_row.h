@@ -32,7 +32,7 @@
 #include <hlmp/parameters.h>
 #include <vclib/qt/gui/clickable_label.h>
 
-namespace vcl::qt {
+namespace hlmp {
 
 class ParameterRow
 {
@@ -44,16 +44,16 @@ class ParameterRow
     bool mHasBeenModified;
 
 protected:
-    ClickableLabel* mDescriptionLabel;
+    vcl::qt::ClickableLabel* mDescriptionLabel;
 
 public:
-    ParameterRow(const hlmp::Parameter& param);
+    ParameterRow(const Parameter& param);
 
     virtual ~ParameterRow();
 
     virtual QWidget* parameterWidget() = 0;
 
-    virtual std::shared_ptr<hlmp::Parameter> parameterFromWidget() const = 0;
+    virtual std::shared_ptr<Parameter> parameterFromWidget() const = 0;
 
     void addRowToGridLayout(QGridLayout* lay, const int row);
 
@@ -67,6 +67,6 @@ protected:
     void setModified(bool b);
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H

@@ -24,9 +24,9 @@
 
 #include <QDoubleValidator>
 
-namespace vcl::qt {
+namespace hlmp {
 
-UscalarParameterRow::UscalarParameterRow(const hlmp::UscalarParameter& param) :
+UscalarParameterRow::UscalarParameterRow(const UscalarParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mLineEdit = new QLineEdit();
@@ -41,7 +41,7 @@ QWidget* UscalarParameterRow::parameterWidget()
     return mLineEdit;
 }
 
-std::shared_ptr<hlmp::Parameter> UscalarParameterRow::parameterFromWidget()
+std::shared_ptr<Parameter> UscalarParameterRow::parameterFromWidget()
     const
 {
     auto p = mParam.clone();
@@ -49,4 +49,4 @@ std::shared_ptr<hlmp::Parameter> UscalarParameterRow::parameterFromWidget()
     return p;
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

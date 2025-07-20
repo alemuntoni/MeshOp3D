@@ -25,7 +25,7 @@
 
 #include "multi_parameter_frame.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 class ParameterFrame : public MultiParameterFrame
 {
@@ -46,14 +46,14 @@ public:
     explicit ParameterFrame(QWidget* parent = nullptr);
 
     explicit ParameterFrame(
-        const hlmp::ParameterVector& parameters,
+        const ParameterVector& parameters,
         QWidget*                     parent = nullptr);
 
-    hlmp::ParameterVector parameters() const;
+    ParameterVector parameters() const;
 
-    void setParameters(const hlmp::ParameterVector& parameters);
+    void setParameters(const ParameterVector& parameters);
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETER_FRAME_H

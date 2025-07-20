@@ -23,7 +23,7 @@
 #include "multi_parameter_frame.h"
 #include "ui_multi_parameter_frame.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 MultiParameterFrame::MultiParameterFrame(QWidget* parent) :
         QFrame(parent), mUI(new Ui::MultiParameterFrame)
@@ -50,7 +50,7 @@ MultiParameterFrame::~MultiParameterFrame()
 
 uint MultiParameterFrame::addSubFrame(
     const std::string&           name,
-    const hlmp::ParameterVector& parameters)
+    const ParameterVector& parameters)
 {
     ParametersGridLayout* layout = new ParametersGridLayout(this);
     layout->setParameters(parameters);
@@ -64,14 +64,14 @@ void MultiParameterFrame::setSubFrameName(uint i, const std::string& name)
 
 void MultiParameterFrame::setSubFramePatameters(
     uint                         i,
-    const hlmp::ParameterVector& parameters)
+    const ParameterVector& parameters)
 {
     ParametersGridLayout* layout = new ParametersGridLayout(this);
     layout->setParameters(parameters);
     setSubFrameLayout(i, layout);
 }
 
-hlmp::ParameterVector MultiParameterFrame::parameters(uint i) const
+ParameterVector MultiParameterFrame::parameters(uint i) const
 {
     return mParamGrids.at(i)->parameters();
 }
@@ -162,4 +162,4 @@ ParameterSubFrame* MultiParameterFrame::subFrame(uint i)
         mParamGrids[i]->parentWidget()->parentWidget());
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

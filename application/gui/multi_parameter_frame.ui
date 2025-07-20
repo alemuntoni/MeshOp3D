@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>vcl::qt::MultiParameterFrame</class>
- <widget class="QFrame" name="vcl::qt::MultiParameterFrame">
+ <class>hlmp::MultiParameterFrame</class>
+ <widget class="QFrame" name="hlmp::MultiParameterFrame">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,10 +23,10 @@
       </sizepolicy>
      </property>
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Shape::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
+      <enum>QFrame::Shadow::Plain</enum>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="leftMargin">
@@ -53,7 +53,7 @@
          <bool>true</bool>
         </property>
         <property name="arrowType">
-         <enum>Qt::DownArrow</enum>
+         <enum>Qt::ArrowType::DownArrow</enum>
         </property>
        </widget>
       </item>
@@ -76,7 +76,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="Line" name="line">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -109,10 +109,10 @@
    <item row="2" column="0" colspan="2">
     <widget class="QFrame" name="parametersFrame">
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Shape::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
+      <enum>QFrame::Shadow::Plain</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="leftMargin">

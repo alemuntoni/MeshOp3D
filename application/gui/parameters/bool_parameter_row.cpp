@@ -22,9 +22,9 @@
 
 #include "bool_parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
-BoolParameterRow::BoolParameterRow(const hlmp::BoolParameter& param) :
+BoolParameterRow::BoolParameterRow(const BoolParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mCheckBox = new QCheckBox("");
@@ -40,11 +40,11 @@ QWidget* BoolParameterRow::parameterWidget()
     return mCheckBox;
 }
 
-std::shared_ptr<hlmp::Parameter> BoolParameterRow::parameterFromWidget() const
+std::shared_ptr<Parameter> BoolParameterRow::parameterFromWidget() const
 {
     auto p = mParam.clone();
     p->setBoolValue(mCheckBox->isChecked());
     return p;
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

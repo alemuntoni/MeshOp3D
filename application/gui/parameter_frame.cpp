@@ -22,7 +22,7 @@
 
 #include "parameter_frame.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 ParameterFrame::ParameterFrame(QWidget* parent) : MultiParameterFrame(parent)
 {
@@ -33,18 +33,18 @@ ParameterFrame::ParameterFrame(QWidget* parent) : MultiParameterFrame(parent)
 }
 
 ParameterFrame::ParameterFrame(
-    const hlmp::ParameterVector& parameters,
+    const ParameterVector& parameters,
     QWidget*                     parent) : ParameterFrame(parent)
 {
     setParameters(parameters);
 }
 
-hlmp::ParameterVector ParameterFrame::parameters() const
+ParameterVector ParameterFrame::parameters() const
 {
     return MultiParameterFrame::parameters(0);
 }
 
-void ParameterFrame::setParameters(const hlmp::ParameterVector& parameters)
+void ParameterFrame::setParameters(const ParameterVector& parameters)
 {
     if (subFramesNumber() == 0) {
         addSubFrame("", parameters);
@@ -57,4 +57,4 @@ void ParameterFrame::setParameters(const hlmp::ParameterVector& parameters)
     }
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

@@ -27,23 +27,23 @@
 
 #include "parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 class UintParameterRow : public ParameterRow
 {
-    hlmp::UintParameter mParam;
+    UintParameter mParam;
 
     QLineEdit* mLineEdit = nullptr;
 
 public:
-    UintParameterRow(const hlmp::UintParameter& param);
+    UintParameterRow(const UintParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<Parameter> parameterFromWidget() const override;
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETERS_UINT_PARAMETER_ROW_H

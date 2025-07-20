@@ -27,23 +27,23 @@
 
 #include "parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 class ScalarParameterRow : public ParameterRow
 {
-    hlmp::ScalarParameter mParam;
+    ScalarParameter mParam;
 
     QLineEdit* mLineEdit = nullptr;
 
 public:
-    ScalarParameterRow(const hlmp::ScalarParameter& param);
+    ScalarParameterRow(const ScalarParameter& param);
 
     // ParameterRow interface
     QWidget* parameterWidget() override;
 
-    std::shared_ptr<hlmp::Parameter> parameterFromWidget() const override;
+    std::shared_ptr<Parameter> parameterFromWidget() const override;
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETERS_SCALAR_PARAMETER_ROW_H

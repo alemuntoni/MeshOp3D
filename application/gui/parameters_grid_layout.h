@@ -29,20 +29,20 @@
 
 #include "parameters/parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 class ParametersGridLayout : public QGridLayout
 {
-    hlmp::ParameterVector mParameters;
+    ParameterVector mParameters;
 
     std::vector<std::shared_ptr<ParameterRow>> mRows;
 
 public:
     ParametersGridLayout(QWidget* parent);
 
-    void setParameters(const hlmp::ParameterVector& parameters);
+    void setParameters(const ParameterVector& parameters);
 
-    hlmp::ParameterVector parameters() const;
+    ParameterVector parameters() const;
 
     void setHelpVisible(bool b);
 
@@ -52,6 +52,6 @@ private:
     static void clear(QLayout* layout);
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H

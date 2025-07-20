@@ -28,7 +28,7 @@
 #include "parameters/uint_parameter_row.h"
 #include "parameters/uscalar_parameter_row.h"
 
-namespace vcl::qt {
+namespace hlmp {
 
 ParametersGridLayout::ParametersGridLayout(QWidget* parent) :
         QGridLayout(parent)
@@ -36,50 +36,50 @@ ParametersGridLayout::ParametersGridLayout(QWidget* parent) :
 }
 
 void ParametersGridLayout::setParameters(
-    const hlmp::ParameterVector& parameters)
+    const ParameterVector& parameters)
 {
     clear();
     mParameters = parameters;
 
     uint row = 0;
-    for (const std::shared_ptr<const hlmp::Parameter>& par : parameters) {
+    for (const std::shared_ptr<const Parameter>& par : parameters) {
         if (par) {
             bool                          paramInserted = false;
             std::shared_ptr<ParameterRow> parRow;
 
             switch (par->type()) {
-            case hlmp::ParameterType::BOOL: {
-                std::shared_ptr<const hlmp::BoolParameter> bp =
-                    std::dynamic_pointer_cast<const hlmp::BoolParameter>(par);
+            case ParameterType::BOOL: {
+                std::shared_ptr<const BoolParameter> bp =
+                    std::dynamic_pointer_cast<const BoolParameter>(par);
                 parRow = std::make_shared<BoolParameterRow>(*bp);
 
                 paramInserted = true;
 
             } break;
-            case hlmp::ParameterType::ENUM: {
-                std::shared_ptr<const hlmp::EnumParameter> ep =
-                    std::dynamic_pointer_cast<const hlmp::EnumParameter>(par);
+            case ParameterType::ENUM: {
+                std::shared_ptr<const EnumParameter> ep =
+                    std::dynamic_pointer_cast<const EnumParameter>(par);
                 parRow = std::make_shared<EnumParameterRow>(*ep);
 
                 paramInserted = true;
             } break;
-            case hlmp::ParameterType::SCALAR: {
-                std::shared_ptr<const hlmp::ScalarParameter> sp =
-                    std::dynamic_pointer_cast<const hlmp::ScalarParameter>(par);
+            case ParameterType::SCALAR: {
+                std::shared_ptr<const ScalarParameter> sp =
+                    std::dynamic_pointer_cast<const ScalarParameter>(par);
                 parRow = std::make_shared<ScalarParameterRow>(*sp);
 
                 paramInserted = true;
             } break;
-            case hlmp::ParameterType::UINT: {
-                std::shared_ptr<const hlmp::UintParameter> up =
-                    std::dynamic_pointer_cast<const hlmp::UintParameter>(par);
+            case ParameterType::UINT: {
+                std::shared_ptr<const UintParameter> up =
+                    std::dynamic_pointer_cast<const UintParameter>(par);
                 parRow = std::make_shared<UintParameterRow>(*up);
 
                 paramInserted = true;
             } break;
-            case hlmp::ParameterType::USCALAR: {
-                std::shared_ptr<const hlmp::UscalarParameter> usp =
-                    std::dynamic_pointer_cast<const hlmp::UscalarParameter>(
+            case ParameterType::USCALAR: {
+                std::shared_ptr<const UscalarParameter> usp =
+                    std::dynamic_pointer_cast<const UscalarParameter>(
                         par);
                 parRow = std::make_shared<UscalarParameterRow>(*usp);
 
@@ -97,9 +97,9 @@ void ParametersGridLayout::setParameters(
     }
 }
 
-hlmp::ParameterVector ParametersGridLayout::parameters() const
+ParameterVector ParametersGridLayout::parameters() const
 {
-    hlmp::ParameterVector pars = mParameters;
+    ParameterVector pars = mParameters;
     for (const std::shared_ptr<ParameterRow>& row : mRows) {
         if (row->hasBeenModified()) {
             auto par = row->parameterFromWidget();
@@ -134,4 +134,4 @@ void ParametersGridLayout::clear(QLayout* layout)
     }
 }
 
-} // namespace vcl::qt
+} // namespace hlmp

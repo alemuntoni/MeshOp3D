@@ -27,7 +27,7 @@
 
 #include <hlmp/actions/aggregators/filter_actions.h>
 
-namespace vcl::qt {
+namespace hlmp {
 
 namespace Ui {
 class FilterDockWidget;
@@ -39,19 +39,19 @@ class FilterDockWidget : public QDockWidget
 
     Ui::FilterDockWidget* mUI;
 
-    const std::shared_ptr<hlmp::FilterActions> mAction;
+    const std::shared_ptr<FilterActions> mAction;
 
 public:
     explicit FilterDockWidget(
-        const std::shared_ptr<hlmp::FilterActions>& action,
+        const std::shared_ptr<FilterActions>& action,
         QWidget*                                    parent = nullptr);
 
     ~FilterDockWidget();
 
 signals:
     void applyFilter(
-        const std::shared_ptr<hlmp::FilterActions>& action,
-        const hlmp::ParameterVector&                parmas);
+        const std::shared_ptr<FilterActions>& action,
+        const ParameterVector&                parmas);
 
 private slots:
     void onApplyButtonClicked();
@@ -60,10 +60,10 @@ private slots:
 
 private:
     void addOutputMeshTypeParameter(
-        hlmp::ParameterVector&                      vec,
-        const std::shared_ptr<hlmp::FilterActions>& action);
+        ParameterVector&                      vec,
+        const std::shared_ptr<FilterActions>& action);
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H

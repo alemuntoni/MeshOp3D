@@ -27,7 +27,7 @@
 
 #include <QGridLayout>
 
-namespace vcl::qt {
+namespace hlmp {
 
 namespace Ui {
 class ParameterSubFrame;
@@ -57,6 +57,6 @@ private slots:
     void showPushButtonClicked(bool checked);
 };
 
-} // namespace vcl::qt
+} // namespace hlmp
 
 #endif // HLMP_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H

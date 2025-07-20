@@ -48,7 +48,7 @@ class MainWindow : public QMainWindow
 
     Ui::MainWindow* mUI;
 
-    //proc::ActionManager mActionManager;
+    // proc::ActionManager mActionManager;
 
     std::shared_ptr<vcl::DrawableObjectVector> mMeshVector =
         std::make_shared<vcl::DrawableObjectVector>();
@@ -75,13 +75,12 @@ private:
 
     void populateFilterMenu();
 
-    void openFilterDialog(
-        const std::shared_ptr<FilterActions>& action);
+    void openFilterDialog(const std::shared_ptr<FilterActions>& action);
 
     MeshTypeId getFilterMeshType(
         const std::shared_ptr<FilterActions>& action,
         const ParameterVector&                params,
-        uint selectedMesh);
+        vcl::uint                             selectedMesh);
 
     template<vcl::MeshConcept MeshType>
     void executeFilter(
@@ -94,8 +93,8 @@ private:
 
         std::shared_ptr<vcl::DrawableMesh<MeshType>> m;
 
-        uint niMeshes = action->inputMeshes().size();
-        uint nioMeshes = action->inputOutputMeshes().size();
+        vcl::uint niMeshes  = action->inputMeshes().size();
+        vcl::uint nioMeshes = action->inputOutputMeshes().size();
         if (niMeshes + nioMeshes == 1) {
             m = toDrawableMesh<MeshType>(
                 mMeshVector->at(mUI->meshViewer->selectedDrawableObject()));
@@ -113,8 +112,8 @@ private:
 
         logger().log(
             vcl::qt::TextEditLogger::MESSAGE_LOG,
-            action->name() + " applied in " +
-                std::to_string(logger().time()) + " seconds.");
+            action->name() + " applied in " + std::to_string(logger().time()) +
+                " seconds.");
 
         if (nioMeshes > 0) {
             m->updateBuffers();
@@ -128,7 +127,7 @@ private:
     template<vcl::MeshConcept MeshType>
     void convertAndAddMesh(
         const std::shared_ptr<ConvertActions>& action,
-        const MeshType& mesh)
+        const MeshType&                        mesh)
     {
         logger().startTimer();
         auto [id, anyMesh] = action->convert(mesh, logger());
@@ -140,12 +139,14 @@ private:
 
         switch (id) {
         case MeshTypeId::TRIANGLE_MESH:
-            mMeshVector->pushBack(makeMeshDrawable(std::move(
-                std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh)))));
+            mMeshVector->pushBack(makeMeshDrawable(
+                std::move(
+                    std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh)))));
             break;
         case MeshTypeId::POLYGON_MESH:
-            mMeshVector->pushBack(makeMeshDrawable(std::move(
-                std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh)))));
+            mMeshVector->pushBack(makeMeshDrawable(
+                std::move(
+                    std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh)))));
             break;
         default: break;
         }

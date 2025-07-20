@@ -24,9 +24,9 @@
 
 #include <QStandardItemModel>
 
-namespace vcl::qt {
+namespace hlmp {
 
-EnumParameterRow::EnumParameterRow(const hlmp::EnumParameter& param) :
+EnumParameterRow::EnumParameterRow(const EnumParameter& param) :
         ParameterRow(param), mParam(param)
 {
     mComboBox = new QComboBox();
@@ -56,11 +56,11 @@ QWidget* EnumParameterRow::parameterWidget()
     return mComboBox;
 }
 
-std::shared_ptr<hlmp::Parameter> EnumParameterRow::parameterFromWidget() const
+std::shared_ptr<Parameter> EnumParameterRow::parameterFromWidget() const
 {
     auto p = mParam.clone();
     p->setUintValue(mComboBox->currentIndex());
     return p;
 }
 
-} // namespace vcl::qt
+} // namespace hlmp
