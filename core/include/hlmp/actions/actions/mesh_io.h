@@ -24,5 +24,6 @@
 #define HLMP_ACTIONS_ACTIONS_MESH_IO_H
 
 #include "mesh_io/base_mesh_io.h"
+#include "mesh_io/gltf_mesh_io.h"
 
 #endif // HLMP_ACTIONS_ACTIONS_MESH_IO_H

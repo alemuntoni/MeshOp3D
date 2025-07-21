@@ -32,7 +32,7 @@
      </widget>
     </item>
     <item>
-     <widget class="vcl::qt::ParameterFrame" name="parameterFrame">
+     <widget class="hlmp::ParameterFrame" name="parameterFrame">
       <property name="frameShape">
        <enum>QFrame::Shape::StyledPanel</enum>
       </property>
@@ -59,7 +59,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>vcl::qt::ParameterFrame</class>
+   <class>hlmp::ParameterFrame</class>
    <extends>QFrame</extends>
    <header>gui/parameter_frame.h</header>
    <container>1</container>

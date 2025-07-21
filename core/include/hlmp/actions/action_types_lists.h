@@ -47,7 +47,7 @@ using ImageIOActionsList =
     vcl::TypeWrapper<BaseImageIO>;
 
 using MeshIOActionsList =
-    vcl::TemplatedTypeWrapper<BaseMeshIO>;
+    vcl::TemplatedTypeWrapper<BaseMeshIO, GltfMeshIO>;
 
 } // namespace hlmp
 

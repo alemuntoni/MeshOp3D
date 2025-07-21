@@ -51,15 +51,18 @@ void loadTexturesUsingManager(MeshType& mesh, const std::string& basePath)
 {
     if constexpr (vcl::HasTextureImages<MeshType>) {
         for (vcl::Texture& texture : mesh.textures()) {
-            std::string ext = vcl::FileInfo::extension(texture.path());
+            if (texture.image().isNull()) {
+                std::string ext = vcl::FileInfo::extension(texture.path());
 
-            try {
-                auto act        = ActionManager::loadImageAction(ext);
-                texture.image() = act->load(basePath + texture.path());
-            }
-            catch (const std::exception& e) {
-                // todo: log error
-                std::cerr << "Error loading texture: " << e.what() << std::endl;
+                try {
+                    auto act        = ActionManager::loadImageAction(ext);
+                    texture.image() = act->load(basePath + texture.path());
+                }
+                catch (const std::exception& e) {
+                    // todo: log error
+                    std::cerr << "Error loading texture: " << e.what()
+                              << std::endl;
+                }
             }
         }
     }
