@@ -25,7 +25,7 @@
 
 #include "convert_action.h"
 
-#include <vclib/concepts/mesh.h>
+#include <vclib/mesh.h>
 
 namespace hlmp {
 
