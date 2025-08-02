@@ -25,9 +25,7 @@
 
 #include <hlmp/settings.h>
 
-#include <vclib/misc/logger.h>
-#include <vclib/misc/string.h>
-#include <vclib/types.h>
+#include <vclib/base.h>
 
 #include <algorithm>
 #include <memory>

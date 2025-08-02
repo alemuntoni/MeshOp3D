@@ -25,7 +25,7 @@
 
 #include <hlmp/settings.h>
 
-#include <vclib/types.h>
+#include <vclib/base.h>
 
 namespace hlmp::detail {
 

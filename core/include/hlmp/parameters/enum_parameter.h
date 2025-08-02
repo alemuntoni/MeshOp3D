@@ -25,7 +25,7 @@
 
 #include "parameter.h"
 
-#include <vclib/types.h>
+#include <vclib/base.h>
 
 namespace hlmp {
 
