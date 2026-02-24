@@ -30,13 +30,13 @@ namespace hlmp {
 template<vcl::MeshConcept MeshType>
 void saveTexturesUsingManager(const MeshType& mesh, const std::string& basePath)
 {
-    if constexpr (vcl::HasTextureImages<MeshType>) {
-        for (const vcl::Texture& texture : mesh.textures()) {
-            std::string ext = vcl::FileInfo::extension(texture.path());
+    if constexpr (vcl::HasMaterials<MeshType>) {
+        for (const auto& [path, texture] : mesh.textureImages()) {
+            std::string ext = vcl::FileInfo::extension(path);
 
             try {
                 auto act = ActionManager::saveImageAction(ext);
-                act->save(basePath + texture.path(), texture.image());
+                act->save(basePath + path, texture);
             }
             catch (const std::exception& e) {
                 // todo: log error
@@ -49,19 +49,25 @@ void saveTexturesUsingManager(const MeshType& mesh, const std::string& basePath)
 template<vcl::MeshConcept MeshType>
 void loadTexturesUsingManager(MeshType& mesh, const std::string& basePath)
 {
-    if constexpr (vcl::HasTextureImages<MeshType>) {
-        for (vcl::Texture& texture : mesh.textures()) {
-            if (texture.image().isNull()) {
-                std::string ext = vcl::FileInfo::extension(texture.path());
+    if constexpr (vcl::HasMaterials<MeshType>) {
+        for (vcl::Material& m : mesh.materials()) {
+            const uint N_TEXTURES =
+                vcl::toUnderlying(vcl::Material::TextureType::COUNT);
+            for (uint i = 0; i < N_TEXTURES; ++i) {
+                const vcl::TextureDescriptor& td = m.textureDescriptor(i);
+                if (!td.isNull() && mesh.textureImage(td.path()).isNull()) {
+                    const std::string& path = td.path();
+                    std::string        ext  = vcl::FileInfo::extension(path);
 
-                try {
-                    auto act        = ActionManager::loadImageAction(ext);
-                    texture.image() = act->load(basePath + texture.path());
-                }
-                catch (const std::exception& e) {
-                    // todo: log error
-                    std::cerr << "Error loading texture: " << e.what()
-                              << std::endl;
+                    try {
+                        auto act = ActionManager::loadImageAction(ext);
+                        mesh.pushTextureImage(path, act->load(basePath + path));
+                    }
+                    catch (const std::exception& e) {
+                        // todo: log error
+                        std::cerr << "Error loading texture: " << e.what()
+                                  << std::endl;
+                    }
                 }
             }
         }

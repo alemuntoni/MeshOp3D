@@ -145,7 +145,7 @@ public:
             vcl::loadStl(mesh, filename, loadedInfo, settings, log);
 
             if (parameters.get("unify_duplicate_vertices")->boolValue()) {
-                vcl::removeDuplicatedVertices(mesh);
+                vcl::removeDuplicateVertices(mesh);
                 mesh.compactVertices();
                 // todo: log the number of removed vertices
             }
