@@ -41,6 +41,7 @@ class TriEdgeMeshConvert : public ConvertActionT<MeshType>
         using TriEdgeMeshType = GetMeshType<MeshTypeId::TRIANGLE_MESH>;
 
         TriEdgeMeshType triEdgeMesh;
+        triEdgeMesh.enableSameOptionalComponentsOf(inputMesh);
         triEdgeMesh.importFrom(inputMesh);
 
         return {MeshTypeId::TRIANGLE_MESH, std::any(triEdgeMesh)};

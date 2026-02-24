@@ -41,6 +41,7 @@ class PolyEdgeMeshConvert : public ConvertActionT<MeshType>
         using PolyEdgeMeshType = GetMeshType<MeshTypeId::POLYGON_MESH>;
 
         PolyEdgeMeshType polyEdgeMesh;
+        polyEdgeMesh.enableSameOptionalComponentsOf(inputMesh);
         polyEdgeMesh.importFrom(inputMesh);
 
         return {MeshTypeId::POLYGON_MESH, std::any(polyEdgeMesh)};
