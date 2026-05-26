@@ -28,27 +28,28 @@
 
 #include "utils.h"
 
-#include "ui_main_window.h"
-
 #include <vclib/qt/gui/text_edit_logger.h>
+#include <vclib/qt/mesh_viewer.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 #include <vclib/render/drawable/drawable_object_vector.h>
 
-#include <QMainWindow>
+#include <QMenu>
+#include <QAction>
 
 namespace hlmp {
 
-namespace Ui {
-class MainWindow;
-} // namespace Ui
-
-class MainWindow : public QMainWindow
+class MainWindow : public vcl::qt::MeshViewer
 {
     Q_OBJECT
 
-    Ui::MainWindow* mUI;
+    // Menus
+    QMenu* mFileMenu;
+    QMenu* mFilterMenu;
+    QMenu* mConvertMenu;
 
-    // proc::ActionManager mActionManager;
+    // Actions
+    QAction* mActionOpenMesh;
+    QAction* mActionSaveMeshAs;
 
     std::shared_ptr<vcl::DrawableObjectVector> mMeshVector =
         std::make_shared<vcl::DrawableObjectVector>();
@@ -71,7 +72,7 @@ public slots:
     void convertCurrentMesh(bool);
 
 private:
-    vcl::qt::TextEditLogger& logger();
+    void createMenus();
 
     void populateFilterMenu();
 
@@ -97,7 +98,7 @@ private:
         vcl::uint nioMeshes = action->inputOutputMeshes().size();
         if (niMeshes + nioMeshes == 1) {
             m = toDrawableMesh<MeshType>(
-                mMeshVector->at(mUI->meshViewer->selectedDrawableObject()));
+                mMeshVector->at(this->selectedDrawableObject()));
             if (niMeshes == 1) {
                 inputMeshes.push_back(m.get());
             }
@@ -121,7 +122,7 @@ private:
         for (const auto& m : outputMeshes) {
             mMeshVector->pushBack(makeMeshDrawable(m));
         }
-        mUI->meshViewer->updateGUI();
+        this->updateGUI();
     }
 
     template<vcl::MeshConcept MeshType>
@@ -150,7 +151,7 @@ private:
             break;
         default: break;
         }
-        mUI->meshViewer->updateGUI();
+        this->updateGUI();
     }
 
     template<vcl::MeshConcept MeshType>

@@ -32,27 +32,17 @@
 #include <vclib/render/drawable/drawable_mesh.h>
 
 #include <QFileDialog>
+#include <QMenuBar>
 #include <QPushButton>
 
 namespace hlmp {
 
 MainWindow::MainWindow(QWidget* parent) :
-        QMainWindow(parent), mUI(new Ui::MainWindow)
+        vcl::qt::MeshViewer(parent)
 {
-    mUI->setupUi(this);
+    setDrawableObjectVector(mMeshVector);
 
-    mUI->meshViewer->setDrawableObjectVector(mMeshVector);
-
-    populateFilterMenu();
-
-    connect(
-        mUI->actionOpenMesh, &QAction::triggered, this, &MainWindow::openMesh);
-
-    connect(
-        mUI->actionSaveMeshAs,
-        &QAction::triggered,
-        this,
-        &MainWindow::saveMeshAs);
+    createMenus();
 
     // set this function to mesh viewer
     auto f = [](const vcl::DrawableObject& obj) {
@@ -73,12 +63,11 @@ MainWindow::MainWindow(QWidget* parent) :
         return std::make_pair(QIcon(), "");
     };
 
-    mUI->meshViewer->setDrawVectorIconFunction(f);
+    setDrawVectorIconFunction(f);
 }
 
 MainWindow::~MainWindow()
 {
-    delete mUI;
 }
 
 void MainWindow::openMesh()
@@ -128,14 +117,14 @@ void MainWindow::openMesh()
         default: break;
         }
 
-        mUI->meshViewer->updateGUI();
-        mUI->meshViewer->fitScene();
+        updateGUI();
+        fitScene();
     }
 }
 
 void MainWindow::saveMeshAs()
 {
-    vcl::uint i = mUI->meshViewer->selectedDrawableObject();
+    vcl::uint i = selectedDrawableObject();
 
     if (mMeshVector->size() == 0 || i == vcl::UINT_NULL) {
         return;
@@ -222,7 +211,7 @@ void MainWindow::applyFilter(
     const ParameterVector&                params)
 {
     MeshTypeId filterMeshType = getFilterMeshType(
-        action, params, mUI->meshViewer->selectedDrawableObject());
+        action, params, selectedDrawableObject());
 
     switch (filterMeshType) {
     case MeshTypeId::TRIANGLE_MESH:
@@ -247,7 +236,7 @@ void MainWindow::convertCurrentMesh(bool)
     auto convert = ActionManager::convertActions(actionId);
     assert(convert);
     if (convert) {
-        auto i = mUI->meshViewer->selectedDrawableObject();
+        auto i = selectedDrawableObject();
         if (i != vcl::UINT_NULL) {
             auto obj  = mMeshVector->at(i);
             auto type = meshId(obj);
@@ -273,9 +262,27 @@ void MainWindow::convertCurrentMesh(bool)
     }
 }
 
-vcl::qt::TextEditLogger& MainWindow::logger()
+void MainWindow::createMenus()
 {
-    return mUI->meshViewer->logger();
+    // Create menus
+    mFileMenu = menuBar()->addMenu(tr("&File"));
+    mFilterMenu = menuBar()->addMenu(tr("F&ilter"));
+    mConvertMenu = menuBar()->addMenu(tr("&Convert"));
+
+    // Create actions
+    mActionOpenMesh = new QAction(QIcon::fromTheme("document-open"), tr("Open Mesh"), this);
+    mActionSaveMeshAs = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Mesh As..."), this);
+
+    // Add actions to File menu
+    mFileMenu->addAction(mActionOpenMesh);
+    mFileMenu->addAction(mActionSaveMeshAs);
+
+    // Connect actions
+    connect(mActionOpenMesh, &QAction::triggered, this, &MainWindow::openMesh);
+    connect(mActionSaveMeshAs, &QAction::triggered, this, &MainWindow::saveMeshAs);
+
+    // Populate filter and convert menus
+    populateFilterMenu();
 }
 
 void MainWindow::populateFilterMenu()
@@ -285,20 +292,20 @@ void MainWindow::populateFilterMenu()
     auto filters = ActionManager::filterActions();
 
     std::array<QMenu*, vcl::toUnderlying(COUNT)> menus;
-    menus[vcl::toUnderlying(CREATE)] = new QMenu("Create", mUI->menuFilter);
+    menus[vcl::toUnderlying(CREATE)] = new QMenu("Create", mFilterMenu);
     menus[vcl::toUnderlying(CLEANING_AND_REPAIRING)] =
-        new QMenu("Cleaning and Repairing", mUI->menuFilter);
+        new QMenu("Cleaning and Repairing", mFilterMenu);
     menus[vcl::toUnderlying(RECONSTRUCTION)] =
-        new QMenu("Reconstruction", mUI->menuFilter);
+        new QMenu("Reconstruction", mFilterMenu);
     menus[vcl::toUnderlying(SMOOTHING)] =
-        new QMenu("Smoothing", mUI->menuFilter);
+        new QMenu("Smoothing", mFilterMenu);
 
     for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
-        mUI->menuFilter->addMenu(menus[i]);
+        mFilterMenu->addMenu(menus[i]);
     }
 
     for (const std::shared_ptr<FilterActionsAggregator>& f : filters) {
-        QAction* action = new QAction(f->name().c_str(), mUI->menuFilter);
+        QAction* action = new QAction(f->name().c_str(), mFilterMenu);
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(f->name())));
 
@@ -318,10 +325,10 @@ void MainWindow::populateFilterMenu()
     auto convert = ActionManager::convertActions();
 
     for (const std::shared_ptr<ConvertActionsAggregator>& c : convert) {
-        QAction* action = new QAction(c->name().c_str(), mUI->menuConvert);
+        QAction* action = new QAction(c->name().c_str(), mConvertMenu);
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(c->name())));
-        mUI->menuConvert->addAction(action);
+        mConvertMenu->addAction(action);
 
         connect(
             action,
