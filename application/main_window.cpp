@@ -101,9 +101,8 @@ void MainWindow::openMesh()
         auto [m, id] = loadMeshBestFit(filename, params, logger());
         logger().stopTimer();
         logger().log(
-            vcl::qt::TextEditLogger::MESSAGE_LOG,
-            pfn + " loaded in " + std::to_string(logger().time()) +
-                " seconds.");
+            pfn + " loaded in " + std::to_string(logger().time()) + " seconds.",
+            vcl::qt::TextEditLogger::MESSAGE_LOG);
 
         switch (id) {
         case MeshTypeId::TRIANGLE_MESH:
@@ -188,8 +187,8 @@ void MainWindow::saveMeshAs()
         }
         logger().stopTimer();
         logger().log(
-            vcl::qt::TextEditLogger::MESSAGE_LOG,
-            pfn + " saved in " + std::to_string(logger().time()) + " seconds.");
+            pfn + " saved in " + std::to_string(logger().time()) + " seconds.",
+            vcl::qt::TextEditLogger::MESSAGE_LOG);
     }
 }
 

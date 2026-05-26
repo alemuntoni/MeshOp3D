@@ -112,9 +112,9 @@ private:
         logger().stopTimer();
 
         logger().log(
-            vcl::qt::TextEditLogger::MESSAGE_LOG,
             action->name() + " applied in " + std::to_string(logger().time()) +
-                " seconds.");
+                " seconds.",
+            vcl::qt::TextEditLogger::MESSAGE_LOG);
 
         if (nioMeshes > 0) {
             m->updateBuffers();
@@ -134,9 +134,9 @@ private:
         auto [id, anyMesh] = action->convert(mesh, logger());
         logger().stopTimer();
         logger().log(
-            vcl::qt::TextEditLogger::MESSAGE_LOG,
             action->name() + " applied in " + std::to_string(logger().time()) +
-                " seconds.");
+                " seconds.",
+            vcl::qt::TextEditLogger::MESSAGE_LOG);
 
         switch (id) {
         case MeshTypeId::TRIANGLE_MESH:
