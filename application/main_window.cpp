@@ -78,46 +78,50 @@ void MainWindow::openMesh()
         nullptr, QObject::tr("Open Document"), QDir::currentPath(), filter);
 
     if (!f.isEmpty()) {
-        std::string     filename = f.toStdString();
-        std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
-        vcl::FileFormat format = vcl::FileInfo::extension(filename);
-
-        auto params = ActionManager::loadMeshParameters(format);
-
-        if (!params.empty()) {
-            ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
-            dialog->exec();
-
-            if (dialog->result() == QDialog::Rejected) {
-                return;
-            }
-            else {
-                params = dialog->parameters();
-            }
-        }
-
-        logger().startTimer();
-        auto [m, id] = loadMeshBestFit(filename, params, logger());
-        logger().stopTimer();
-        logger().log(
-            pfn + " loaded in " + std::to_string(logger().time()) + " seconds.",
-            vcl::qt::TextEditLogger::MESSAGE_LOG);
-
-        switch (id) {
-        case MeshTypeId::TRIANGLE_MESH:
-            pushDrawableObject(makeMeshDrawable(
-                std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
-            break;
-        case MeshTypeId::POLYGON_MESH:
-            pushDrawableObject(makeMeshDrawable(
-                std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
-            break;
-        default: break;
-        }
-
-        updateGUI();
-        fitScene();
+        loadMesh(f.toStdString());
     }
+}
+
+void MainWindow::loadMesh(const std::string& filename)
+{
+    std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
+    vcl::FileFormat format = vcl::FileInfo::extension(filename);
+
+    auto params = ActionManager::loadMeshParameters(format);
+
+    if (!params.empty()) {
+        ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
+        dialog->exec();
+
+        if (dialog->result() == QDialog::Rejected) {
+            return;
+        }
+        else {
+            params = dialog->parameters();
+        }
+    }
+
+    logger().startTimer();
+    auto [m, id] = loadMeshBestFit(filename, params, logger());
+    logger().stopTimer();
+    logger().log(
+        pfn + " loaded in " + std::to_string(logger().time()) + " seconds.",
+        vcl::qt::TextEditLogger::MESSAGE_LOG);
+
+    switch (id) {
+    case MeshTypeId::TRIANGLE_MESH:
+        pushDrawableObject(makeMeshDrawable(
+            std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
+        break;
+    case MeshTypeId::POLYGON_MESH:
+        pushDrawableObject(makeMeshDrawable(
+            std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
+        break;
+    default: break;
+    }
+
+    updateGUI();
+    fitScene();
 }
 
 void MainWindow::saveMeshAs()

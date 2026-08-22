@@ -69,6 +69,8 @@ public slots:
     void convertCurrentMesh(bool);
 
 private:
+    void loadMesh(const std::string& filename);
+
     void createMenus();
 
     void populateFilterMenu();
