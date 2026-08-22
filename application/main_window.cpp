@@ -34,14 +34,16 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QPushButton>
+#include <QUrl>
 
 namespace hlmp {
 
-MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent)
+MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appConfigDirectory("HLMP") / "settings.json").string())
 {
     vcl::pushDefaultEditors(*this);
 
     createMenus();
+    setAcceptDrops(true);
 
     // set this function to mesh viewer
     auto f = [](const vcl::DrawableObject& obj) {
@@ -67,6 +69,64 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+    if (event->mimeData()->hasUrls()) {
+        std::vector<vcl::FileFormat> formats = ActionManager::loadMeshFormats();
+        bool accept = false;
+
+        for (const QUrl& url : event->mimeData()->urls()) {
+            if (url.isLocalFile()) {
+                std::string filename = url.toLocalFile().toStdString();
+                vcl::FileFormat format = vcl::FileInfo::extension(filename);
+
+                for (const auto& f : formats) {
+                    if (f == format) {
+                        accept = true;
+                        break;
+                    }
+                }
+            }
+            if (accept) {
+                break;
+            }
+        }
+
+        if (accept) {
+            event->acceptProposedAction();
+        }
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent* event)
+{
+    const QMimeData* mimeData = event->mimeData();
+
+    if (mimeData->hasUrls()) {
+        std::vector<vcl::FileFormat> formats = ActionManager::loadMeshFormats();
+
+        for (const QUrl& url : mimeData->urls()) {
+            if (url.isLocalFile()) {
+                std::string filename = url.toLocalFile().toStdString();
+                vcl::FileFormat format = vcl::FileInfo::extension(filename);
+                
+                bool accept = false;
+                for (const auto& f : formats) {
+                    if (f == format) {
+                        accept = true;
+                        break;
+                    }
+                }
+                
+                if (accept) {
+                    loadMesh(filename);
+                }
+            }
+        }
+        event->acceptProposedAction();
+    }
 }
 
 void MainWindow::openMesh()

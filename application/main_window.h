@@ -35,6 +35,9 @@
 
 #include <QAction>
 #include <QMenu>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
 
 namespace hlmp {
 
@@ -54,6 +57,10 @@ class MainWindow : public vcl::qt::MeshViewer
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
+
+protected:
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 
 public slots:
     void openMesh();
