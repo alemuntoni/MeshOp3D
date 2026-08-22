@@ -23,13 +23,12 @@
 #ifndef HLMP_PARAMETER_VECTOR_H
 #define HLMP_PARAMETER_VECTOR_H
 
+#include "base/polymorphic_object_vector.h"
 #include "parameters/parameter.h"
-
-#include <vclib/space/core/vector/polymorphic_object_vector.h>
 
 namespace hlmp {
 
-class ParameterVector : public vcl::PolymorphicObjectVector<Parameter>
+class ParameterVector : public PolymorphicObjectVector<Parameter>
 {
 public:
     std::shared_ptr<const Parameter> get(const std::string& name) const

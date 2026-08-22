@@ -29,12 +29,12 @@
 #include "utils.h"
 
 #include <vclib/qt/gui/text_edit_logger.h>
-#include <vclib/qt/mesh_viewer.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 #include <vclib/render/drawable/drawable_object_vector.h>
+#include <vclib/render/mesh_viewer.h>
 
-#include <QMenu>
 #include <QAction>
+#include <QMenu>
 
 namespace hlmp {
 
@@ -51,9 +51,6 @@ class MainWindow : public vcl::qt::MeshViewer
     QAction* mActionOpenMesh;
     QAction* mActionSaveMeshAs;
 
-    std::shared_ptr<vcl::DrawableObjectVector> mMeshVector =
-        std::make_shared<vcl::DrawableObjectVector>();
-
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
@@ -67,7 +64,7 @@ public slots:
 
     void applyFilter(
         const std::shared_ptr<FilterActionsAggregator>& action,
-        const ParameterVector&                params);
+        const ParameterVector&                          params);
 
     void convertCurrentMesh(bool);
 
@@ -76,17 +73,18 @@ private:
 
     void populateFilterMenu();
 
-    void openFilterDialog(const std::shared_ptr<FilterActionsAggregator>& action);
+    void openFilterDialog(
+        const std::shared_ptr<FilterActionsAggregator>& action);
 
     MeshTypeId getFilterMeshType(
         const std::shared_ptr<FilterActionsAggregator>& action,
-        const ParameterVector&                params,
-        vcl::uint                             selectedMesh);
+        const ParameterVector&                          params,
+        vcl::uint                                       selectedMesh);
 
     template<vcl::MeshConcept MeshType>
     void executeFilter(
         const std::shared_ptr<FilterActionsAggregator>& action,
-        const ParameterVector&                params)
+        const ParameterVector&                          params)
     {
         std::vector<const MeshType*> inputMeshes;
         std::vector<MeshType*>       inputOutputMeshes;
@@ -98,7 +96,7 @@ private:
         vcl::uint nioMeshes = action->inputOutputMeshes().size();
         if (niMeshes + nioMeshes == 1) {
             m = toDrawableMesh<MeshType>(
-                mMeshVector->at(this->selectedDrawableObject()));
+                this->drawableObject(this->selectedDrawableObject()));
             if (niMeshes == 1) {
                 inputMeshes.push_back(m.get());
             }
@@ -120,7 +118,7 @@ private:
             m->updateBuffers();
         }
         for (const auto& m : outputMeshes) {
-            mMeshVector->pushBack(makeMeshDrawable(m));
+            this->pushDrawableObject(makeMeshDrawable(m));
         }
         this->updateGUI();
     }
@@ -128,7 +126,7 @@ private:
     template<vcl::MeshConcept MeshType>
     void convertAndAddMesh(
         const std::shared_ptr<ConvertActionsAggregator>& action,
-        const MeshType&                        mesh)
+        const MeshType&                                  mesh)
     {
         logger().startTimer();
         auto [id, anyMesh] = action->convert(mesh, logger());
@@ -140,12 +138,12 @@ private:
 
         switch (id) {
         case MeshTypeId::TRIANGLE_MESH:
-            mMeshVector->pushBack(makeMeshDrawable(
+            this->pushDrawableObject(makeMeshDrawable(
                 std::move(
                     std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh)))));
             break;
         case MeshTypeId::POLYGON_MESH:
-            mMeshVector->pushBack(makeMeshDrawable(
+            this->pushDrawableObject(makeMeshDrawable(
                 std::move(
                     std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh)))));
             break;

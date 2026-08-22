@@ -22,11 +22,11 @@
 
 #include "main_window.h"
 
-#include <QApplication>
+#include <vclib/render/application.h>
 
 int main(int argc, char** argv)
 {
-    auto app = vcl::qt::qAppl(argc, argv);
+    auto app = vcl::Application(argc, argv);
 
     hlmp::MainWindow mw;
 

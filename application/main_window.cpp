@@ -37,10 +37,9 @@
 
 namespace hlmp {
 
-MainWindow::MainWindow(QWidget* parent) :
-        vcl::qt::MeshViewer(parent)
+MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent)
 {
-    setDrawableObjectVector(mMeshVector);
+    vcl::pushDefaultEditors(*this);
 
     createMenus();
 
@@ -106,11 +105,11 @@ void MainWindow::openMesh()
 
         switch (id) {
         case MeshTypeId::TRIANGLE_MESH:
-            mMeshVector->pushBack(makeMeshDrawable(
+            pushDrawableObject(makeMeshDrawable(
                 std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
             break;
         case MeshTypeId::POLYGON_MESH:
-            mMeshVector->pushBack(makeMeshDrawable(
+            pushDrawableObject(makeMeshDrawable(
                 std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
             break;
         default: break;
@@ -125,11 +124,11 @@ void MainWindow::saveMeshAs()
 {
     vcl::uint i = selectedDrawableObject();
 
-    if (mMeshVector->size() == 0 || i == vcl::UINT_NULL) {
+    if (drawableObjectsCount() == 0 || i == vcl::UINT_NULL) {
         return;
     }
 
-    auto obj = mMeshVector->at(i);
+    auto obj = drawableObject(i);
 
     MeshTypeId type = meshId(obj);
 
@@ -207,10 +206,10 @@ void MainWindow::openFilterDialog(bool)
 
 void MainWindow::applyFilter(
     const std::shared_ptr<FilterActionsAggregator>& action,
-    const ParameterVector&                params)
+    const ParameterVector&                          params)
 {
-    MeshTypeId filterMeshType = getFilterMeshType(
-        action, params, selectedDrawableObject());
+    MeshTypeId filterMeshType =
+        getFilterMeshType(action, params, selectedDrawableObject());
 
     switch (filterMeshType) {
     case MeshTypeId::TRIANGLE_MESH:
@@ -237,7 +236,7 @@ void MainWindow::convertCurrentMesh(bool)
     if (convert) {
         auto i = selectedDrawableObject();
         if (i != vcl::UINT_NULL) {
-            auto obj  = mMeshVector->at(i);
+            auto obj  = drawableObject(i);
             auto type = meshId(obj);
 
             if (type != COUNT) {
@@ -264,13 +263,15 @@ void MainWindow::convertCurrentMesh(bool)
 void MainWindow::createMenus()
 {
     // Create menus
-    mFileMenu = menuBar()->addMenu(tr("&File"));
-    mFilterMenu = menuBar()->addMenu(tr("F&ilter"));
+    mFileMenu    = menuBar()->addMenu(tr("&File"));
+    mFilterMenu  = menuBar()->addMenu(tr("F&ilter"));
     mConvertMenu = menuBar()->addMenu(tr("&Convert"));
 
     // Create actions
-    mActionOpenMesh = new QAction(QIcon::fromTheme("document-open"), tr("Open Mesh"), this);
-    mActionSaveMeshAs = new QAction(QIcon::fromTheme("document-save-as"), tr("Save Mesh As..."), this);
+    mActionOpenMesh =
+        new QAction(QIcon::fromTheme("document-open"), tr("Open Mesh"), this);
+    mActionSaveMeshAs = new QAction(
+        QIcon::fromTheme("document-save-as"), tr("Save Mesh As..."), this);
 
     // Add actions to File menu
     mFileMenu->addAction(mActionOpenMesh);
@@ -278,7 +279,8 @@ void MainWindow::createMenus()
 
     // Connect actions
     connect(mActionOpenMesh, &QAction::triggered, this, &MainWindow::openMesh);
-    connect(mActionSaveMeshAs, &QAction::triggered, this, &MainWindow::saveMeshAs);
+    connect(
+        mActionSaveMeshAs, &QAction::triggered, this, &MainWindow::saveMeshAs);
 
     // Populate filter and convert menus
     populateFilterMenu();
@@ -296,8 +298,7 @@ void MainWindow::populateFilterMenu()
         new QMenu("Cleaning and Repairing", mFilterMenu);
     menus[vcl::toUnderlying(RECONSTRUCTION)] =
         new QMenu("Reconstruction", mFilterMenu);
-    menus[vcl::toUnderlying(SMOOTHING)] =
-        new QMenu("Smoothing", mFilterMenu);
+    menus[vcl::toUnderlying(SMOOTHING)] = new QMenu("Smoothing", mFilterMenu);
 
     for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
         mFilterMenu->addMenu(menus[i]);
@@ -337,7 +338,8 @@ void MainWindow::populateFilterMenu()
     }
 }
 
-void MainWindow::openFilterDialog(const std::shared_ptr<FilterActionsAggregator>& action)
+void MainWindow::openFilterDialog(
+    const std::shared_ptr<FilterActionsAggregator>& action)
 {
     FilterDockWidget* dock = new FilterDockWidget(action, this);
 
@@ -349,8 +351,8 @@ void MainWindow::openFilterDialog(const std::shared_ptr<FilterActionsAggregator>
 
 MeshTypeId MainWindow::getFilterMeshType(
     const std::shared_ptr<FilterActionsAggregator>& action,
-    const ParameterVector&                params,
-    vcl::uint                             selectedMesh)
+    const ParameterVector&                          params,
+    vcl::uint                                       selectedMesh)
 {
     vcl::uint niMeshes  = action->inputMeshes().size();
     vcl::uint nioMeshes = action->inputOutputMeshes().size();
@@ -365,7 +367,7 @@ MeshTypeId MainWindow::getFilterMeshType(
         assert(selectedMesh != vcl::UINT_NULL);
         // only one mesh input, the type of the mesh is the same as the
         // selectedMesh
-        return meshId(mMeshVector->at(selectedMesh));
+        return meshId(drawableObject(selectedMesh));
     }
     else {
         // TODO: implement

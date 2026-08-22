@@ -15,8 +15,6 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
-target_include_directories(vclib-render PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${FORMS})
 target_link_libraries(${PROJECT_NAME} PRIVATE vclib hlmp::core)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
