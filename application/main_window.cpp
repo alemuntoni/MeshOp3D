@@ -262,10 +262,17 @@ void MainWindow::convertCurrentMesh(bool)
 
 void MainWindow::createMenus()
 {
-    // Create menus
-    mFileMenu    = menuBar()->addMenu(tr("&File"));
-    mFilterMenu  = menuBar()->addMenu(tr("F&ilter"));
-    mConvertMenu = menuBar()->addMenu(tr("&Convert"));
+    QAction* before =
+        menuBar()->actions().isEmpty() ? nullptr : menuBar()->actions().first();
+
+    mFileMenu    = new QMenu(tr("&File"), this);
+    mFilterMenu  = new QMenu(tr("F&ilter"), this);
+    mConvertMenu = new QMenu(tr("&Convert"), this);
+
+    // file first,filter and convert after other menus
+    menuBar()->insertMenu(before, mFileMenu);
+    menuBar()->addMenu(mFilterMenu);
+    menuBar()->addMenu(mConvertMenu);
 
     // Create actions
     mActionOpenMesh =

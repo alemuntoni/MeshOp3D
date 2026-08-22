@@ -52,7 +52,7 @@ uint MultiParameterFrame::addSubFrame(
     const std::string&           name,
     const ParameterVector& parameters)
 {
-    ParametersGridLayout* layout = new ParametersGridLayout(this);
+    ParametersGridLayout* layout = new ParametersGridLayout(nullptr);
     layout->setParameters(parameters);
     return addSubFrameLayout(name, layout);
 }
@@ -66,7 +66,7 @@ void MultiParameterFrame::setSubFramePatameters(
     uint                         i,
     const ParameterVector& parameters)
 {
-    ParametersGridLayout* layout = new ParametersGridLayout(this);
+    ParametersGridLayout* layout = new ParametersGridLayout(nullptr);
     layout->setParameters(parameters);
     setSubFrameLayout(i, layout);
 }
