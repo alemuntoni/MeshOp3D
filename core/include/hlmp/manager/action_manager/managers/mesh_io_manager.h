@@ -25,16 +25,16 @@
 
 #include "../containers/io_action_container.h"
 
-#include <hlmp/actions/aggregators/mesh_io_actions_aggregator.h>
+#include <hlmp/actions/interfaces/mesh_io_action.h>
 
 namespace hlmp::detail {
 
 class MeshIOManager
 {
-    IOActionContainer<MeshIOActionsAggregator> mMeshIOActions;
+    IOActionContainer<MeshIOAction> mMeshIOActions;
 
 protected:
-    void add(const std::shared_ptr<MeshIOActionsAggregator>& action)
+    void add(const std::shared_ptr<MeshIOAction>& action)
     {
         mMeshIOActions.add(action);
     }
@@ -49,20 +49,12 @@ public:
 
     ParameterVector loadMeshParameters(vcl::FileFormat fmt) const
     {
-        return loadMeshActions(fmt)->parametersLoad(fmt);
+        return loadMeshAction(fmt)->parametersLoad(fmt);
     }
 
-    std::shared_ptr<MeshIOActionsAggregator> loadMeshActions(vcl::FileFormat fmt) const
+    std::shared_ptr<MeshIOAction> loadMeshAction(vcl::FileFormat fmt) const
     {
         return mMeshIOActions.loadAction(fmt);
-    }
-
-    template<vcl::MeshConcept MeshType>
-    std::shared_ptr<MeshIOActionT<MeshType>> loadMeshAction(
-        vcl::FileFormat fmt) const
-    {
-        std::shared_ptr<MeshIOActionsAggregator> actions = loadMeshActions(fmt);
-        return actions->action<MeshType>();
     }
 
     // save mesh
@@ -79,20 +71,12 @@ public:
 
     ParameterVector saveMeshParameters(vcl::FileFormat fmt) const
     {
-        return saveMeshActions(fmt)->parametersSave(fmt);
+        return saveMeshAction(fmt)->parametersSave(fmt);
     }
 
-    std::shared_ptr<MeshIOActionsAggregator> saveMeshActions(vcl::FileFormat fmt) const
+    std::shared_ptr<MeshIOAction> saveMeshAction(vcl::FileFormat fmt) const
     {
         return mMeshIOActions.saveAction(fmt);
-    }
-
-    template<vcl::MeshConcept MeshType>
-    std::shared_ptr<MeshIOActionT<MeshType>> saveMeshAction(
-        vcl::FileFormat fmt) const
-    {
-        std::shared_ptr<MeshIOActionsAggregator> actions = saveMeshActions(fmt);
-        return actions->action<MeshType>();
     }
 };
 

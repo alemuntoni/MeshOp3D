@@ -43,9 +43,10 @@ std::pair<std::any, MeshTypeId> loadMeshBestFit(
     std::any    res;
     std::string ext = vcl::FileInfo::extension(filename);
 
-    vcl::PolyEdgeMesh mesh =
-        ActionManager::loadMeshActions(ext)->load<vcl::PolyEdgeMesh>(
-            filename, parameters, logger);
+    vcl::MeshInfo info;
+    std::any resAny = ActionManager::loadMeshAction(ext)->loadErased(
+        MeshTypeId::POLYGON_MESH, filename, vcl::FileFormat(ext), parameters, info, logger);
+    vcl::PolyEdgeMesh mesh = std::any_cast<vcl::PolyEdgeMesh>(std::move(resAny));
 
     if (isTriangleMesh(mesh)) {
         vcl::TriEdgeMesh m;

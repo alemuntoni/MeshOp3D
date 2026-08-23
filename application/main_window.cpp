@@ -217,8 +217,8 @@ void MainWindow::saveMeshAs()
             filename += "." + f.extensions().front();
         }
 
-        auto            actions = ActionManager::saveMeshActions(f);
-        ParameterVector params  = actions->parametersSave(f);
+        auto            action = ActionManager::saveMeshAction(f);
+        ParameterVector params  = action->parametersSave(f);
 
         if (!params.empty()) {
             ParameterDialog* dialog = new ParameterDialog(params, "Save Mesh");
@@ -233,21 +233,31 @@ void MainWindow::saveMeshAs()
         }
 
         logger().startTimer();
+        vcl::MeshInfo info = action->formatCapability(f);
+        std::any meshPtrAny;
+
         switch (type) {
         case MeshTypeId::TRIANGLE_MESH: {
             auto m =
                 std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>>(
                     obj);
-            actions->save<vcl::TriEdgeMesh>(filename, *m, params, logger());
+            const vcl::TriEdgeMesh* ptr = m.get();
+            meshPtrAny = std::make_any<const vcl::TriEdgeMesh*>(ptr);
         } break;
         case MeshTypeId::POLYGON_MESH: {
             auto m =
                 std::dynamic_pointer_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(
                     obj);
-            actions->save<vcl::PolyEdgeMesh>(filename, *m, params, logger());
+            const vcl::PolyEdgeMesh* ptr = m.get();
+            meshPtrAny = std::make_any<const vcl::PolyEdgeMesh*>(ptr);
         } break;
         default: break;
         }
+
+        if (meshPtrAny.has_value()) {
+            action->saveErased(type, filename, f, meshPtrAny, info, params, logger());
+        }
+
         logger().stopTimer();
         logger().log(
             pfn + " saved in " + std::to_string(logger().time()) + " seconds.",

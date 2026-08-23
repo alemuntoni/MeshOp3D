@@ -27,6 +27,8 @@
 
 #include <hlmp/parameter_vector.h>
 
+#include <any>
+
 #include <vclib/io/file_format.h>
 #include <vclib/space/complex/mesh_info.h>
 
@@ -64,6 +66,25 @@ public:
      */
     virtual std::vector<std::pair<vcl::FileFormat, vcl::MeshInfo>>
     supportedMeshFormats() const = 0;
+
+    virtual std::any loadErased(
+        MeshTypeId             meshType,
+        const std::string&     filename,
+        const vcl::FileFormat& format,
+        const ParameterVector& parameters,
+        vcl::MeshInfo&         loadedInfo,
+        vcl::AbstractLogger&   log) const = 0;
+
+    virtual void saveErased(
+        MeshTypeId             meshType,
+        const std::string&     filename,
+        const vcl::FileFormat& format,
+        const std::any&        mesh,
+        const vcl::MeshInfo&   info,
+        const ParameterVector& parameters,
+        vcl::AbstractLogger&   log) const = 0;
+
+    virtual vcl::BitSet32 supportedMeshTypes() const = 0;
 
     /**
      * @brief Returns the parameters to load the mesh.
@@ -114,7 +135,7 @@ public:
         return formats;
     }
 
-protected:
+public:
     vcl::MeshInfo formatCapability(const vcl::FileFormat& format) const
     {
         for (const auto& [f, info] : supportedMeshFormats()) {

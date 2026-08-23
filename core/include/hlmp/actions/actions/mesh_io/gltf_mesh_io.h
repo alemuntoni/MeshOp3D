@@ -23,7 +23,7 @@
 #ifndef HLMP_ACTIONS_ACTIONS_MESH_IO_GLTF_MESH_IO_H
 #define HLMP_ACTIONS_ACTIONS_MESH_IO_GLTF_MESH_IO_H
 
-#include <hlmp/actions/interfaces/mesh_io_action_t.h>
+#include <hlmp/actions/interfaces/mesh_io_action_base.h>
 #include <hlmp/manager.h>
 #include <hlmp/manager/load_save_textures.h>
 
@@ -32,15 +32,11 @@
 
 namespace hlmp {
 
-template<vcl::MeshConcept MeshType>
-class GltfMeshIO : public MeshIOActionT<MeshType>
+class GltfMeshIO : public MeshIOActionBase<GltfMeshIO>
 {
-    using Base = MeshIOActionT<MeshType>;
+    using Base = MeshIOActionBase<GltfMeshIO>;
 
 public:
-    // allow usage of the overridden base class functions
-    using Base::load;
-
     std::string name() const final { return "glTF IO"; }
 
     Base::IOSupport ioSupport() const final { return Base::IOSupport::LOAD; }
@@ -75,12 +71,13 @@ public:
             "Saving in glTF format is not supported yet.");
     }
 
+    template<vcl::MeshConcept MeshType>
     MeshType load(
         const std::string&     filename,
         const vcl::FileFormat& format,
         const ParameterVector& parameters,
         vcl::MeshInfo&         loadedInfo,
-        vcl::AbstractLogger&   log = Base::logger()) const final
+        vcl::AbstractLogger&   log) const
     {
         MeshType mesh;
         vcl::LoadSettings settings;
@@ -101,13 +98,14 @@ public:
         return mesh;
     }
 
+    template<vcl::MeshConcept MeshType>
     void save(
         const std::string&     filename,
         const vcl::FileFormat& format,
         const MeshType&        mesh,
         const vcl::MeshInfo&   info,
         const ParameterVector& parameters,
-        vcl::AbstractLogger&   log = Base::logger()) const final
+        vcl::AbstractLogger&   log) const
     {
         // glTF saving is not supported yet
         throw vcl::UnknownFileFormatException(

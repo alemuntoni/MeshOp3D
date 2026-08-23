@@ -41,7 +41,7 @@ std::vector<std::shared_ptr<Action>> actionInstances()
     fillActionInstances(vec, ImageIOActionsList());
 
     // MeshIO actions
-    fillAggregatedActionInstances<MeshIOActionsAggregator>(vec, MeshIOActionsList());
+    fillActionInstances(vec, MeshIOActionsList());
 
     return vec;
 }

@@ -40,7 +40,7 @@ void Manager::add(const std::shared_ptr<Action>& action)
     std::shared_ptr<ConvertAction> convertActions;
     std::shared_ptr<FilterAction>  filterActions;
     std::shared_ptr<ImageIOAction>  imageIOAction;
-    std::shared_ptr<MeshIOActionsAggregator>  meshIOActions;
+    std::shared_ptr<MeshIOAction>  meshIOActions;
 
     switch (action->type()) {
     case CONVERT_ACTION:
@@ -56,7 +56,7 @@ void Manager::add(const std::shared_ptr<Action>& action)
         ImageIOManager::add(imageIOAction);
         break;
     case MESH_IO_ACTION:
-        meshIOActions = std::dynamic_pointer_cast<MeshIOActionsAggregator>(action);
+        meshIOActions = std::dynamic_pointer_cast<MeshIOAction>(action);
         MeshIOManager::add(meshIOActions);
         break;
     default: throw std::runtime_error("Action type not supported");

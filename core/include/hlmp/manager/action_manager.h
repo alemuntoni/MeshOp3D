@@ -59,15 +59,7 @@ public:
 
     static ParameterVector loadMeshParameters(vcl::FileFormat fmt);
 
-    static std::shared_ptr<MeshIOActionsAggregator> loadMeshActions(
-        vcl::FileFormat fmt);
-
-    template<vcl::MeshConcept MeshType>
-    static std::shared_ptr<MeshIOActionT<MeshType>> loadMeshAction(
-        vcl::FileFormat fmt)
-    {
-        return instance().loadMeshAction<MeshType>(fmt);
-    }
+    static std::shared_ptr<MeshIOAction> loadMeshAction(vcl::FileFormat fmt);
 
     // save mesh
 
@@ -77,15 +69,7 @@ public:
 
     static ParameterVector saveMeshParameters(vcl::FileFormat fmt);
 
-    static std::shared_ptr<MeshIOActionsAggregator> saveMeshActions(
-        vcl::FileFormat fmt);
-
-    template<vcl::MeshConcept MeshType>
-    static std::shared_ptr<MeshIOActionT<MeshType>> saveMeshAction(
-        vcl::FileFormat fmt)
-    {
-        return instance().saveMeshAction<MeshType>(fmt);
-    }
+    static std::shared_ptr<MeshIOAction> saveMeshAction(vcl::FileFormat fmt);
 
     // filter
 

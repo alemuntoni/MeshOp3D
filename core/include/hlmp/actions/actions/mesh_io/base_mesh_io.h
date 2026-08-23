@@ -23,7 +23,7 @@
 #ifndef HLMP_ACTIONS_ACTIONS_MESH_IO_BASE_MESH_IO_H
 #define HLMP_ACTIONS_ACTIONS_MESH_IO_BASE_MESH_IO_H
 
-#include <hlmp/actions/interfaces/mesh_io_action_t.h>
+#include <hlmp/actions/interfaces/mesh_io_action_base.h>
 #include <hlmp/manager.h>
 
 #include <vclib/algorithms/mesh.h>
@@ -31,16 +31,11 @@
 
 namespace hlmp {
 
-template<vcl::MeshConcept MeshType>
-class BaseMeshIO : public MeshIOActionT<MeshType>
+class BaseMeshIO : public MeshIOActionBase<BaseMeshIO>
 {
-    using Base = MeshIOActionT<MeshType>;
+    using Base = MeshIOActionBase<BaseMeshIO>;
 
 public:
-    // allow usage of the overridden base class functions
-    using Base::load;
-    using Base::save;
-
     std::string name() const final { return "Base IO"; }
 
     Base::IOSupport ioSupport() const final { return Base::IOSupport::BOTH; }
@@ -118,12 +113,13 @@ public:
         return params;
     }
 
+    template<vcl::MeshConcept MeshType>
     MeshType load(
         const std::string&     filename,
         const vcl::FileFormat& format,
         const ParameterVector& parameters,
         vcl::MeshInfo&         loadedInfo,
-        vcl::AbstractLogger&   log = Base::logger()) const final
+        vcl::AbstractLogger&   log) const
     {
         MeshType     mesh;
         vcl::LoadSettings settings;
@@ -160,13 +156,14 @@ public:
         return mesh;
     }
 
+    template<vcl::MeshConcept MeshType>
     void save(
         const std::string&     filename,
         const vcl::FileFormat& format,
         const MeshType&        mesh,
         const vcl::MeshInfo&   info,
         const ParameterVector& parameters,
-        vcl::AbstractLogger&   log = Base::logger()) const final
+        vcl::AbstractLogger&   log) const
     {
         std::string basePath = vcl::FileInfo::pathWithoutFileName(filename);
 

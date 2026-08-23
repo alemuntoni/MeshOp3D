@@ -67,10 +67,10 @@ ParameterVector ActionManager::loadMeshParameters(vcl::FileFormat fmt)
     return instance().loadMeshParameters(fmt);
 }
 
-std::shared_ptr<MeshIOActionsAggregator> ActionManager::loadMeshActions(
+std::shared_ptr<MeshIOAction> ActionManager::loadMeshAction(
     vcl::FileFormat fmt)
 {
-    return instance().loadMeshActions(fmt);
+    return instance().loadMeshAction(fmt);
 }
 
 // save mesh
@@ -90,10 +90,10 @@ ParameterVector ActionManager::saveMeshParameters(vcl::FileFormat fmt)
     return instance().saveMeshParameters(fmt);
 }
 
-std::shared_ptr<MeshIOActionsAggregator> ActionManager::saveMeshActions(
+std::shared_ptr<MeshIOAction> ActionManager::saveMeshAction(
     vcl::FileFormat fmt)
 {
-    return instance().saveMeshActions(fmt);
+    return instance().saveMeshAction(fmt);
 }
 
 // filter
