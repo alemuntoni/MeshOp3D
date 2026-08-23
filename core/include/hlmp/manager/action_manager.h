@@ -96,23 +96,10 @@ public:
 
     // convert
 
-    static std::shared_ptr<ConvertActionsAggregator> convertActions(
+    static std::shared_ptr<ConvertAction> convertAction(
         const std::string& name);
 
     static auto convertActions() { return instance().convertActions(); }
-
-    template<typename MeshType>
-    static std::shared_ptr<ConvertActionT<MeshType>> convertAction(
-        const std::string& name)
-    {
-        return instance().convertAction<MeshType>(name);
-    }
-
-    template<MeshTypeId MESH>
-    static auto convertAction(const std::string& name)
-    {
-        return instance().convertAction<GetMeshType<MESH>>(name);
-    }
 
 private:
     static detail::Manager& instance();

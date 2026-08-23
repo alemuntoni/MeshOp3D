@@ -32,7 +32,7 @@ std::vector<std::shared_ptr<Action>> actionInstances()
     std::vector<std::shared_ptr<Action>> vec;
 
     // Convert actions
-    fillAggregatedActionInstances<ConvertActionsAggregator>(vec, ConvertActionsList());
+    fillActionInstances(vec, ConvertActionsList());
 
     // Filter actions
     fillActionInstances(vec, FilterActionsList());

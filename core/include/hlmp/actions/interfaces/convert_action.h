@@ -24,6 +24,7 @@
 #define HLMP_ACTIONS_INTERFACES_CONVERT_ACTION_H
 
 #include "action.h"
+#include <any>
 
 namespace hlmp {
 
@@ -39,6 +40,13 @@ public:
     virtual std::string name() const = 0;
 
     virtual MeshTypeId meshType() const = 0;
+
+    virtual std::pair<MeshTypeId, std::any> convertErased(
+        MeshTypeId           inputMeshType,
+        const std::any&      inputMesh,
+        vcl::AbstractLogger& log) const = 0;
+
+    virtual vcl::BitSet32 supportedMeshTypes() const = 0;
 
     /* ************************************ *
      * Member functions already implemented *

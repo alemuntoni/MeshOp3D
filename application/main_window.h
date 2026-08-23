@@ -23,7 +23,7 @@
 #ifndef HLMP_APPLICATION_MAIN_WINDOW_H
 #define HLMP_APPLICATION_MAIN_WINDOW_H
 
-#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
+#include <hlmp/actions/interfaces/convert_action.h>
 #include <hlmp/actions/interfaces/filter_action.h>
 
 #include "utils.h"
@@ -134,11 +134,12 @@ private:
 
     template<vcl::MeshConcept MeshType>
     void convertAndAddMesh(
-        const std::shared_ptr<ConvertActionsAggregator>& action,
-        const MeshType&                                  mesh)
+        const std::shared_ptr<ConvertAction>& action,
+        const MeshType&                       mesh)
     {
         logger().startTimer();
-        auto [id, anyMesh] = action->convert(mesh, logger());
+        const MeshType* meshPtr = &mesh;
+        auto [id, anyMesh] = action->convertErased(meshTypeId<MeshType>(), std::any(meshPtr), logger());
         logger().stopTimer();
         logger().log(
             action->name() + " applied in " + std::to_string(logger().time()) +

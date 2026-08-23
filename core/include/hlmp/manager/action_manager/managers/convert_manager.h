@@ -25,16 +25,16 @@
 
 #include "../containers/id_action_container.h"
 
-#include <hlmp/actions/aggregators/convert_actions_aggregator.h>
+#include <hlmp/actions/interfaces/convert_action.h>
 
 namespace hlmp::detail {
 
 class ConvertManager
 {
-    IDActionContainer<ConvertActionsAggregator> mConvertActions;
+    IDActionContainer<ConvertAction> mConvertActions;
 
 protected:
-    void add(const std::shared_ptr<ConvertActionsAggregator>& action)
+    void add(const std::shared_ptr<ConvertAction>& action)
     {
         mConvertActions.add(action);
     }
@@ -42,19 +42,10 @@ protected:
 public:
     // convert
 
-    std::shared_ptr<ConvertActionsAggregator> convertActions(
+    std::shared_ptr<ConvertAction> convertAction(
         const std::string& name) const
     {
         return mConvertActions.action(name);
-    }
-
-    template<typename MeshType>
-    std::shared_ptr<ConvertActionT<MeshType>> convertAction(
-        const std::string& name)
-    {
-        std::shared_ptr<ConvertActionsAggregator> actions = convertActions(name);
-
-        return actions->action<MeshType>();
     }
 
     auto convertActions() { return mConvertActions.actions(); }

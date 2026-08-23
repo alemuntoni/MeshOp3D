@@ -106,10 +106,10 @@ std::shared_ptr<FilterAction> ActionManager::filterAction(
 
 // convert
 
-std::shared_ptr<ConvertActionsAggregator> ActionManager::convertActions(
+std::shared_ptr<ConvertAction> ActionManager::convertAction(
     const std::string& name)
 {
-    return instance().convertActions(name);
+    return instance().convertAction(name);
 }
 
 detail::Manager& ActionManager::instance()

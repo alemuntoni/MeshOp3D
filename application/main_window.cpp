@@ -295,7 +295,7 @@ void MainWindow::convertCurrentMesh(bool)
     std::string actionId =
         sender->property("action_id").toString().toStdString();
 
-    auto convert = ActionManager::convertActions(actionId);
+    auto convert = ActionManager::convertAction(actionId);
     assert(convert);
     if (convert) {
         auto i = selectedDrawableObject();
@@ -395,7 +395,7 @@ void MainWindow::populateFilterMenu()
 
     auto convert = ActionManager::convertActions();
 
-    for (const std::shared_ptr<ConvertActionsAggregator>& c : convert) {
+    for (const std::shared_ptr<ConvertAction>& c : convert) {
         QAction* action = new QAction(c->name().c_str(), mConvertMenu);
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(c->name())));

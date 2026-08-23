@@ -23,20 +23,21 @@
 #ifndef HLMP_ACTIONS_ACTIONS_CONVERT_POLY_EDGE_MESH_H
 #define HLMP_ACTIONS_ACTIONS_CONVERT_POLY_EDGE_MESH_H
 
-#include <hlmp/actions/interfaces/convert_action_t.h>
+#include <hlmp/actions/interfaces/convert_action_base.h>
 
 namespace hlmp {
 
-template<vcl::MeshConcept MeshType>
-class PolyEdgeMeshConvert : public ConvertActionT<MeshType>
+class PolyEdgeMeshConvert : public ConvertActionBase<PolyEdgeMeshConvert>
 {
-    using Base = ConvertActionT<MeshType>;
+    using Base = ConvertActionBase<PolyEdgeMeshConvert>;
 
+public:
     std::string name() const final { return "Convert to PolyEdgeMesh"; }
 
+    template<vcl::MeshConcept MeshType>
     std::pair<MeshTypeId, std::any> convert(
         const MeshType&      inputMesh,
-        vcl::AbstractLogger& log) const final
+        vcl::AbstractLogger& log) const
     {
         using PolyEdgeMeshType = GetMeshType<MeshTypeId::POLYGON_MESH>;
 

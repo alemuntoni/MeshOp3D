@@ -31,7 +31,7 @@
 namespace hlmp {
 
 using ConvertActionsList =
-    vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
+    vcl::TypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
 
 using FilterActionsList = vcl::TypeWrapper<
     // apply filters

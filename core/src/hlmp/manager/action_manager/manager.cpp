@@ -37,14 +37,14 @@ void Manager::add(const std::shared_ptr<Action>& action)
 
     vcl::uint mt;
 
-    std::shared_ptr<ConvertActionsAggregator> convertActions;
+    std::shared_ptr<ConvertAction> convertActions;
     std::shared_ptr<FilterAction>  filterActions;
     std::shared_ptr<ImageIOAction>  imageIOAction;
     std::shared_ptr<MeshIOActionsAggregator>  meshIOActions;
 
     switch (action->type()) {
     case CONVERT_ACTION:
-        convertActions = std::dynamic_pointer_cast<ConvertActionsAggregator>(action);
+        convertActions = std::dynamic_pointer_cast<ConvertAction>(action);
         ConvertManager::add(convertActions);
         break;
     case FILTER_ACTION:
