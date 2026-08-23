@@ -80,6 +80,8 @@ private:
 
     void createMenus();
 
+    void createSearchFilterWidget();
+
     void populateFilterMenu();
 
     void openFilterDialog(

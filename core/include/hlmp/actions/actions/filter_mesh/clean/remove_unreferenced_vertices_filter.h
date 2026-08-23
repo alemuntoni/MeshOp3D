@@ -64,6 +64,8 @@ public:
         const ParameterVector&,
         vcl::AbstractLogger& log = FilterAction::logger()) const
     {
+        using enum vcl::AbstractLogger::LogLevel;
+
         MeshType& mesh = *inputOutputMeshes.front();
 
         vcl::uint removedCount = vcl::removeUnreferencedVertices(mesh);
@@ -71,10 +73,11 @@ public:
         if (removedCount > 0) {
             log.log(
                 "Removed " + std::to_string(removedCount) +
-                " unreferenced vertices.", vcl::AbstractLogger::MESSAGE_LOG);
+                    " unreferenced vertices.",
+                MESSAGE_LOG);
         }
         else {
-            log.log("No unreferenced vertices found.", vcl::AbstractLogger::MESSAGE_LOG);
+            log.log("No unreferenced vertices found.", MESSAGE_LOG);
         }
 
         return OutputValues();

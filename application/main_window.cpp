@@ -25,6 +25,7 @@
 // #include "gui/action_file_dialog.h"
 #include "gui/filter_dock_widget.h"
 #include "gui/parameter_dialog.h"
+#include "gui/search_filter_widget.h"
 
 #include <hlmp/functions.h>
 #include <hlmp/manager.h>
@@ -34,6 +35,9 @@
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QPushButton>
+#include <QShortcut>
+#include <QKeySequence>
+#include <QToolBar>
 #include <QUrl>
 
 namespace hlmp {
@@ -65,6 +69,8 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
     };
 
     setDrawVectorIconFunction(f);
+
+    createSearchFilterWidget();
 }
 
 MainWindow::~MainWindow()
@@ -365,6 +371,26 @@ void MainWindow::createMenus()
 
     // Populate filter and convert menus
     populateFilterMenu();
+}
+
+void MainWindow::createSearchFilterWidget()
+{
+    SearchFilterWidget* searchWidget = new SearchFilterWidget(this);
+    menuBar()->setCornerWidget(searchWidget);
+
+    connect(
+        searchWidget,
+        &SearchFilterWidget::filterSelected,
+        this,
+        [this](const std::shared_ptr<FilterAction>& filter) {
+            openFilterDialog(filter);
+        });
+
+    QShortcut* shortcut = new QShortcut(QKeySequence("Ctrl+F"), this);
+    connect(shortcut, &QShortcut::activated, searchWidget, [searchWidget]() {
+        searchWidget->setFocus();
+        searchWidget->selectAll();
+    });
 }
 
 void MainWindow::populateFilterMenu()

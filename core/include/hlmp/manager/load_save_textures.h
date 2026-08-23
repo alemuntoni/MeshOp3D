@@ -25,6 +25,8 @@
 
 #include "action_manager.h"
 
+#include <vclib/io.h>
+
 namespace hlmp {
 
 template<vcl::MeshConcept MeshType>
