@@ -23,16 +23,14 @@
 #ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_GENERATE_CONVEX_HULL_FILTER_H
 #define HLMP_ACTIONS_ACTIONS_FILTER_MESH_GENERATE_CONVEX_HULL_FILTER_H
 
-#include <hlmp/actions/interfaces/filter_action_t.h>
+#include <hlmp/actions/interfaces/filter_action_base.h>
 
 #include <vclib/algorithms/mesh/convex_hull.h>
 
 namespace hlmp {
 
-template<vcl::MeshConcept MeshType>
-class ConvexHullFilter : public FilterActionT<MeshType>
+class ConvexHullFilter : public FilterActionBase<ConvexHullFilter>
 {
-    using Base = FilterActionT<MeshType>;
 
 public:
     std::string name() const final { return "Convex Hull"; }
@@ -42,9 +40,9 @@ public:
         return "Generates a convex hull mesh from a set of 3D points.";
     }
 
-    Base::CategoryBitSet categories() const final
+    FilterAction::CategoryBitSet categories() const final
     {
-        return {Base::Category::RECONSTRUCTION};
+        return {FilterAction::Category::RECONSTRUCTION};
     }
 
     std::vector<UintParameter> inputMeshes() const final
@@ -56,12 +54,13 @@ public:
 
     ParameterVector parameters() const final { return {}; }
 
-    virtual OutputValues executeFilter(
+    template<vcl::MeshConcept MeshType>
+    OutputValues executeFilter(
         const std::vector<const MeshType*>& inputMeshes,
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
         const ParameterVector&              parameters,
-        vcl::AbstractLogger&                log = Base::logger()) const final
+        vcl::AbstractLogger&                log = FilterAction::logger()) const
     {
         const MeshType& input = *inputMeshes.front();
         std::string     name  = "Convex Hull";

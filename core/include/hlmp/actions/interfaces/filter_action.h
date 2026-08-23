@@ -28,6 +28,8 @@
 #include <hlmp/parameter_vector.h>
 #include <hlmp/parameters.h>
 
+#include <vclib/algorithms/mesh.h>
+
 namespace hlmp {
 
 class FilterAction : public Action
@@ -51,8 +53,6 @@ public:
     // From Action class
 
     virtual std::string name() const = 0;
-
-    virtual MeshTypeId meshType() const = 0;
 
     /**
      * @brief Returns the categories of the filter.
@@ -123,9 +123,178 @@ public:
      * Member functions already implemented *
      * ************************************ */
 
+    /**
+     * @brief Returns the supported mesh types for this action.
+     */
+    virtual vcl::BitSet32 supportedMeshTypes() const = 0;
+
+    /* ************************************ *
+     * Member functions already implemented *
+     * ************************************ */
+
     Type type() const final { return Type::FILTER_ACTION; }
 
+    MeshTypeId meshType() const final { return MeshTypeId::COUNT; }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<const MeshType*>& inputMeshes,
+        const std::vector<MeshType*>&       inputOutputMeshes,
+        std::vector<MeshType>&              outputMeshes,
+        const ParameterVector&              parameters,
+        vcl::AbstractLogger&                log = logger()) const
+    {
+        checkInputVectors(inputMeshes, inputOutputMeshes);
+        
+        std::vector<const void*> inV;
+        inV.reserve(inputMeshes.size());
+        for (const auto* m : inputMeshes) inV.push_back(m);
+        
+        std::vector<void*> inOutV;
+        inOutV.reserve(inputOutputMeshes.size());
+        for (auto* m : inputOutputMeshes) inOutV.push_back(m);
+        
+        std::vector<void*> outV;
+        
+        auto res = executeErased(
+            meshTypeId<MeshType>(), inV, inOutV, outV, parameters, log);
+            
+        for (void* ptr : outV) {
+            MeshType* m = static_cast<MeshType*>(ptr);
+            outputMeshes.push_back(std::move(*m));
+            delete m;
+        }
+        
+        for (MeshType* m : inputOutputMeshes) {
+            postExecute(*m);
+        }
+        for (MeshType& m : outputMeshes) {
+            postExecute(m);
+        }
+        
+        return res;
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<const MeshType*>& inputMeshes,
+        const std::vector<MeshType*>&       inputOutputMeshes,
+        std::vector<MeshType>&              outputMeshes,
+        vcl::AbstractLogger&                log = logger()) const
+    {
+        return execute(
+            inputMeshes, inputOutputMeshes, outputMeshes, parameters(), log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<const MeshType*>& inputMeshes,
+        std::vector<MeshType>&              outputMeshes,
+        const ParameterVector&              parameters,
+        vcl::AbstractLogger&                log = logger()) const
+    {
+        checkInputOutputMeshes(0);
+        return execute(inputMeshes, {}, outputMeshes, parameters, log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<const MeshType*>& inputMeshes,
+        std::vector<MeshType>&              outputMeshes,
+        vcl::AbstractLogger&                log = logger()) const
+    {
+        return execute(inputMeshes, outputMeshes, parameters(), log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<const MeshType*>& inputMeshes,
+        const ParameterVector&              parameters,
+        vcl::AbstractLogger&                log = logger()) const
+    {
+        std::vector<MeshType> outputMeshes;
+        auto out = execute(inputMeshes, outputMeshes, parameters, log);
+        warnOutputMeshesVector(outputMeshes, log);
+        return out;
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<const MeshType*>& inputMeshes,
+        vcl::AbstractLogger&                log = logger()) const
+    {
+        return execute(inputMeshes, parameters(), log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<MeshType*>& inputOutputMeshes,
+        std::vector<MeshType>&        outputMeshes,
+        const ParameterVector&        parameters,
+        vcl::AbstractLogger&          log = logger()) const
+    {
+        return execute({}, inputOutputMeshes, outputMeshes, parameters, log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<MeshType*>& inputOutputMeshes,
+        std::vector<MeshType>&        outputMeshes,
+        vcl::AbstractLogger&          log = logger()) const
+    {
+        return execute(inputOutputMeshes, outputMeshes, parameters(), log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<MeshType*>& inputOutputMeshes,
+        const ParameterVector&        parameters,
+        vcl::AbstractLogger&          log = logger()) const
+    {
+        std::vector<MeshType> outputMeshes;
+        auto out = execute(inputOutputMeshes, outputMeshes, parameters, log);
+        warnOutputMeshesVector(outputMeshes, log);
+        return out;
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        const std::vector<MeshType*>& inputOutputMeshes,
+        vcl::AbstractLogger&          log = logger()) const
+    {
+        return execute(inputOutputMeshes, parameters(), log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        std::vector<MeshType>& outputMeshes,
+        const ParameterVector& parameters,
+        vcl::AbstractLogger&   log = logger()) const
+    {
+        return execute(
+            std::vector<const MeshType*>(),
+            std::vector<MeshType*>(),
+            outputMeshes,
+            parameters,
+            log);
+    }
+
+    template<vcl::MeshConcept MeshType>
+    OutputValues execute(
+        std::vector<MeshType>& outputMeshes,
+        vcl::AbstractLogger&   log = logger()) const
+    {
+        return execute(outputMeshes, parameters(), log);
+    }
+
 protected:
+    virtual OutputValues executeErased(
+        MeshTypeId                      typeId,
+        const std::vector<const void*>& inputMeshes,
+        std::vector<void*>&             inputOutputMeshes,
+        std::vector<void*>&             outputMeshes,
+        const ParameterVector&          parameters,
+        vcl::AbstractLogger&            log) const = 0;
     void checkInputMeshes(vcl::uint provided) const
     {
         vcl::uint n = inputMeshes().size();
@@ -170,6 +339,15 @@ protected:
     {
         checkInputMeshes(inputMeshes.size());
         checkInputOutputMeshes(inputOutputMeshes.size());
+    }
+
+    template<vcl::MeshConcept MeshType>
+    void postExecute(MeshType& mesh) const
+    {
+        if constexpr (vcl::HasFaces<MeshType>) {
+            vcl::updatePerVertexAndFaceNormals(mesh);
+        }
+        vcl::updateBoundingBox(mesh);
     }
 };
 

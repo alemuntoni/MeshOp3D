@@ -98,10 +98,10 @@ std::shared_ptr<MeshIOActionsAggregator> ActionManager::saveMeshActions(
 
 // filter
 
-std::shared_ptr<FilterActionsAggregator> ActionManager::filterActions(
+std::shared_ptr<FilterAction> ActionManager::filterAction(
     const std::string& name)
 {
-    return instance().filterActions(name);
+    return instance().filterAction(name);
 }
 
 // convert

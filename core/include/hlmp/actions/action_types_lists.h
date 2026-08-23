@@ -33,7 +33,7 @@ namespace hlmp {
 using ConvertActionsList =
     vcl::TemplatedTypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
 
-using FilterActionsList = vcl::TemplatedTypeWrapper<
+using FilterActionsList = vcl::TypeWrapper<
     // apply filters
     LaplacianSmoothingFilter,
 

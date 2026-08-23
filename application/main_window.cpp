@@ -261,7 +261,7 @@ void MainWindow::openFilterDialog(bool)
 
     std::string actionId =
         sender->property("action_id").toString().toStdString();
-    auto filter = ActionManager::filterActions(actionId);
+    auto filter = ActionManager::filterAction(actionId);
     assert(filter);
     if (filter) {
         openFilterDialog(filter);
@@ -269,8 +269,8 @@ void MainWindow::openFilterDialog(bool)
 }
 
 void MainWindow::applyFilter(
-    const std::shared_ptr<FilterActionsAggregator>& action,
-    const ParameterVector&                          params)
+    const std::shared_ptr<FilterAction>& action,
+    const ParameterVector&               params)
 {
     MeshTypeId filterMeshType =
         getFilterMeshType(action, params, selectedDrawableObject());
@@ -375,7 +375,7 @@ void MainWindow::populateFilterMenu()
         mFilterMenu->addMenu(menus[i]);
     }
 
-    for (const std::shared_ptr<FilterActionsAggregator>& f : filters) {
+    for (const std::shared_ptr<FilterAction>& f : filters) {
         QAction* action = new QAction(f->name().c_str(), mFilterMenu);
         action->setProperty(
             "action_id", QVariant(QString::fromStdString(f->name())));
@@ -410,7 +410,7 @@ void MainWindow::populateFilterMenu()
 }
 
 void MainWindow::openFilterDialog(
-    const std::shared_ptr<FilterActionsAggregator>& action)
+    const std::shared_ptr<FilterAction>& action)
 {
     FilterDockWidget* dock = new FilterDockWidget(action, this);
 
@@ -421,9 +421,9 @@ void MainWindow::openFilterDialog(
 }
 
 MeshTypeId MainWindow::getFilterMeshType(
-    const std::shared_ptr<FilterActionsAggregator>& action,
-    const ParameterVector&                          params,
-    vcl::uint                                       selectedMesh)
+    const std::shared_ptr<FilterAction>& action,
+    const ParameterVector&               params,
+    vcl::uint                            selectedMesh)
 {
     vcl::uint niMeshes  = action->inputMeshes().size();
     vcl::uint nioMeshes = action->inputOutputMeshes().size();

@@ -25,7 +25,7 @@
 
 #include <QDockWidget>
 
-#include <hlmp/actions/aggregators/filter_actions_aggregator.h>
+#include <hlmp/actions/interfaces/filter_action.h>
 
 namespace hlmp {
 
@@ -39,18 +39,18 @@ class FilterDockWidget : public QDockWidget
 
     Ui::FilterDockWidget* mUI;
 
-    const std::shared_ptr<FilterActionsAggregator> mAction;
+    const std::shared_ptr<FilterAction> mAction;
 
 public:
     explicit FilterDockWidget(
-        const std::shared_ptr<FilterActionsAggregator>& action,
+        const std::shared_ptr<FilterAction>& action,
         QWidget*                                    parent = nullptr);
 
     ~FilterDockWidget();
 
 signals:
     void applyFilter(
-        const std::shared_ptr<FilterActionsAggregator>& action,
+        const std::shared_ptr<FilterAction>& action,
         const ParameterVector&                parmas);
 
 private slots:
@@ -61,7 +61,7 @@ private slots:
 private:
     void addOutputMeshTypeParameter(
         ParameterVector&                      vec,
-        const std::shared_ptr<FilterActionsAggregator>& action);
+        const std::shared_ptr<FilterAction>& action);
 };
 
 } // namespace hlmp

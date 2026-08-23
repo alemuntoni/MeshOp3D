@@ -23,16 +23,14 @@
 #ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_CREATE_CREATE_CONE_FILTER_H
 #define HLMP_ACTIONS_ACTIONS_FILTER_MESH_CREATE_CREATE_CONE_FILTER_H
 
-#include <hlmp/actions/interfaces/filter_action_t.h>
+#include <hlmp/actions/interfaces/filter_action_base.h>
 
 #include <vclib/algorithms/mesh.h>
 
 namespace hlmp {
 
-template<vcl::MeshConcept MeshType>
-class CreateConeFilter : public FilterActionT<MeshType>
+class CreateConeFilter : public FilterActionBase<CreateConeFilter>
 {
-    using Base = FilterActionT<MeshType>;
 
 public:
     std::string name() const final { return "Create Cone"; }
@@ -41,7 +39,7 @@ public:
 
     vcl::BitSet<vcl::uint> categories() const override
     {
-        return {Base::Category::CREATE};
+        return {FilterAction::Category::CREATE};
     }
 
     std::vector<UintParameter> inputMeshes() const final { return {}; }
@@ -62,12 +60,13 @@ public:
         return params;
     }
 
-    virtual OutputValues executeFilter(
+    template<vcl::MeshConcept MeshType>
+    OutputValues executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>&,
         std::vector<MeshType>& outputMeshes,
         const ParameterVector& parameters,
-        vcl::AbstractLogger&   log = Base::logger()) const final
+        vcl::AbstractLogger&   log = FilterAction::logger()) const
     {
         auto bottomRadius = parameters.get("bottom_radius")->scalarValue();
         auto topRadius    = parameters.get("top_radius")->scalarValue();

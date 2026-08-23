@@ -35,7 +35,7 @@ std::vector<std::shared_ptr<Action>> actionInstances()
     fillAggregatedActionInstances<ConvertActionsAggregator>(vec, ConvertActionsList());
 
     // Filter actions
-    fillAggregatedActionInstances<FilterActionsAggregator>(vec, FilterActionsList());
+    fillActionInstances(vec, FilterActionsList());
 
     // ImageIO actions
     fillActionInstances(vec, ImageIOActionsList());

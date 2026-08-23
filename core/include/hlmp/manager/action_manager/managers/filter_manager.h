@@ -25,16 +25,16 @@
 
 #include "../containers/id_action_container.h"
 
-#include <hlmp/actions/aggregators/filter_actions_aggregator.h>
+#include <hlmp/actions/interfaces/filter_action.h>
 
 namespace hlmp::detail {
 
 class FilterManager
 {
-    IDActionContainer<FilterActionsAggregator> mFilterActions;
+    IDActionContainer<FilterAction> mFilterActions;
 
 protected:
-    void add(const std::shared_ptr<FilterActionsAggregator>& action)
+    void add(const std::shared_ptr<FilterAction>& action)
     {
         mFilterActions.add(action);
     }
@@ -42,18 +42,9 @@ protected:
 public:
     // filter
 
-    std::shared_ptr<FilterActionsAggregator> filterActions(const std::string& name) const
+    std::shared_ptr<FilterAction> filterAction(const std::string& name) const
     {
         return mFilterActions.action(name);
-    }
-
-    template<typename MeshType>
-    std::shared_ptr<FilterActionT<MeshType>> filterAction(
-        const std::string& name)
-    {
-        std::shared_ptr<FilterActionsAggregator> actions = filterActions(name);
-
-        return actions->action<MeshType>();
     }
 
     auto filterActions() { return mFilterActions.actions(); }

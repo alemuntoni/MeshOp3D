@@ -89,23 +89,10 @@ public:
 
     // filter
 
-    static std::shared_ptr<FilterActionsAggregator> filterActions(
+    static std::shared_ptr<FilterAction> filterAction(
         const std::string& name);
 
     static auto filterActions() { return instance().filterActions(); }
-
-    template<typename MeshType>
-    static std::shared_ptr<FilterActionT<MeshType>> filterAction(
-        const std::string& name)
-    {
-        return instance().filterAction<MeshType>(name);
-    }
-
-    template<MeshTypeId MESH>
-    static auto filterAction(const std::string& name)
-    {
-        return instance().filterAction<GetMeshType<MESH>>(name);
-    }
 
     // convert
 

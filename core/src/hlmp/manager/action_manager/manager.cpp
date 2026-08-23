@@ -38,7 +38,7 @@ void Manager::add(const std::shared_ptr<Action>& action)
     vcl::uint mt;
 
     std::shared_ptr<ConvertActionsAggregator> convertActions;
-    std::shared_ptr<FilterActionsAggregator>  filterActions;
+    std::shared_ptr<FilterAction>  filterActions;
     std::shared_ptr<ImageIOAction>  imageIOAction;
     std::shared_ptr<MeshIOActionsAggregator>  meshIOActions;
 
@@ -48,7 +48,7 @@ void Manager::add(const std::shared_ptr<Action>& action)
         ConvertManager::add(convertActions);
         break;
     case FILTER_ACTION:
-        filterActions = std::dynamic_pointer_cast<FilterActionsAggregator>(action);
+        filterActions = std::dynamic_pointer_cast<FilterAction>(action);
         FilterManager::add(filterActions);
         break;
     case IMAGE_IO_ACTION:

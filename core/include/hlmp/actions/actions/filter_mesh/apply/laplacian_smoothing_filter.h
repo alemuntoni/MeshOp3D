@@ -23,16 +23,14 @@
 #ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_APPLY_LAPLACIAN_SMOOTHING_FILTER_H
 #define HLMP_ACTIONS_ACTIONS_FILTER_MESH_APPLY_LAPLACIAN_SMOOTHING_FILTER_H
 
-#include <hlmp/actions/interfaces/filter_action_t.h>
+#include <hlmp/actions/interfaces/filter_action_base.h>
 
 #include <vclib/algorithms/mesh/smooth.h>
 
 namespace hlmp {
 
-template<vcl::MeshConcept MeshType>
-class LaplacianSmoothingFilter : public FilterActionT<MeshType>
+class LaplacianSmoothingFilter : public FilterActionBase<LaplacianSmoothingFilter>
 {
-    using Base = FilterActionT<MeshType>;
 
 public:
     std::string name() const final { return "Laplacian Smoothing"; }
@@ -49,7 +47,7 @@ public:
 
     vcl::BitSet<vcl::uint> categories() const final
     {
-        return {Base::Category::SMOOTHING};
+        return {FilterAction::Category::SMOOTHING};
     }
 
     std::vector<UintParameter> inputMeshes() const final { return {}; }
@@ -86,12 +84,13 @@ public:
         return params;
     }
 
-    virtual OutputValues executeFilter(
+    template<vcl::MeshConcept MeshType>
+    OutputValues executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&,
         const ParameterVector& parameters,
-        vcl::AbstractLogger&   log = Base::logger()) const final
+        vcl::AbstractLogger&   log = FilterAction::logger()) const
     {
         vcl::uint smoothingSteps = parameters.get("smoothing_steps")->uintValue();
         bool cotangentWeighting =
