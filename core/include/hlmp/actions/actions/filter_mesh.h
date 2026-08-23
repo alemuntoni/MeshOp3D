@@ -24,6 +24,7 @@
 #define HLMP_ACTIONS_ACTIONS_FILTER_MESH_H
 
 #include "filter_mesh/apply.h"
+#include "filter_mesh/clean.h"
 #include "filter_mesh/create.h"
 #include "filter_mesh/generate.h"
 

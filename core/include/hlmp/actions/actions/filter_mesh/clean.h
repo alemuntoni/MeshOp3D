@@ -20,38 +20,9 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_ACTIONS_ACTION_TYPES_LISTS_H
-#define HLMP_ACTIONS_ACTION_TYPES_LISTS_H
+#ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_H
+#define HLMP_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_H
 
-#include "actions/convert.h"
-#include "actions/filter_mesh.h"
-#include "actions/image_io.h"
-#include "actions/mesh_io.h"
+#include "clean/remove_unreferenced_vertices_filter.h"
 
-namespace hlmp {
-
-using ConvertActionsList =
-    vcl::TypeWrapper<PolyEdgeMeshConvert, TriEdgeMeshConvert>;
-
-using FilterActionsList = vcl::TypeWrapper<
-    // apply filters
-    LaplacianSmoothingFilter,
-
-    // clean filters
-    RemoveUnreferencedVerticesFilter,
-
-    // create filters
-    CreateConeFilter,
-
-    // generate filters
-    ConvexHullFilter>;
-
-using ImageIOActionsList =
-    vcl::TypeWrapper<BaseImageIO>;
-
-using MeshIOActionsList =
-    vcl::TypeWrapper<BaseMeshIO, GltfMeshIO>;
-
-} // namespace hlmp
-
-#endif // HLMP_ACTIONS_ACTION_TYPES_LISTS_H
+#endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_H
