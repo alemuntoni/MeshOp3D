@@ -38,6 +38,10 @@ using FilterActionsList = vcl::TypeWrapper<
     LaplacianSmoothingFilter,
 
     // clean filters
+    RemoveDegenerateFacesFilter,
+    RemoveDegenerateVerticesFilter,
+    RemoveDuplicateFacesFilter,
+    RemoveDuplicateVerticesFilter,
     RemoveUnreferencedVerticesFilter,
 
     // create filters

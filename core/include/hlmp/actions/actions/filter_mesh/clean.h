@@ -23,6 +23,10 @@
 #ifndef HLMP_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_H
 #define HLMP_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_H
 
+#include "clean/remove_degenerate_faces_filter.h"
+#include "clean/remove_degenerate_vertices_filter.h"
+#include "clean/remove_duplicate_faces_filter.h"
+#include "clean/remove_duplicate_vertices_filter.h"
 #include "clean/remove_unreferenced_vertices_filter.h"
 
 #endif // HLMP_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_H
