@@ -34,9 +34,9 @@
 #include <vclib/render/mesh_viewer.h>
 
 #include <QAction>
-#include <QMenu>
 #include <QDragEnterEvent>
 #include <QDropEvent>
+#include <QMenu>
 #include <QMimeData>
 
 namespace hlmp {
@@ -54,6 +54,11 @@ class MainWindow : public vcl::qt::MeshViewer
     QAction* mActionOpenMesh;
     QAction* mActionSaveMeshAs;
 
+    // Open Recent
+    std::vector<std::string> mRecentFiles;
+    QMenu*                   mOpenRecentMenu;
+    QAction*                 mRecentFileActions[10];
+
 public:
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
@@ -64,6 +69,8 @@ protected:
 
 public slots:
     void openMesh();
+
+    void openRecentMesh();
 
     void saveMeshAs();
 
@@ -76,6 +83,14 @@ public slots:
     void convertCurrentMesh(bool);
 
 private:
+    void loadRecentFiles();
+
+    void saveRecentFiles();
+
+    void addRecentFile(const std::string& filename);
+
+    void updateRecentFilesMenu();
+
     void loadMesh(const std::string& filename);
 
     void createMenus();
@@ -84,8 +99,7 @@ private:
 
     void populateFilterMenu();
 
-    void openFilterDialog(
-        const std::shared_ptr<FilterAction>& action);
+    void openFilterDialog(const std::shared_ptr<FilterAction>& action);
 
     MeshTypeId getFilterMeshType(
         const std::shared_ptr<FilterAction>& action,
@@ -141,7 +155,8 @@ private:
     {
         logger().startTimer();
         const MeshType* meshPtr = &mesh;
-        auto [id, anyMesh] = action->convertErased(meshTypeId<MeshType>(), std::any(meshPtr), logger());
+        auto [id, anyMesh]      = action->convertErased(
+            meshTypeId<MeshType>(), std::any(meshPtr), logger());
         logger().stopTimer();
         logger().log(
             action->name() + " applied in " + std::to_string(logger().time()) +

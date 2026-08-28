@@ -32,6 +32,8 @@
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
+#include <nlohmann/json.hpp>
+
 #include <QFileDialog>
 #include <QMenuBar>
 #include <QPushButton>
@@ -39,6 +41,10 @@
 #include <QKeySequence>
 #include <QToolBar>
 #include <QUrl>
+
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
 
 namespace hlmp {
 
@@ -71,6 +77,9 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
     setDrawVectorIconFunction(f);
 
     createSearchFilterWidget();
+
+    loadRecentFiles();
+    updateRecentFilesMenu();
 }
 
 MainWindow::~MainWindow()
@@ -148,6 +157,17 @@ void MainWindow::openMesh()
     }
 }
 
+void MainWindow::openRecentMesh()
+{
+    QAction* action = qobject_cast<QAction*>(sender());
+    if (action) {
+        QString path = action->data().toString();
+        if (!path.isEmpty()) {
+            loadMesh(path.toStdString());
+        }
+    }
+}
+
 void MainWindow::loadMesh(const std::string& filename)
 {
     std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
@@ -178,10 +198,12 @@ void MainWindow::loadMesh(const std::string& filename)
     case MeshTypeId::TRIANGLE_MESH:
         pushDrawableObject(makeMeshDrawable(
             std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
+        addRecentFile(filename);
         break;
     case MeshTypeId::POLYGON_MESH:
         pushDrawableObject(makeMeshDrawable(
             std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
+        addRecentFile(filename);
         break;
     default: break;
     }
@@ -340,6 +362,101 @@ void MainWindow::convertCurrentMesh(bool)
     }
 }
 
+void MainWindow::loadRecentFiles()
+{
+    std::string filePath = this->settingsFilePath();
+    if (filePath.empty()) return;
+
+    std::ifstream in(filePath);
+    if (in.is_open()) {
+        nlohmann::json j;
+        try {
+            in >> j;
+            if (j.contains("recent_files") && j["recent_files"].is_array()) {
+                mRecentFiles.clear();
+                for (const auto& item : j["recent_files"]) {
+                    mRecentFiles.push_back(item.get<std::string>());
+                }
+            }
+        } catch (...) {
+            // Ignore parse errors
+        }
+    }
+}
+
+void MainWindow::saveRecentFiles()
+{
+    std::string filePath = this->settingsFilePath();
+    if (filePath.empty()) return;
+
+    nlohmann::json j;
+    std::ifstream in(filePath);
+    if (in.is_open()) {
+        try {
+            in >> j;
+        } catch (...) {
+            j = nlohmann::json::object();
+        }
+        in.close();
+    } else {
+        j = nlohmann::json::object();
+    }
+
+    j["recent_files"] = mRecentFiles;
+
+    std::filesystem::path dir = std::filesystem::path(filePath).parent_path();
+    if (!std::filesystem::exists(dir)) {
+        std::filesystem::create_directories(dir);
+    }
+
+    std::ofstream out(filePath);
+    if (out.is_open()) {
+        out << j.dump(4);
+    }
+}
+
+void MainWindow::addRecentFile(const std::string& filename)
+{
+    auto it = std::find(mRecentFiles.begin(), mRecentFiles.end(), filename);
+    if (it != mRecentFiles.end()) {
+        mRecentFiles.erase(it);
+    }
+
+    mRecentFiles.insert(mRecentFiles.begin(), filename);
+
+    while (mRecentFiles.size() > 10) {
+        mRecentFiles.pop_back();
+    }
+
+    saveRecentFiles();
+    updateRecentFilesMenu();
+}
+
+void MainWindow::updateRecentFilesMenu()
+{
+    if (mOpenRecentMenu) {
+        mOpenRecentMenu->setEnabled(!mRecentFiles.empty());
+    }
+
+    for (int i = 0; i < 10; ++i) {
+        if (!mRecentFileActions[i]) continue;
+        
+        if (i < mRecentFiles.size()) {
+            std::string path = mRecentFiles[i];
+            std::string filename = vcl::FileInfo::fileNameWithExtension(path);
+            int key = (i + 1) % 10;
+            QString text = QString("&%1 %2").arg(key).arg(QString::fromStdString(filename));
+            
+            mRecentFileActions[i]->setText(text);
+            mRecentFileActions[i]->setData(QString::fromStdString(path));
+            mRecentFileActions[i]->setVisible(true);
+            mRecentFileActions[i]->setToolTip(QString::fromStdString(path));
+        } else {
+            mRecentFileActions[i]->setVisible(false);
+        }
+    }
+}
+
 void MainWindow::createMenus()
 {
     QAction* before =
@@ -360,8 +477,19 @@ void MainWindow::createMenus()
     mActionSaveMeshAs = new QAction(
         QIcon::fromTheme("document-save-as"), tr("Save Mesh As..."), this);
 
+    mOpenRecentMenu = new QMenu(tr("Open &Recent"), this);
+    for (int i = 0; i < 10; ++i) {
+        mRecentFileActions[i] = new QAction(this);
+        mRecentFileActions[i]->setVisible(false);
+        int key = (i + 1) % 10;
+        mRecentFileActions[i]->setShortcut(QKeySequence(QString("Ctrl+%1").arg(key)));
+        connect(mRecentFileActions[i], &QAction::triggered, this, &MainWindow::openRecentMesh);
+        mOpenRecentMenu->addAction(mRecentFileActions[i]);
+    }
+
     // Add actions to File menu
     mFileMenu->addAction(mActionOpenMesh);
+    mFileMenu->addMenu(mOpenRecentMenu);
     mFileMenu->addAction(mActionSaveMeshAs);
 
     // Connect actions
