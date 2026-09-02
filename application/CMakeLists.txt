@@ -15,9 +15,11 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${FORMS})
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
 target_link_libraries(${PROJECT_NAME} PRIVATE vclib hlmp::core)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-    HLMP_ASSETS_DIR="${HLMP_ASSETS_DIR}")
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin COMPONENT Runtime
+    BUNDLE DESTINATION . COMPONENT Runtime
+)

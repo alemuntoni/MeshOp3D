@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+    <file alias="assets/icons/hex.png">../assets/icons/hex.png</file>
+    <file alias="assets/icons/poly.png">../assets/icons/poly.png</file>
+    <file alias="assets/icons/tet.png">../assets/icons/tet.png</file>
+    <file alias="assets/icons/tri.png">../assets/icons/tri.png</file>
+</qresource>
+</RCC>

@@ -41,6 +41,8 @@
 #include <QKeySequence>
 #include <QToolBar>
 #include <QUrl>
+#include <QFile>
+#include <QCoreApplication>
 
 #include <algorithm>
 #include <filesystem>
@@ -61,14 +63,14 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
             dynamic_cast<const vcl::DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
         if (tri) {
             return std::make_pair(
-                QIcon(QString(HLMP_ASSETS_DIR) + "/icons/tri.png"),
+                QIcon(":/assets/icons/tri.png"),
                 vcl::meshTypeName<vcl::TriEdgeMesh>().c_str());
         }
         const auto* pol =
             dynamic_cast<const vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
         if (pol) {
             return std::make_pair(
-                QIcon(QString(HLMP_ASSETS_DIR) + "/icons/poly.png"),
+                QIcon(":/assets/icons/poly.png"),
                 vcl::meshTypeName<vcl::PolyEdgeMesh>().c_str());
         }
         return std::make_pair(QIcon(), "");
