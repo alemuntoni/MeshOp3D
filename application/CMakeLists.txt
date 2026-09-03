@@ -15,7 +15,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "*.cpp")
 file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
+add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
 target_link_libraries(${PROJECT_NAME} PRIVATE vclib hlmp::core)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -23,3 +23,64 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin COMPONENT Runtime
     BUNDLE DESTINATION . COMPONENT Runtime
 )
+
+if(WIN32)
+    install(CODE "execute_process(COMMAND windeployqt \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")" COMPONENT Runtime)
+elseif(APPLE)
+    install(CODE "execute_process(COMMAND macdeployqt \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\")" COMPONENT Runtime)
+elseif(UNIX AND NOT APPLE)
+    configure_file(assets/application.desktop.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" DESTINATION share/applications COMPONENT Runtime)
+    install(FILES assets/mop3d-icon.svg DESTINATION share/icons/hicolor/scalable/apps COMPONENT Runtime)
+    
+    # Determine architecture for linuxdeploy
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86_64|amd64|AMD64)")
+        set(LINUXDEPLOY_ARCH "x86_64")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "(aarch64|arm64|ARM64)")
+        set(LINUXDEPLOY_ARCH "aarch64")
+    else()
+        message(WARNING "Unsupported architecture for AppImage: ${CMAKE_SYSTEM_PROCESSOR}, falling back to x86_64")
+        set(LINUXDEPLOY_ARCH "x86_64")
+    endif()
+
+    find_program(QMAKE_EXECUTABLE NAMES qmake6 qmake HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin" REQUIRED)
+    
+    # Configure the CPack pre-build script
+    configure_file(cmake/linuxdeploy_cpack.cmake.in "${CMAKE_BINARY_DIR}/linuxdeploy_cpack.cmake" @ONLY)
+    
+    set(CPACK_PRE_BUILD_SCRIPTS "${CMAKE_BINARY_DIR}/linuxdeploy_cpack.cmake")
+endif()
+
+# --- CPack Configuration ---
+set(CPACK_PACKAGE_NAME "HighLevelMeshProcessing")
+set(CPACK_PACKAGE_VENDOR "VCLab")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "High Level Mesh Processing Application")
+set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})
+set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
+if(NOT APPLE)
+    set(CPACK_PACKAGE_ICON "mop3d-icon.svg")
+endif()
+if(UNIX AND NOT APPLE)
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
+else()
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/")
+endif()
+
+# Package only the "Runtime" component to ignore vclib headers
+set(CPACK_COMPONENTS_ALL "Runtime")
+set(CPACK_DEB_COMPONENT_INSTALL ON)
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+
+if(WIN32)
+    set(CPACK_GENERATOR "ZIP")
+elseif(APPLE)
+    set(CPACK_GENERATOR "DragNDrop")
+else()
+    set(CPACK_GENERATOR "DEB;TGZ;AppImage")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6widgets6, libgmp10, libmpfr6, libtbb12, libembree4")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Alessandro Muntoni")
+endif()
+
+include(CPack)

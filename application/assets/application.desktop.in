@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=HighLevelMeshProcessing
+Comment=High Level Mesh Processing Application
+Exec=@PROJECT_NAME@ %U
+Icon=mop3d-icon
+Terminal=false
+Type=Application
+Categories=Graphics;3DGraphics;

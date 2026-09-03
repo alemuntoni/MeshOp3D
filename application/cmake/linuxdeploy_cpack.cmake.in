@@ -1,0 +1,43 @@
+if(CPACK_GENERATOR MATCHES "AppImage")
+    message(STATUS "Running linuxdeploy for AppImage in ${CPACK_TEMPORARY_DIRECTORY}...")
+    
+    set(LINUXDEPLOY_ARCH "@LINUXDEPLOY_ARCH@")
+    set(QMAKE_EXECUTABLE "@QMAKE_EXECUTABLE@")
+    set(CMAKE_BINARY_DIR "@CMAKE_BINARY_DIR@")
+    
+    set(LINUXDEPLOY_BIN "${CMAKE_BINARY_DIR}/linuxdeploy.AppImage")
+    set(LINUXDEPLOY_PLUGIN_QT_BIN "${CMAKE_BINARY_DIR}/linuxdeploy-plugin-qt.AppImage")
+    
+    if(NOT EXISTS "${LINUXDEPLOY_BIN}")
+        message(STATUS "Downloading linuxdeploy...")
+        file(DOWNLOAD "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-${LINUXDEPLOY_ARCH}.AppImage" "${LINUXDEPLOY_BIN}")
+        execute_process(COMMAND chmod a+x "${LINUXDEPLOY_BIN}")
+    endif()
+    
+    if(NOT EXISTS "${LINUXDEPLOY_PLUGIN_QT_BIN}")
+        message(STATUS "Downloading linuxdeploy-plugin-qt...")
+        file(DOWNLOAD "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-${LINUXDEPLOY_ARCH}.AppImage" "${LINUXDEPLOY_PLUGIN_QT_BIN}")
+        execute_process(COMMAND chmod a+x "${LINUXDEPLOY_PLUGIN_QT_BIN}")
+    endif()
+    
+    # Run linuxdeploy to bundle Qt libraries in the AppDir
+    message(STATUS "Executing linuxdeploy...")
+    get_filename_component(QT_BIN_DIR "${QMAKE_EXECUTABLE}" DIRECTORY)
+    get_filename_component(QT_LIB_DIR "${QT_BIN_DIR}/../lib" ABSOLUTE)
+    
+    execute_process(
+        COMMAND "${CMAKE_COMMAND}" -E env "LD_LIBRARY_PATH=${QT_LIB_DIR}:$ENV{LD_LIBRARY_PATH}" "QMAKE=${QMAKE_EXECUTABLE}" EXTRA_QT_MODULES=svg,wayland "${LINUXDEPLOY_BIN}" --appdir "${CPACK_TEMPORARY_DIRECTORY}" -e "${CPACK_TEMPORARY_DIRECTORY}/usr/bin/@PROJECT_NAME@" --plugin qt
+        RESULT_VARIABLE res
+    )
+    if(res)
+        message(FATAL_ERROR "linuxdeploy failed with exit code ${res}")
+    endif()
+
+    # linuxdeploy creates symlinks for AppRun, desktop file, and icon in the AppDir root.
+    # CPack's native AppImage generator ALSO tries to create them, causing a "File exists" error.
+    # We remove them here so CPack can do its job.
+    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
+    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@PROJECT_NAME@.desktop")
+    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.svg")
+    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/.DirIcon")
+endif()
