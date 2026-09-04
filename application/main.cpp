@@ -24,8 +24,17 @@
 
 #include <vclib/render/application.h>
 
+#include <qglobal.h>
+
 int main(int argc, char** argv)
 {
+#ifdef Q_OS_LINUX
+    // Workaround for Qt dark theme detection on Linux (Issue #155)
+    if (qEnvironmentVariableIsEmpty("QT_QPA_PLATFORMTHEME")) {
+        qputenv("QT_QPA_PLATFORMTHEME", "xdgdesktopportal");
+    }
+#endif
+
     auto app = vcl::Application(argc, argv);
 
     hlmp::MainWindow mw;
