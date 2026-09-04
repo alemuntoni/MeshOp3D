@@ -76,8 +76,6 @@ endif()
 
 # Package only the "Runtime" component to ignore vclib headers
 set(CPACK_COMPONENTS_ALL "Runtime")
-set(CPACK_DEB_COMPONENT_INSTALL ON)
-set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
 if(WIN32)
     set(CPACK_GENERATOR "ZIP")

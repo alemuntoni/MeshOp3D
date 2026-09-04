@@ -1,5 +1,5 @@
-if(CPACK_GENERATOR MATCHES "AppImage")
-    message(STATUS "Running linuxdeploy for AppImage in ${CPACK_TEMPORARY_DIRECTORY}...")
+if(CPACK_GENERATOR MATCHES "^(AppImage|TGZ)$")
+    message(STATUS "Running linuxdeploy for ${CPACK_GENERATOR} in ${CPACK_TEMPORARY_DIRECTORY}...")
     
     set(LINUXDEPLOY_ARCH "@LINUXDEPLOY_ARCH@")
     set(QMAKE_EXECUTABLE "@QMAKE_EXECUTABLE@")
@@ -33,11 +33,13 @@ if(CPACK_GENERATOR MATCHES "AppImage")
         message(FATAL_ERROR "linuxdeploy failed with exit code ${res}")
     endif()
 
-    # linuxdeploy creates symlinks for AppRun, desktop file, and icon in the AppDir root.
-    # CPack's native AppImage generator ALSO tries to create them, causing a "File exists" error.
-    # We remove them here so CPack can do its job.
-    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
-    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@PROJECT_NAME@.desktop")
-    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.svg")
-    file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/.DirIcon")
+    if(CPACK_GENERATOR MATCHES "AppImage")
+        # linuxdeploy creates symlinks for AppRun, desktop file, and icon in the AppDir root.
+        # CPack's native AppImage generator ALSO tries to create them, causing a "File exists" error.
+        # We remove them here so CPack can do its job.
+        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
+        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@PROJECT_NAME@.desktop")
+        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.svg")
+        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/.DirIcon")
+    endif()
 endif()
