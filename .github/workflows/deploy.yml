@@ -102,7 +102,7 @@ jobs:
       with:
         name: packages-${{ matrix.os }}
         path: |
-          build/*-windows.zip
+          build/*.zip
           build/*.dmg
           build/*.deb
           build/*.tar.gz
@@ -113,6 +113,8 @@ jobs:
     name: Create Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v8
@@ -122,19 +124,19 @@ jobs:
     - name: Prepare Release Assets
       run: |
         mkdir -p release_assets
-        find artifacts -type f -name '*-windows.zip' -exec cp {} release_assets/ \;
+        find artifacts -type f -name '*.zip' -exec cp {} release_assets/ \;
         find artifacts -type f -name '*.dmg' -exec cp {} release_assets/ \;
         find artifacts -type f -name '*.deb' -exec cp {} release_assets/ \;
         find artifacts -type f -name '*.tar.gz' -exec cp {} release_assets/ \;
         find artifacts -type f -name '*.AppImage' -exec cp {} release_assets/ \;
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: v${{ github.event.inputs.version }}
+        tag: v${{ github.event.inputs.version }}
         name: Release v${{ github.event.inputs.version }}
         draft: false
         prerelease: false
-        files: release_assets/*
+        artifacts: release_assets/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
