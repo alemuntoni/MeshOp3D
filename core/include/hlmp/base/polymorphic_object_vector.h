@@ -25,6 +25,8 @@
 
 #include "concepts.h"
 
+#include <hlmp/settings.h>
+
 #include <vclib/base.h>
 #include <vclib/space/core.h>
 

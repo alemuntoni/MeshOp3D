@@ -28,6 +28,8 @@
 
 namespace hlmp {
 
+using uint = vcl::uint;
+
 /**
  * @brief Scalar type used in HighLevelMeshProcessing.
  */
@@ -38,7 +40,7 @@ using ScalarType = double;
  */
 constexpr bool INDEXED_MESHES = false;
 
-enum class MeshTypeId : vcl::uint {
+enum class MeshTypeId : uint {
     TRIANGLE_MESH = 0,
     POLYGON_MESH  = 1,
 
