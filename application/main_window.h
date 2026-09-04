@@ -145,6 +145,11 @@ private:
         for (const auto& m : outputMeshes) {
             this->pushDrawableObject(makeMeshDrawable(m));
         }
+        
+        if (nioMeshes > 0 || outputMeshes.size() > 0) {
+            this->setRightAreaVisible(true);
+        }
+        
         this->updateGUI();
     }
 
@@ -176,6 +181,8 @@ private:
             break;
         default: break;
         }
+        
+        this->setRightAreaVisible(true);
         this->updateGUI();
     }
 

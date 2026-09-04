@@ -64,16 +64,16 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
         if (tri) {
             return std::make_pair(
                 QIcon(":/assets/icons/tri.png"),
-                vcl::meshTypeName<vcl::TriEdgeMesh>().c_str());
+                std::string("Triangle Mesh"));
         }
         const auto* pol =
             dynamic_cast<const vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
         if (pol) {
             return std::make_pair(
                 QIcon(":/assets/icons/poly.png"),
-                vcl::meshTypeName<vcl::PolyEdgeMesh>().c_str());
+                std::string("Polygonal Mesh"));
         }
-        return std::make_pair(QIcon(), "");
+        return std::make_pair(QIcon(), std::string(""));
     };
 
     setDrawVectorIconFunction(f);
@@ -82,6 +82,8 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
 
     loadRecentFiles();
     updateRecentFilesMenu();
+    
+    setRightAreaVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -201,11 +203,13 @@ void MainWindow::loadMesh(const std::string& filename)
         pushDrawableObject(makeMeshDrawable(
             std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
         addRecentFile(filename);
+        setRightAreaVisible(true);
         break;
     case MeshTypeId::POLYGON_MESH:
         pushDrawableObject(makeMeshDrawable(
             std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
         addRecentFile(filename);
+        setRightAreaVisible(true);
         break;
     default: break;
     }
