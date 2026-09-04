@@ -52,6 +52,12 @@ elseif(UNIX AND NOT APPLE)
 endif()
 
 # --- CPack Configuration ---
+string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" SYS_ARCH)
+if(SYS_ARCH STREQUAL "amd64")
+    set(SYS_ARCH "x86_64")
+endif()
+set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${SYS_ARCH}")
+
 set(CPACK_PACKAGE_NAME "HighLevelMeshProcessing")
 set(CPACK_PACKAGE_VENDOR "VCLab")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "High Level Mesh Processing Application")
