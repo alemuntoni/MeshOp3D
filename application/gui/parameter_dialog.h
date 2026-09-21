@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_APPLICATION_GUI_PARAMETER_DIALOG_H
-#define HLMP_APPLICATION_GUI_PARAMETER_DIALOG_H
+#ifndef M3D_APPLICATION_GUI_PARAMETER_DIALOG_H
+#define M3D_APPLICATION_GUI_PARAMETER_DIALOG_H
 
 #include "parameters_grid_layout.h"
 
@@ -44,4 +44,4 @@ public:
 
 } // namespace hlmp
 
-#endif // HLMP_APPLICATION_GUI_PARAMETER_DIALOG_H
+#endif // M3D_APPLICATION_GUI_PARAMETER_DIALOG_H

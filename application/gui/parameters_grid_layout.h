@@ -20,12 +20,12 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
-#define HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#ifndef M3D_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#define M3D_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
 
 #include <QGridLayout>
 
-#include <hlmp/parameter_vector.h>
+#include <m3d/parameter_vector.h>
 
 #include "parameters/parameter_row.h"
 
@@ -54,4 +54,4 @@ private:
 
 } // namespace hlmp
 
-#endif // HLMP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#endif // M3D_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H

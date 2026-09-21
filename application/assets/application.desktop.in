@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=HighLevelMeshProcessing
-Comment=High Level Mesh Processing Application
+Name=MeshOp3D
+Comment=MeshOp3D Application
 Exec=@PROJECT_NAME@ %U
 Icon=mop3d-icon
 Terminal=false

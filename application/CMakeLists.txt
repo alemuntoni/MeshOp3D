@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(HLMP-application)
+project(MeshOp3D-app)
 
 if (NOT TARGET vclib-3rd-qt)
     message(FATAL_ERROR "Qt6 not found. Please set Qt6_DIR to the Qt6Config.cmake file.")
@@ -16,7 +16,7 @@ file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
-target_link_libraries(${PROJECT_NAME} PRIVATE vclib hlmp::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE vclib m3d::core)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 install(TARGETS ${PROJECT_NAME}
@@ -58,7 +58,7 @@ if(SYS_ARCH STREQUAL "amd64")
 endif()
 set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${SYS_ARCH}")
 
-set(CPACK_PACKAGE_NAME "HighLevelMeshProcessing")
+set(CPACK_PACKAGE_NAME "MeshOp3D")
 set(CPACK_PACKAGE_VENDOR "VCLab")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "High Level Mesh Processing Application")
 set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})

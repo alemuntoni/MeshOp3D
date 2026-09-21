@@ -21,7 +21,7 @@
  ****************************************************************************/
 
 #include "search_filter_widget.h"
-#include <hlmp/manager.h>
+#include <m3d/manager.h>
 
 #include <QStringList>
 #include <QTimer>

@@ -27,8 +27,9 @@
 #include "gui/parameter_dialog.h"
 #include "gui/search_filter_widget.h"
 
-#include <hlmp/functions.h>
-#include <hlmp/manager.h>
+#include <m3d/functions.h>
+#include <m3d/manager.h>
+
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 

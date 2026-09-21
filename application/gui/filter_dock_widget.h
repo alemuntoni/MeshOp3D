@@ -20,12 +20,12 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
-#define HLMP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
+#ifndef M3D_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
+#define M3D_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
 
 #include <QDockWidget>
 
-#include <hlmp/actions/interfaces/filter_action.h>
+#include <m3d/actions/interfaces/filter_action.h>
 
 namespace hlmp {
 
@@ -66,4 +66,4 @@ private:
 
 } // namespace hlmp
 
-#endif // HLMP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
+#endif // M3D_APPLICATION_GUI_FILTER_DOCK_WIDGET_H

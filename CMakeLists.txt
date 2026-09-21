@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(HighLevelMeshProcessing VERSION 0.0.1)
+project(MeshOp3D VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 20)
 

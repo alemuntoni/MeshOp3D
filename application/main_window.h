@@ -20,11 +20,11 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_APPLICATION_MAIN_WINDOW_H
-#define HLMP_APPLICATION_MAIN_WINDOW_H
+#ifndef M3D_APPLICATION_MAIN_WINDOW_H
+#define M3D_APPLICATION_MAIN_WINDOW_H
 
-#include <hlmp/actions/interfaces/convert_action.h>
-#include <hlmp/actions/interfaces/filter_action.h>
+#include <m3d/actions/interfaces/convert_action.h>
+#include <m3d/actions/interfaces/filter_action.h>
 
 #include "utils.h"
 
@@ -196,4 +196,4 @@ private:
 
 } // namespace hlmp
 
-#endif // HLMP_APPLICATION_MAIN_WINDOW_H
+#endif // M3D_APPLICATION_MAIN_WINDOW_H

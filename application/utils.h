@@ -20,10 +20,11 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef HLMP_APPLICATION_UTILS_H
-#define HLMP_APPLICATION_UTILS_H
+#ifndef M3D_APPLICATION_UTILS_H
+#define M3D_APPLICATION_UTILS_H
 
-#include <hlmp/settings.h>
+#include <m3d/settings.h>
+
 #include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
@@ -68,4 +69,4 @@ inline MeshTypeId meshId(
 
 } // namespace hlmp
 
-#endif // HLMP_APPLICATION_UTILS_H
+#endif // M3D_APPLICATION_UTILS_H
