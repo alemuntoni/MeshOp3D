@@ -52,7 +52,7 @@ def main():
     # 3. Package
     cpack_generators = ""
     if system == "Windows":
-        cpack_generators = "ZIP"
+        cpack_generators = "ZIP;NSIS"
     elif system == "Darwin":
         cpack_generators = "DragNDrop"
     elif system == "Linux":
@@ -68,7 +68,7 @@ def main():
     if not os.path.exists(packages_dir):
         os.makedirs(packages_dir)
 
-    patterns = ['*.zip', '*.dmg', '*.deb', '*.tar.gz', '*.AppImage']
+    patterns = ['*.zip', '*.exe', '*.dmg', '*.deb', '*.tar.gz', '*.AppImage']
     
     copied = 0
     for pattern in patterns:

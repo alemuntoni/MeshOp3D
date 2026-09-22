@@ -46,15 +46,31 @@ endif()
 # regardless of the CMake project name (${PROJECT_NAME}).
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${MOP_APP_NAME}")
 
-install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION bin COMPONENT Runtime
-    BUNDLE DESTINATION . COMPONENT Runtime
-)
+if(WIN32)
+    # On Windows the executable lives directly in the install root,
+    # not in a bin/ subdirectory (which is the Linux/macOS convention).
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION . COMPONENT Runtime)
+else()
+    install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION bin COMPONENT Runtime
+        BUNDLE DESTINATION . COMPONENT Runtime
+    )
+endif()
 
 if(WIN32)
-    #install(CODE "execute_process(COMMAND windeployqt \"\${CMAKE_INSTALL_PREFIX}/bin/${MOP_APP_NAME}.exe\")" COMPONENT Runtime)
-    find_program(WINDEPLOYQT_EXECUTABLE NAMES windeployqt HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin" REQUIRED)
-    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/bin/${MOP_APP_NAME}.exe\")" COMPONENT Runtime)
+    # Embed the .ico icon into the .exe (visible in Explorer/taskbar/Alt+Tab).
+    # A .rc file is required by MSVC; CMake compiles it automatically via rc.exe.
+    target_sources(${PROJECT_NAME} PRIVATE assets/mop3d-icon.rc)
+
+    # Deploy Qt runtime DLLs next to the installed executable.
+    find_program(WINDEPLOYQT_EXECUTABLE NAMES windeployqt
+        HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin"
+        REQUIRED)
+    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \
+        \"\${CMAKE_INSTALL_PREFIX}/${MOP_APP_NAME}.exe\")" COMPONENT Runtime)
+
+    # Install the .ico alongside the executable (needed for the DefaultIcon registry entry).
+    install(FILES assets/mop3d-icon.ico DESTINATION . COMPONENT Runtime)
 elseif(APPLE)
     # The bundle and its internal executable will be named ${MOP_APP_NAME} (not ${PROJECT_NAME}).
     set(MOP_BUNDLE_EXECUTABLE "${MOP_APP_NAME}")
@@ -114,11 +130,16 @@ set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${SYS_ARCH}")
 set(CPACK_PACKAGE_NAME "${MOP_APP_NAME}")
 set(CPACK_PACKAGE_VENDOR "VCLab")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${MOP_APP_NAME} is a mesh processing application developed by the Visual Computing Lab, ISTI - CNR.")
+set(CPACK_RESOURCE_FILE_LICENSE      "${CMAKE_SOURCE_DIR}/LICENSE")
+# Install to "C:\Program Files\MeshOp3D" (no version suffix).
+# CPack's default is "${CPACK_PACKAGE_NAME} ${CPACK_PACKAGE_VERSION}".
+set(CPACK_PACKAGE_INSTALL_DIRECTORY  "${MOP_APP_NAME}")
 set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})
 set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${CMAKE_PROJECT_VERSION_PATCH})
-if(NOT APPLE)
+if(NOT WIN32 AND NOT APPLE)
+    # Linux only: used by DEB/TGZ packaging.
     set(CPACK_PACKAGE_ICON "mop3d-icon.png")
 endif()
 if(UNIX AND NOT APPLE)
@@ -131,7 +152,14 @@ endif()
 set(CPACK_COMPONENTS_ALL "Runtime")
 
 if(WIN32)
-    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_GENERATOR "ZIP;NSIS")
+    set(CPACK_NSIS_DISPLAY_NAME              "${MOP_APP_NAME}")
+    set(CPACK_NSIS_INSTALLED_ICON_NAME       "${MOP_APP_NAME}.exe")
+    set(CPACK_NSIS_MUI_ICON                  "${CMAKE_CURRENT_SOURCE_DIR}/assets/mop3d-icon.ico")
+    set(CPACK_NSIS_MUI_UNIICON               "${CMAKE_CURRENT_SOURCE_DIR}/assets/mop3d-icon.ico")
+    set(CPACK_NSIS_URL_INFO_ABOUT            "https://github.com/cnr-isti-vclab/MeshOp3D")
+    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS    "${MOP_NSIS_REGISTRY_ENTRIES}")
+    set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS  "${MOP_NSIS_UNREGISTRY_ENTRIES}")
 elseif(APPLE)
     set(CPACK_GENERATOR "DragNDrop")
 else()

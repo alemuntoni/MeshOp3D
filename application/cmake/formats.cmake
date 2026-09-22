@@ -135,6 +135,40 @@ foreach(_fmt IN LISTS MOP_FORMATS)
     string(APPEND MOP_PLIST_EXTENSIONS "        <string>${MOP_FORMAT_${_fmt}_EXT}</string>\n")
 endforeach()
 
-# -- Windows: NSIS installer (Phase 3) ----------------------------------------
-# Registry entries will be generated in Phase 3 using MOP_FORMATS and
-# MOP_FORMAT_<id>_* variables defined above.
+# -- Windows: NSIS registry entries (Phase 3) ---------------------------------
+# MOP_NSIS_REGISTRY_ENTRIES   → used by CPACK_NSIS_EXTRA_INSTALL_COMMANDS
+# MOP_NSIS_UNREGISTRY_ENTRIES → used by CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS
+#
+# For each format this writes four registry keys:
+#   HKCR\.<ext>                              → ProgID "MeshOp3D.<ext>"
+#   HKCR\MeshOp3D.<ext>                     → human-readable description
+#   HKCR\MeshOp3D.<ext>\shell\open\command  → "$INSTDIR\bin\MeshOp3D.exe" "%1"
+#   HKCR\MeshOp3D.<ext>\DefaultIcon         → "$INSTDIR\bin\MeshOp3D.exe,0"
+#
+# ESCAPING: three levels separate formats.cmake from what NSIS sees:
+#   formats.cmake source → CMake variable → CPackConfig.cmake text → (CMake re-parse) → NSIS
+#
+# Backslash in registry path (e.g. \shell):
+#   \\\\  →  \\  →  \\  →  \   ← NSIS gets single \
+#
+# Double-quote inside NSIS single-quoted string value (e.g. in open command):
+#   \\\"  →  \"  →  \"  →  "   ← NSIS gets literal "
+#
+# Why single-quoted NSIS strings?
+#   Using NSIS single-quoted strings ('...') keeps naked '"' characters out of
+#   the CMake variable. A naked '"' in the variable would be written as-is into
+#   CPackConfig.cmake, terminating the set() argument prematurely.
+set(MOP_NSIS_REGISTRY_ENTRIES "")
+set(MOP_NSIS_UNREGISTRY_ENTRIES "")
+foreach(_fmt IN LISTS MOP_FORMATS)
+    set(_ext  "${MOP_FORMAT_${_fmt}_EXT}")
+    set(_desc "${MOP_FORMAT_${_fmt}_DESC}")
+    string(APPEND MOP_NSIS_REGISTRY_ENTRIES
+        "  WriteRegStr HKCR '.${_ext}' '' 'MeshOp3D.${_ext}'\n"
+        "  WriteRegStr HKCR 'MeshOp3D.${_ext}' '' '${_desc}'\n"
+        "  WriteRegStr HKCR 'MeshOp3D.${_ext}\\\\shell\\\\open\\\\command' '' '\\\"$INSTDIR\\\\MeshOp3D.exe\\\" \\\"%1\\\"'\n"
+        "  WriteRegStr HKCR 'MeshOp3D.${_ext}\\\\DefaultIcon' '' '$INSTDIR\\\\MeshOp3D.exe,0'\n\n")
+    string(APPEND MOP_NSIS_UNREGISTRY_ENTRIES
+        "  DeleteRegKey HKCR 'MeshOp3D.${_ext}'\n"
+        "  DeleteRegKey /ifempty HKCR '.${_ext}'\n")
+endforeach()

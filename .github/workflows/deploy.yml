@@ -55,6 +55,12 @@ jobs:
         cache: 'true'
         version: '6.10.*'
 
+    - name: Install NSIS (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: | 
+        choco install nsis -y
+
     - name: Build Application
       shell: bash
       run: |
@@ -67,6 +73,7 @@ jobs:
       run: |
         cd build
         cpack -C Release -G ZIP
+        cpack -C Release -G NSIS
 
     - name: Package (macOS)
       if: runner.os == 'macOS'
@@ -103,6 +110,7 @@ jobs:
         name: packages-${{ matrix.os }}
         path: |
           build/*.zip
+          build/*.exe
           build/*.dmg
           build/*.deb
           build/*.tar.gz
@@ -124,10 +132,11 @@ jobs:
     - name: Prepare Release Assets
       run: |
         mkdir -p release_assets
-        find artifacts -type f -name '*.zip' -exec cp {} release_assets/ \;
-        find artifacts -type f -name '*.dmg' -exec cp {} release_assets/ \;
-        find artifacts -type f -name '*.deb' -exec cp {} release_assets/ \;
-        find artifacts -type f -name '*.tar.gz' -exec cp {} release_assets/ \;
+        find artifacts -type f -name '*.zip'      -exec cp {} release_assets/ \;
+        find artifacts -type f -name '*.exe'      -exec cp {} release_assets/ \;
+        find artifacts -type f -name '*.dmg'      -exec cp {} release_assets/ \;
+        find artifacts -type f -name '*.deb'      -exec cp {} release_assets/ \;
+        find artifacts -type f -name '*.tar.gz'   -exec cp {} release_assets/ \;
         find artifacts -type f -name '*.AppImage' -exec cp {} release_assets/ \;
 
     - name: Create GitHub Release
