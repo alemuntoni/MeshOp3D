@@ -32,15 +32,24 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} asse
 target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core Qt6::Network)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+if(APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        INSTALL_RPATH "@executable_path/../Frameworks"
+    )
+endif()
+
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin COMPONENT Runtime
     BUNDLE DESTINATION . COMPONENT Runtime
 )
 
 if(WIN32)
-    install(CODE "execute_process(COMMAND windeployqt \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")" COMPONENT Runtime)
+    #install(CODE "execute_process(COMMAND windeployqt \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")" COMPONENT Runtime)
+    find_program(WINDEPLOYQT_EXECUTABLE NAMES windeployqt HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin" REQUIRED)
+    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")" COMPONENT Runtime)
 elseif(APPLE)
-    install(CODE "execute_process(COMMAND macdeployqt \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\")" COMPONENT Runtime)
+    find_program(MACDEPLOYQT_EXECUTABLE NAMES macdeployqt HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin" REQUIRED)
+    install(CODE "execute_process(COMMAND \"${MACDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\")" COMPONENT Runtime)
 elseif(UNIX AND NOT APPLE)
     configure_file(assets/application.desktop.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" @ONLY)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" DESTINATION share/applications COMPONENT Runtime)
