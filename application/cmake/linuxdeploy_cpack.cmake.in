@@ -26,7 +26,7 @@ if(CPACK_GENERATOR MATCHES "^(AppImage|TGZ)$")
     get_filename_component(QT_LIB_DIR "${QT_BIN_DIR}/../lib" ABSOLUTE)
     
     execute_process(
-        COMMAND "${CMAKE_COMMAND}" -E env "LD_LIBRARY_PATH=${QT_LIB_DIR}:$ENV{LD_LIBRARY_PATH}" "QMAKE=${QMAKE_EXECUTABLE}" EXTRA_QT_MODULES=svg,wayland "${LINUXDEPLOY_BIN}" --appdir "${CPACK_TEMPORARY_DIRECTORY}" -e "${CPACK_TEMPORARY_DIRECTORY}/usr/bin/@PROJECT_NAME@" --plugin qt
+        COMMAND "${CMAKE_COMMAND}" -E env "LD_LIBRARY_PATH=${QT_LIB_DIR}:$ENV{LD_LIBRARY_PATH}" "QMAKE=${QMAKE_EXECUTABLE}" EXTRA_QT_MODULES=svg,wayland "${LINUXDEPLOY_BIN}" --appdir "${CPACK_TEMPORARY_DIRECTORY}" -e "${CPACK_TEMPORARY_DIRECTORY}/usr/bin/@MOP_APP_NAME@" --plugin qt
         RESULT_VARIABLE res
     )
     if(res)
@@ -38,7 +38,7 @@ if(CPACK_GENERATOR MATCHES "^(AppImage|TGZ)$")
         # CPack's native AppImage generator ALSO tries to create them, causing a "File exists" error.
         # We remove them here so CPack can do its job.
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
-        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@PROJECT_NAME@.desktop")
+        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@MOP_APP_NAME@.desktop")
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.png")
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/.DirIcon")
     endif()

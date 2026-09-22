@@ -20,6 +20,5 @@ set(VCLIB_ALLOW_DOWNLOAD_IMGUI OFF)
 
 add_subdirectory(vclib EXCLUDE_FROM_ALL)
 
-
 add_subdirectory(core)
 add_subdirectory(application)

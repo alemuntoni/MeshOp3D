@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 
     auto app = vcl::Application(argc, argv);
 
-    QGuiApplication::setDesktopFileName("MeshOp3D-app.desktop");
+    QGuiApplication::setDesktopFileName("MeshOp3D.desktop");
     QGuiApplication::setWindowIcon(QIcon(":/assets/mop3d-icon.png"));
 
     mop::MainWindow mw;
