@@ -14,6 +14,7 @@ namespace mop {
 
 FilterDockWidget::FilterDockWidget(
     const std::shared_ptr<FilterAction>& action,
+    const std::vector<std::string>&             meshNames,
     QWidget*                                    parent) :
         QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
@@ -25,6 +26,33 @@ FilterDockWidget::FilterDockWidget(
         QString::fromStdString(action->description()));
 
     auto params = action->parameters();
+
+    auto inMeshes = action->inputMeshes();
+    for (int i = (int)inMeshes.size() - 1; i >= 0; --i) {
+        EnumParameter param(
+            "mesh_input_" + std::to_string(i),
+            std::min((vcl::uint)i, (vcl::uint)meshNames.size() - 1), // default
+            meshNames,
+            vcl::BitSet32().set(), // TODO: use supportedMeshTypes if available
+            inMeshes[i].description(),
+            "Select the mesh to use as " + inMeshes[i].description()
+        );
+        params.insert(0, param);
+    }
+
+    auto inoutMeshes = action->inputOutputMeshes();
+    for (int i = (int)inoutMeshes.size() - 1; i >= 0; --i) {
+        vcl::uint defaultId = std::min((vcl::uint)(i + inMeshes.size()), (vcl::uint)meshNames.size() - 1);
+        EnumParameter param(
+            "mesh_inout_" + std::to_string(i),
+            defaultId,
+            meshNames,
+            vcl::BitSet32().set(),
+            inoutMeshes[i].description(),
+            "Select the mesh to use as " + inoutMeshes[i].description()
+        );
+        params.insert(inMeshes.size(), param);
+    }
 
     // if the action has only output mesh(es)
     if (action->inputMeshes().empty() && action->inputOutputMeshes().empty()) {

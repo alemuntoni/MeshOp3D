@@ -25,6 +25,7 @@
 #include <QFileDialog>
 #include <QKeySequence>
 #include <QMenuBar>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QShortcut>
 #include <QToolBar>
@@ -262,14 +263,24 @@ void MainWindow::applyFilter(
     MeshTypeId filterMeshType =
         getFilterMeshType(action, params, selectedDrawableObject());
 
-    switch (filterMeshType) {
-    case MeshTypeId::TRIANGLE_MESH:
-        executeFilter<vcl::TriEdgeMesh>(action, params);
-        break;
-    case MeshTypeId::POLYGON_MESH:
-        executeFilter<vcl::PolyEdgeMesh>(action, params);
-        break;
-    default: break;
+    try {
+        switch (filterMeshType) {
+        case MeshTypeId::TRIANGLE_MESH:
+            executeFilter<vcl::TriEdgeMesh>(action, params);
+            break;
+        case MeshTypeId::POLYGON_MESH:
+            executeFilter<vcl::PolyEdgeMesh>(action, params);
+            break;
+        default: break;
+        }
+    }
+    catch (const std::exception& e) {
+        std::string msg = "Error executing filter '" + action->name() +
+                          "': " + std::string(e.what());
+
+        logger().log(msg, vcl::qt::TextEditLogger::ERROR_LOG);
+        QMessageBox::critical(
+            this, "Error", QString::fromStdString(msg), QMessageBox::Ok);
     }
 }
 
@@ -542,6 +553,7 @@ void MainWindow::populateFilterMenu()
     menus[vcl::toUnderlying(RECONSTRUCTION)] =
         new QMenu("Reconstruction", mFilterMenu);
     menus[vcl::toUnderlying(SMOOTHING)] = new QMenu("Smoothing", mFilterMenu);
+    menus[vcl::toUnderlying(BOOLEANS)] = new QMenu("Booleans", mFilterMenu);
 
     for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
         mFilterMenu->addMenu(menus[i]);
@@ -583,7 +595,24 @@ void MainWindow::populateFilterMenu()
 
 void MainWindow::openFilterDialog(const std::shared_ptr<FilterAction>& action)
 {
-    FilterDockWidget* dock = new FilterDockWidget(action, this);
+    vcl::uint niMeshes  = action->inputMeshes().size();
+    vcl::uint nioMeshes = action->inputOutputMeshes().size();
+    
+    if (nioMeshes > drawableObjectsCount()) {
+        QMessageBox::warning(this, "Error", "Not enough meshes loaded. At least " + QString::number(nioMeshes) + " meshes are required for this operation.");
+        return;
+    }
+    if (niMeshes > 0 && drawableObjectsCount() == 0) {
+        QMessageBox::warning(this, "Error", "No meshes loaded. At least 1 mesh is required for this operation.");
+        return;
+    }
+
+    std::vector<std::string> meshNames;
+    for (vcl::uint i = 0; i < drawableObjectsCount(); ++i) {
+        meshNames.push_back(drawableObject(i)->name() + " (" + std::to_string(i) + ")");
+    }
+
+    FilterDockWidget* dock = new FilterDockWidget(action, meshNames, this);
 
     connect(
         dock, &FilterDockWidget::applyFilter, this, &MainWindow::applyFilter);
@@ -612,7 +641,13 @@ MeshTypeId MainWindow::getFilterMeshType(
         return meshId(drawableObject(selectedMesh));
     }
     else {
-        // TODO: implement
+        if (niMeshes > 0) {
+            vcl::uint id = params.get("mesh_input_0")->uintValue();
+            return meshId(drawableObject(id));
+        } else if (nioMeshes > 0) {
+            vcl::uint id = params.get("mesh_inout_0")->uintValue();
+            return meshId(drawableObject(id));
+        }
         return MeshTypeId::COUNT;
     }
 }

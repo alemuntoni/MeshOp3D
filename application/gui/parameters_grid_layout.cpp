@@ -86,10 +86,8 @@ ParameterVector ParametersGridLayout::parameters() const
 {
     ParameterVector pars = mParameters;
     for (const std::shared_ptr<ParameterRow>& row : mRows) {
-        if (row->hasBeenModified()) {
-            auto par = row->parameterFromWidget();
-            pars.get(par->name())->setValue(*par);
-        }
+        auto par = row->parameterFromWidget();
+        pars.get(par->name())->setValue(*par);
     }
     return pars;
 }

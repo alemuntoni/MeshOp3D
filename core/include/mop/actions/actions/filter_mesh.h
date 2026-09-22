@@ -12,5 +12,6 @@
 #include "filter_mesh/clean.h"
 #include "filter_mesh/create.h"
 #include "filter_mesh/generate.h"
+#include "filter_mesh/booleans.h"
 
 #endif // MOP_CORE_ACTIONS_ACTIONS_FILTER_MESH_H

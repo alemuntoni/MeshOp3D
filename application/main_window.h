@@ -100,20 +100,57 @@ private:
         std::vector<MeshType*>       inputOutputMeshes;
         std::vector<MeshType>        outputMeshes;
 
-        std::shared_ptr<vcl::DrawableMesh<MeshType>> m;
+        std::vector<std::shared_ptr<vcl::DrawableMesh<MeshType>>> modifiedDrawables;
 
         vcl::uint niMeshes  = action->inputMeshes().size();
         vcl::uint nioMeshes = action->inputOutputMeshes().size();
         if (niMeshes + nioMeshes == 1) {
-            m = toDrawableMesh<MeshType>(
+            auto m = toDrawableMesh<MeshType>(
                 this->drawableObject(this->selectedDrawableObject()));
+            if (!m) {
+                throw std::runtime_error(
+                    "Selected mesh is of incompatible type.");
+            }
             if (niMeshes == 1) {
                 inputMeshes.push_back(m.get());
             }
             else {
                 inputOutputMeshes.push_back(m.get());
+                modifiedDrawables.push_back(m);
             }
         }
+        else if (niMeshes + nioMeshes > 1) {
+            for (vcl::uint i = 0; i < niMeshes; ++i) {
+                vcl::uint id = params.get("mesh_input_" + std::to_string(i))->uintValue();
+                auto mesh = toDrawableMesh<MeshType>(this->drawableObject(id));
+                if (!mesh) {
+                    throw std::runtime_error(
+                        "Selected mesh for input " + std::to_string(i) +
+                        " is of incompatible type.");
+                }
+                inputMeshes.push_back(mesh.get());
+            }
+
+            std::vector<vcl::uint> inoutIds;
+            for (vcl::uint i = 0; i < nioMeshes; ++i) {
+                vcl::uint id = params.get("mesh_inout_" + std::to_string(i))->uintValue();
+                if (std::find(inoutIds.begin(), inoutIds.end(), id) != inoutIds.end()) {
+                    throw std::runtime_error(
+                        "Duplicate mesh selected for input/output.");
+                }
+                inoutIds.push_back(id);
+
+                auto mesh = toDrawableMesh<MeshType>(this->drawableObject(id));
+                if (!mesh) {
+                    throw std::runtime_error(
+                        "Selected mesh for input/output " + std::to_string(i) +
+                        " is of incompatible type.");
+                }
+                inputOutputMeshes.push_back(mesh.get());
+                modifiedDrawables.push_back(mesh);
+            }
+        }
+
         logger().startTimer();
         action->execute(
             inputMeshes, inputOutputMeshes, outputMeshes, params, logger());
@@ -125,7 +162,9 @@ private:
             vcl::qt::TextEditLogger::MESSAGE_LOG);
 
         if (nioMeshes > 0) {
-            m->updateBuffers();
+            for (auto& mod : modifiedDrawables) {
+                mod->updateBuffers();
+            }
         }
         for (const auto& m : outputMeshes) {
             this->pushDrawableObject(makeMeshDrawable(m));

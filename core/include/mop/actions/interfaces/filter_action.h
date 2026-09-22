@@ -25,6 +25,7 @@ public:
         CLEANING_AND_REPAIRING,
         RECONSTRUCTION,
         SMOOTHING,
+        BOOLEANS,
 
         COUNT,
     };

@@ -29,6 +29,7 @@ class FilterDockWidget : public QDockWidget
 public:
     explicit FilterDockWidget(
         const std::shared_ptr<FilterAction>& action,
+        const std::vector<std::string>&             meshNames,
         QWidget*                                    parent = nullptr);
 
     ~FilterDockWidget();

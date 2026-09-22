@@ -21,6 +21,6 @@ add_library(mop::core ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${MOP_CORE_INCLUDE_DIR})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC vclib::core)
+target_link_libraries(${PROJECT_NAME} PUBLIC vclib::core vclib::external)
 
 target_sources(${PROJECT_NAME} PRIVATE ${HEADERS} ${SOURCES})
