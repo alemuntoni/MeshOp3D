@@ -6,3 +6,4 @@ Icon=mop3d-icon
 Terminal=false
 Type=Application
 Categories=Graphics;3DGraphics;
+StartupWMClass=@PROJECT_NAME@

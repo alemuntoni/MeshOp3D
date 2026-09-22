@@ -4,5 +4,6 @@
     <file alias="assets/icons/poly.png">../assets/icons/poly.png</file>
     <file alias="assets/icons/tet.png">../assets/icons/tet.png</file>
     <file alias="assets/icons/tri.png">../assets/icons/tri.png</file>
+    <file alias="assets/mop3d-icon.png">assets/mop3d-icon.png</file>
 </qresource>
 </RCC>

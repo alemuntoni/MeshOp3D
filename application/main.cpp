@@ -9,6 +9,8 @@
 
 #include <vclib/render/application.h>
 
+#include <QGuiApplication>
+#include <QIcon>
 #include <qglobal.h>
 
 int main(int argc, char** argv)
@@ -21,6 +23,9 @@ int main(int argc, char** argv)
 #endif
 
     auto app = vcl::Application(argc, argv);
+
+    QGuiApplication::setDesktopFileName("MeshOp3D-app.desktop");
+    QGuiApplication::setWindowIcon(QIcon(":/assets/mop3d-icon.png"));
 
     mop::MainWindow mw;
 

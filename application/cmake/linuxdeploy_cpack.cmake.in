@@ -39,7 +39,7 @@ if(CPACK_GENERATOR MATCHES "^(AppImage|TGZ)$")
         # We remove them here so CPack can do its job.
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@PROJECT_NAME@.desktop")
-        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.svg")
+        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.png")
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/.DirIcon")
     endif()
 endif()
