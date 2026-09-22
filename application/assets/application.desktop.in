@@ -1,9 +1,10 @@
 [Desktop Entry]
 Name=MeshOp3D
 Comment=MeshOp3D Application
-Exec=@PROJECT_NAME@ %U
+Exec=@PROJECT_NAME@ %F
 Icon=mop3d-icon
 Terminal=false
 Type=Application
 Categories=Graphics;3DGraphics;
 StartupWMClass=@PROJECT_NAME@
+MimeType=@MOP_DESKTOP_MIME_TYPES@

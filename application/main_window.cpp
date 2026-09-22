@@ -20,15 +20,15 @@
 
 #include <nlohmann/json.hpp>
 
+#include <QCoreApplication>
+#include <QFile>
 #include <QFileDialog>
+#include <QKeySequence>
 #include <QMenuBar>
 #include <QPushButton>
 #include <QShortcut>
-#include <QKeySequence>
 #include <QToolBar>
 #include <QUrl>
-#include <QFile>
-#include <QCoreApplication>
 
 #include <algorithm>
 #include <filesystem>
@@ -36,7 +36,10 @@
 
 namespace mop {
 
-MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appConfigDirectory("MeshOp3D") / "settings.json").string())
+MainWindow::MainWindow(QWidget* parent) :
+        vcl::qt::MeshViewer(
+            parent,
+            (vcl::appConfigDirectory("MeshOp3D") / "settings.json").string())
 {
     vcl::pushDefaultEditors(*this);
 
@@ -49,8 +52,7 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
             dynamic_cast<const vcl::DrawableMesh<vcl::TriEdgeMesh>*>(&obj);
         if (tri) {
             return std::make_pair(
-                QIcon(":/assets/icons/tri.png"),
-                std::string("Triangle Mesh"));
+                QIcon(":/assets/icons/tri.png"), std::string("Triangle Mesh"));
         }
         const auto* pol =
             dynamic_cast<const vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(&obj);
@@ -68,7 +70,7 @@ MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appC
 
     loadRecentFiles();
     updateRecentFilesMenu();
-    
+
     setRightAreaVisible(false);
 }
 
@@ -80,12 +82,12 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* event)
 {
     if (event->mimeData()->hasUrls()) {
         std::vector<vcl::FileFormat> formats = ActionManager::loadMeshFormats();
-        bool accept = false;
+        bool                         accept  = false;
 
         for (const QUrl& url : event->mimeData()->urls()) {
             if (url.isLocalFile()) {
-                std::string filename = url.toLocalFile().toStdString();
-                vcl::FileFormat format = vcl::FileInfo::extension(filename);
+                std::string     filename = url.toLocalFile().toStdString();
+                vcl::FileFormat format   = vcl::FileInfo::extension(filename);
 
                 for (const auto& f : formats) {
                     if (f == format) {
@@ -114,9 +116,9 @@ void MainWindow::dropEvent(QDropEvent* event)
 
         for (const QUrl& url : mimeData->urls()) {
             if (url.isLocalFile()) {
-                std::string filename = url.toLocalFile().toStdString();
-                vcl::FileFormat format = vcl::FileInfo::extension(filename);
-                
+                std::string     filename = url.toLocalFile().toStdString();
+                vcl::FileFormat format   = vcl::FileInfo::extension(filename);
+
                 bool accept = false;
                 for (const auto& f : formats) {
                     if (f == format) {
@@ -124,7 +126,7 @@ void MainWindow::dropEvent(QDropEvent* event)
                         break;
                     }
                 }
-                
+
                 if (accept) {
                     loadMesh(filename);
                 }
@@ -156,52 +158,6 @@ void MainWindow::openRecentMesh()
             loadMesh(path.toStdString());
         }
     }
-}
-
-void MainWindow::loadMesh(const std::string& filename)
-{
-    std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
-    vcl::FileFormat format = vcl::FileInfo::extension(filename);
-
-    auto params = ActionManager::loadMeshParameters(format);
-
-    if (!params.empty()) {
-        ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
-        dialog->exec();
-
-        if (dialog->result() == QDialog::Rejected) {
-            return;
-        }
-        else {
-            params = dialog->parameters();
-        }
-    }
-
-    logger().startTimer();
-    auto [m, id] = loadMeshBestFit(filename, params, logger());
-    logger().stopTimer();
-    logger().log(
-        pfn + " loaded in " + std::to_string(logger().time()) + " seconds.",
-        vcl::qt::TextEditLogger::MESSAGE_LOG);
-
-    switch (id) {
-    case MeshTypeId::TRIANGLE_MESH:
-        pushDrawableObject(makeMeshDrawable(
-            std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
-        addRecentFile(filename);
-        setRightAreaVisible(true);
-        break;
-    case MeshTypeId::POLYGON_MESH:
-        pushDrawableObject(makeMeshDrawable(
-            std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
-        addRecentFile(filename);
-        setRightAreaVisible(true);
-        break;
-    default: break;
-    }
-
-    updateGUI();
-    fitScene();
 }
 
 void MainWindow::saveMeshAs()
@@ -238,7 +194,7 @@ void MainWindow::saveMeshAs()
         }
 
         auto            action = ActionManager::saveMeshAction(f);
-        ParameterVector params  = action->parametersSave(f);
+        ParameterVector params = action->parametersSave(f);
 
         if (!params.empty()) {
             ParameterDialog* dialog = new ParameterDialog(params, "Save Mesh");
@@ -254,7 +210,7 @@ void MainWindow::saveMeshAs()
 
         logger().startTimer();
         vcl::MeshInfo info = action->formatCapability(f);
-        std::any meshPtrAny;
+        std::any      meshPtrAny;
 
         switch (type) {
         case MeshTypeId::TRIANGLE_MESH: {
@@ -275,7 +231,8 @@ void MainWindow::saveMeshAs()
         }
 
         if (meshPtrAny.has_value()) {
-            action->saveErased(type, filename, f, meshPtrAny, info, params, logger());
+            action->saveErased(
+                type, filename, f, meshPtrAny, info, params, logger());
         }
 
         logger().stopTimer();
@@ -354,10 +311,57 @@ void MainWindow::convertCurrentMesh(bool)
     }
 }
 
+void MainWindow::loadMesh(const std::string& filename)
+{
+    std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
+    vcl::FileFormat format = vcl::FileInfo::extension(filename);
+
+    auto params = ActionManager::loadMeshParameters(format);
+
+    if (!params.empty()) {
+        ParameterDialog* dialog = new ParameterDialog(params, "Load Mesh");
+        dialog->exec();
+
+        if (dialog->result() == QDialog::Rejected) {
+            return;
+        }
+        else {
+            params = dialog->parameters();
+        }
+    }
+
+    logger().startTimer();
+    auto [m, id] = loadMeshBestFit(filename, params, logger());
+    logger().stopTimer();
+    logger().log(
+        pfn + " loaded in " + std::to_string(logger().time()) + " seconds.",
+        vcl::qt::TextEditLogger::MESSAGE_LOG);
+
+    switch (id) {
+    case MeshTypeId::TRIANGLE_MESH:
+        pushDrawableObject(makeMeshDrawable(
+            std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
+        addRecentFile(filename);
+        setRightAreaVisible(true);
+        break;
+    case MeshTypeId::POLYGON_MESH:
+        pushDrawableObject(makeMeshDrawable(
+            std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
+        addRecentFile(filename);
+        setRightAreaVisible(true);
+        break;
+    default: break;
+    }
+
+    updateGUI();
+    fitScene();
+}
+
 void MainWindow::loadRecentFiles()
 {
     std::string filePath = this->settingsFilePath();
-    if (filePath.empty()) return;
+    if (filePath.empty())
+        return;
 
     std::ifstream in(filePath);
     if (in.is_open()) {
@@ -370,7 +374,8 @@ void MainWindow::loadRecentFiles()
                     mRecentFiles.push_back(item.get<std::string>());
                 }
             }
-        } catch (...) {
+        }
+        catch (...) {
             // Ignore parse errors
         }
     }
@@ -379,18 +384,21 @@ void MainWindow::loadRecentFiles()
 void MainWindow::saveRecentFiles()
 {
     std::string filePath = this->settingsFilePath();
-    if (filePath.empty()) return;
+    if (filePath.empty())
+        return;
 
     nlohmann::json j;
-    std::ifstream in(filePath);
+    std::ifstream  in(filePath);
     if (in.is_open()) {
         try {
             in >> j;
-        } catch (...) {
+        }
+        catch (...) {
             j = nlohmann::json::object();
         }
         in.close();
-    } else {
+    }
+    else {
         j = nlohmann::json::object();
     }
 
@@ -431,19 +439,22 @@ void MainWindow::updateRecentFilesMenu()
     }
 
     for (int i = 0; i < 10; ++i) {
-        if (!mRecentFileActions[i]) continue;
-        
+        if (!mRecentFileActions[i])
+            continue;
+
         if (i < mRecentFiles.size()) {
-            std::string path = mRecentFiles[i];
+            std::string path     = mRecentFiles[i];
             std::string filename = vcl::FileInfo::fileNameWithExtension(path);
-            int key = (i + 1) % 10;
-            QString text = QString("&%1 %2").arg(key).arg(QString::fromStdString(filename));
-            
+            int         key      = (i + 1) % 10;
+            QString     text     = QString("&%1 %2").arg(key).arg(
+                QString::fromStdString(filename));
+
             mRecentFileActions[i]->setText(text);
             mRecentFileActions[i]->setData(QString::fromStdString(path));
             mRecentFileActions[i]->setVisible(true);
             mRecentFileActions[i]->setToolTip(QString::fromStdString(path));
-        } else {
+        }
+        else {
             mRecentFileActions[i]->setVisible(false);
         }
     }
@@ -474,8 +485,13 @@ void MainWindow::createMenus()
         mRecentFileActions[i] = new QAction(this);
         mRecentFileActions[i]->setVisible(false);
         int key = (i + 1) % 10;
-        mRecentFileActions[i]->setShortcut(QKeySequence(QString("Ctrl+%1").arg(key)));
-        connect(mRecentFileActions[i], &QAction::triggered, this, &MainWindow::openRecentMesh);
+        mRecentFileActions[i]->setShortcut(
+            QKeySequence(QString("Ctrl+%1").arg(key)));
+        connect(
+            mRecentFileActions[i],
+            &QAction::triggered,
+            this,
+            &MainWindow::openRecentMesh);
         mOpenRecentMenu->addAction(mRecentFileActions[i]);
     }
 
@@ -565,8 +581,7 @@ void MainWindow::populateFilterMenu()
     }
 }
 
-void MainWindow::openFilterDialog(
-    const std::shared_ptr<FilterAction>& action)
+void MainWindow::openFilterDialog(const std::shared_ptr<FilterAction>& action)
 {
     FilterDockWidget* dock = new FilterDockWidget(action, this);
 

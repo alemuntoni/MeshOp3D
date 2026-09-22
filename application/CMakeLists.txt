@@ -12,6 +12,12 @@ if (NOT TARGET vclib-3rd-qt)
     message(FATAL_ERROR "Qt6 not found. Please set Qt6_DIR to the Qt6Config.cmake file.")
 endif()
 
+find_package(Qt6 REQUIRED COMPONENTS Network)
+
+# Load supported file formats (Single Source of Truth for OS file associations).
+# Generates MOP_DESKTOP_MIME_TYPES, MOP_MIME_XML_ENTRIES, MOP_PLIST_EXTENSIONS.
+include(cmake/formats.cmake)
+
 #automoc
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -23,7 +29,7 @@ file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
-target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core Qt6::Network)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 install(TARGETS ${PROJECT_NAME}
@@ -39,6 +45,8 @@ elseif(UNIX AND NOT APPLE)
     configure_file(assets/application.desktop.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" @ONLY)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" DESTINATION share/applications COMPONENT Runtime)
     install(FILES assets/mop3d-icon.png DESTINATION share/icons/hicolor/512x512/apps COMPONENT Runtime)
+    configure_file(assets/mop3d-mimetypes.xml.in "${CMAKE_CURRENT_BINARY_DIR}/mop3d-mimetypes.xml" @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/mop3d-mimetypes.xml" DESTINATION share/mime/packages COMPONENT Runtime)
     
     # Determine architecture for linuxdeploy
     if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86_64|amd64|AMD64)")
@@ -90,7 +98,7 @@ elseif(APPLE)
     set(CPACK_GENERATOR "DragNDrop")
 else()
     set(CPACK_GENERATOR "DEB;TGZ;AppImage")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6widgets6, libgmp10, libmpfr6, libtbb12, libembree4")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt6core6, libqt6gui6, libqt6widgets6, libqt6network6, libgmp10, libmpfr6, libtbb12, libembree4")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Alessandro Muntoni")
 endif()
 

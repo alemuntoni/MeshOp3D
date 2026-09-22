@@ -67,6 +67,8 @@ public slots:
 
     void convertCurrentMesh(bool);
 
+    void loadMesh(const std::string& filename);
+
 private:
     void loadRecentFiles();
 
@@ -75,8 +77,6 @@ private:
     void addRecentFile(const std::string& filename);
 
     void updateRecentFilesMenu();
-
-    void loadMesh(const std::string& filename);
 
     void createMenus();
 
