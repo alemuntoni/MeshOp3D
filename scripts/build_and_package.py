@@ -35,6 +35,11 @@ def main():
         "-DCMAKE_BUILD_TYPE=Release",
         f"-DCMAKE_PROJECT_VERSION={args.version}"
     ]
+    
+    if shutil.which("ninja"):
+        print("Ninja build system found, using it.")
+        cmake_config_cmd.extend(["-G", "Ninja"])
+        
     if args.qt6_dir:
         cmake_config_cmd.append(f"-DCMAKE_PREFIX_PATH={args.qt6_dir}")
 
