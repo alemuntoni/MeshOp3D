@@ -21,12 +21,12 @@
  ****************************************************************************/
 
 #include "search_filter_widget.h"
-#include <m3d/manager.h>
+#include <mop/manager.h>
 
 #include <QStringList>
 #include <QTimer>
 
-namespace hlmp {
+namespace mop {
 
 SearchFilterWidget::SearchFilterWidget(QWidget* parent) : QLineEdit(parent)
 {
@@ -89,4 +89,4 @@ void SearchFilterWidget::keyPressEvent(QKeyEvent* event)
 
 
 
-} // namespace hlmp
+} // namespace mop

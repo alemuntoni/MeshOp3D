@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
-#define M3D_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
+#ifndef MOP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
+#define MOP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
 
 #include <QFrame>
 
@@ -29,7 +29,7 @@
 
 #include "parameter_frame/parameter_sub_frame.h"
 
-namespace hlmp {
+namespace mop {
 
 namespace Ui {
 class MultiParameterFrame;
@@ -90,6 +90,6 @@ private:
     ParameterSubFrame* subFrame(uint i);
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H
+#endif // MOP_APPLICATION_GUI_MULTI_PARAMETER_FRAME_H

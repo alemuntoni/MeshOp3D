@@ -24,7 +24,7 @@
 
 #include <QStandardItemModel>
 
-namespace hlmp {
+namespace mop {
 
 EnumParameterRow::EnumParameterRow(const EnumParameter& param) :
         ParameterRow(param), mParam(param)
@@ -63,4 +63,4 @@ std::shared_ptr<Parameter> EnumParameterRow::parameterFromWidget() const
     return p;
 }
 
-} // namespace hlmp
+} // namespace mop

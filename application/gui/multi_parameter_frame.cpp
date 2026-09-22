@@ -23,7 +23,7 @@
 #include "multi_parameter_frame.h"
 #include "ui_multi_parameter_frame.h"
 
-namespace hlmp {
+namespace mop {
 
 MultiParameterFrame::MultiParameterFrame(QWidget* parent) :
         QFrame(parent), mUI(new Ui::MultiParameterFrame)
@@ -162,4 +162,4 @@ ParameterSubFrame* MultiParameterFrame::subFrame(uint i)
         mParamGrids[i]->parentWidget()->parentWidget());
 }
 
-} // namespace hlmp
+} // namespace mop

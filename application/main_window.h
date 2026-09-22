@@ -20,11 +20,11 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_MAIN_WINDOW_H
-#define M3D_APPLICATION_MAIN_WINDOW_H
+#ifndef MOP_APPLICATION_MAIN_WINDOW_H
+#define MOP_APPLICATION_MAIN_WINDOW_H
 
-#include <m3d/actions/interfaces/convert_action.h>
-#include <m3d/actions/interfaces/filter_action.h>
+#include <mop/actions/interfaces/convert_action.h>
+#include <mop/actions/interfaces/filter_action.h>
 
 #include "utils.h"
 
@@ -39,7 +39,7 @@
 #include <QMenu>
 #include <QMimeData>
 
-namespace hlmp {
+namespace mop {
 
 class MainWindow : public vcl::qt::MeshViewer
 {
@@ -194,6 +194,6 @@ private:
     }
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_MAIN_WINDOW_H
+#endif // MOP_APPLICATION_MAIN_WINDOW_H

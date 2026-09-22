@@ -16,7 +16,7 @@ file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
-target_link_libraries(${PROJECT_NAME} PRIVATE vclib m3d::core)
+target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 install(TARGETS ${PROJECT_NAME}

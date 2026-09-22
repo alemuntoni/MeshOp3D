@@ -25,7 +25,7 @@
 
 #include <QPushButton>
 
-namespace hlmp {
+namespace mop {
 
 FilterDockWidget::FilterDockWidget(
     const std::shared_ptr<FilterAction>& action,
@@ -108,4 +108,4 @@ void FilterDockWidget::addOutputMeshTypeParameter(
     params.insert(0, param);
 }
 
-} // namespace hlmp
+} // namespace mop

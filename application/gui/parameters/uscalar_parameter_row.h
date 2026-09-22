@@ -20,14 +20,14 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_PARAMETERS_USCALAR_PARAMETER_ROW_H
-#define M3D_APPLICATION_GUI_PARAMETERS_USCALAR_PARAMETER_ROW_H
+#ifndef MOP_APPLICATION_GUI_PARAMETERS_USCALAR_PARAMETER_ROW_H
+#define MOP_APPLICATION_GUI_PARAMETERS_USCALAR_PARAMETER_ROW_H
 
 #include <QLineEdit>
 
 #include "parameter_row.h"
 
-namespace hlmp {
+namespace mop {
 
 class UscalarParameterRow : public ParameterRow
 {
@@ -44,6 +44,6 @@ public:
     std::shared_ptr<Parameter> parameterFromWidget() const override;
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_PARAMETERS_USCALAR_PARAMETER_ROW_H
+#endif // MOP_APPLICATION_GUI_PARAMETERS_USCALAR_PARAMETER_ROW_H

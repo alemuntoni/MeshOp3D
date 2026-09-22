@@ -27,8 +27,8 @@
 #include "gui/parameter_dialog.h"
 #include "gui/search_filter_widget.h"
 
-#include <m3d/functions.h>
-#include <m3d/manager.h>
+#include <mop/functions.h>
+#include <mop/manager.h>
 
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
@@ -49,7 +49,7 @@
 #include <filesystem>
 #include <fstream>
 
-namespace hlmp {
+namespace mop {
 
 MainWindow::MainWindow(QWidget* parent) : vcl::qt::MeshViewer(parent, (vcl::appConfigDirectory("HLMP") / "settings.json").string())
 {
@@ -617,4 +617,4 @@ MeshTypeId MainWindow::getFilterMeshType(
     }
 }
 
-} // namespace hlmp
+} // namespace mop

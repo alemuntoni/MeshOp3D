@@ -22,7 +22,7 @@
 
 #include "bool_parameter_row.h"
 
-namespace hlmp {
+namespace mop {
 
 BoolParameterRow::BoolParameterRow(const BoolParameter& param) :
         ParameterRow(param), mParam(param)
@@ -47,4 +47,4 @@ std::shared_ptr<Parameter> BoolParameterRow::parameterFromWidget() const
     return p;
 }
 
-} // namespace hlmp
+} // namespace mop

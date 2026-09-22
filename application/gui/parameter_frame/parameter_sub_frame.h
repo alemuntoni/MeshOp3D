@@ -20,14 +20,14 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H
-#define M3D_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H
+#ifndef MOP_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H
+#define MOP_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H
 
 #include <QFrame>
 
 #include <QGridLayout>
 
-namespace hlmp {
+namespace mop {
 
 namespace Ui {
 class ParameterSubFrame;
@@ -57,6 +57,6 @@ private slots:
     void showPushButtonClicked(bool checked);
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H
+#endif // MOP_APPLICATION_GUI_PARAMETER_FRAME_PARAMETER_SUB_FRAME_H

@@ -24,7 +24,7 @@
 
 #include <QDoubleValidator>
 
-namespace hlmp {
+namespace mop {
 
 ScalarParameterRow::ScalarParameterRow(const ScalarParameter& param) :
         ParameterRow(param), mParam(param)
@@ -51,4 +51,4 @@ std::shared_ptr<Parameter> ScalarParameterRow::parameterFromWidget() const
     return p;
 }
 
-} // namespace hlmp
+} // namespace mop

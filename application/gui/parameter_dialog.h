@@ -20,14 +20,14 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_PARAMETER_DIALOG_H
-#define M3D_APPLICATION_GUI_PARAMETER_DIALOG_H
+#ifndef MOP_APPLICATION_GUI_PARAMETER_DIALOG_H
+#define MOP_APPLICATION_GUI_PARAMETER_DIALOG_H
 
 #include "parameters_grid_layout.h"
 
 #include <QDialog>
 
-namespace hlmp {
+namespace mop {
 
 class ParameterDialog : public QDialog
 {
@@ -42,6 +42,6 @@ public:
     ParameterVector parameters();
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_PARAMETER_DIALOG_H
+#endif // MOP_APPLICATION_GUI_PARAMETER_DIALOG_H

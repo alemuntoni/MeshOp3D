@@ -22,7 +22,7 @@
 
 #include "parameter_frame.h"
 
-namespace hlmp {
+namespace mop {
 
 ParameterFrame::ParameterFrame(QWidget* parent) : MultiParameterFrame(parent)
 {
@@ -57,4 +57,4 @@ void ParameterFrame::setParameters(const ParameterVector& parameters)
     }
 }
 
-} // namespace hlmp
+} // namespace mop

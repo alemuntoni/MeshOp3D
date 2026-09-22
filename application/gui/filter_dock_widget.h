@@ -20,14 +20,14 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
-#define M3D_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
+#ifndef MOP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
+#define MOP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
 
 #include <QDockWidget>
 
-#include <m3d/actions/interfaces/filter_action.h>
+#include <mop/actions/interfaces/filter_action.h>
 
-namespace hlmp {
+namespace mop {
 
 namespace Ui {
 class FilterDockWidget;
@@ -64,6 +64,6 @@ private:
         const std::shared_ptr<FilterAction>& action);
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_FILTER_DOCK_WIDGET_H
+#endif // MOP_APPLICATION_GUI_FILTER_DOCK_WIDGET_H

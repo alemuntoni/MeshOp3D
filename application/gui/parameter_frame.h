@@ -20,12 +20,12 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_PARAMETER_FRAME_H
-#define M3D_APPLICATION_GUI_PARAMETER_FRAME_H
+#ifndef MOP_APPLICATION_GUI_PARAMETER_FRAME_H
+#define MOP_APPLICATION_GUI_PARAMETER_FRAME_H
 
 #include "multi_parameter_frame.h"
 
-namespace hlmp {
+namespace mop {
 
 class ParameterFrame : public MultiParameterFrame
 {
@@ -54,6 +54,6 @@ public:
     void setParameters(const ParameterVector& parameters);
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_PARAMETER_FRAME_H
+#endif // MOP_APPLICATION_GUI_PARAMETER_FRAME_H

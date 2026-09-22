@@ -24,7 +24,7 @@
 
 #include <QPushButton>
 
-namespace hlmp {
+namespace mop {
 
 ParameterDialog::ParameterDialog(QWidget* parent) : QDialog(parent)
 {
@@ -64,4 +64,4 @@ ParameterVector ParameterDialog::parameters()
     return vec;
 }
 
-} // namespace hlmp
+} // namespace mop

@@ -28,7 +28,7 @@
 #include "parameters/uint_parameter_row.h"
 #include "parameters/uscalar_parameter_row.h"
 
-namespace hlmp {
+namespace mop {
 
 ParametersGridLayout::ParametersGridLayout(QWidget* parent) :
         QGridLayout(parent)
@@ -134,4 +134,4 @@ void ParametersGridLayout::clear(QLayout* layout)
     }
 }
 
-} // namespace hlmp
+} // namespace mop

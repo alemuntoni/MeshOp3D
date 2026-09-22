@@ -20,8 +20,8 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H
-#define M3D_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H
+#ifndef MOP_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H
+#define MOP_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H
 
 #include <memory>
 
@@ -29,10 +29,10 @@
 #include <QLabel>
 #include <QWidget>
 
-#include <m3d/parameters.h>
+#include <mop/parameters.h>
 #include <vclib/qt/gui/clickable_label.h>
 
-namespace hlmp {
+namespace mop {
 
 class ParameterRow
 {
@@ -67,6 +67,6 @@ protected:
     void setModified(bool b);
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H
+#endif // MOP_APPLICATION_GUI_PARAMETERS_PARAMETER_ROW_H

@@ -24,7 +24,7 @@
 
 #include <QIntValidator>
 
-namespace hlmp {
+namespace mop {
 
 UintParameterRow::UintParameterRow(const UintParameter& param) :
         ParameterRow(param), mParam(param)
@@ -48,4 +48,4 @@ std::shared_ptr<Parameter> UintParameterRow::parameterFromWidget() const
     return p;
 }
 
-} // namespace hlmp
+} // namespace mop

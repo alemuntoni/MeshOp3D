@@ -20,16 +20,16 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
-#define M3D_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#ifndef MOP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#define MOP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
 
 #include <QGridLayout>
 
-#include <m3d/parameter_vector.h>
+#include <mop/parameter_vector.h>
 
 #include "parameters/parameter_row.h"
 
-namespace hlmp {
+namespace mop {
 
 class ParametersGridLayout : public QGridLayout
 {
@@ -52,6 +52,6 @@ private:
     static void clear(QLayout* layout);
 };
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H
+#endif // MOP_APPLICATION_GUI_PARAMETERS_GRID_LAYOUT_H

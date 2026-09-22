@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>hlmp::FilterDockWidget</class>
- <widget class="QDockWidget" name="hlmp::FilterDockWidget">
+ <class>mop::FilterDockWidget</class>
+ <widget class="QDockWidget" name="mop::FilterDockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -32,7 +32,7 @@
      </widget>
     </item>
     <item>
-     <widget class="hlmp::ParameterFrame" name="parameterFrame">
+     <widget class="mop::ParameterFrame" name="parameterFrame">
       <property name="frameShape">
        <enum>QFrame::Shape::StyledPanel</enum>
       </property>
@@ -59,7 +59,7 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>hlmp::ParameterFrame</class>
+   <class>mop::ParameterFrame</class>
    <extends>QFrame</extends>
    <header>gui/parameter_frame.h</header>
    <container>1</container>

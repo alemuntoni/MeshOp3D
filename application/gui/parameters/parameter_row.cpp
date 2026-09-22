@@ -22,7 +22,7 @@
 
 #include "parameter_row.h"
 
-namespace hlmp {
+namespace mop {
 
 ParameterRow::ParameterRow(const Parameter& param) :
         mVisible(true), mHelpVisible(false)
@@ -95,4 +95,4 @@ void ParameterRow::setModified(bool b)
     mHasBeenModified = b;
 }
 
-} // namespace hlmp
+} // namespace mop

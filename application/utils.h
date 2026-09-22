@@ -20,15 +20,15 @@
  * (https://www.mozilla.org/en-US/MPL/2.0/) for more details.                *
  ****************************************************************************/
 
-#ifndef M3D_APPLICATION_UTILS_H
-#define M3D_APPLICATION_UTILS_H
+#ifndef MOP_APPLICATION_UTILS_H
+#define MOP_APPLICATION_UTILS_H
 
-#include <m3d/settings.h>
+#include <mop/settings.h>
 
 #include <vclib/meshes.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
-namespace hlmp {
+namespace mop {
 
 template<vcl::MeshConcept MeshType>
 std::shared_ptr<vcl::DrawableObject> makeMeshDrawable(
@@ -67,6 +67,6 @@ inline MeshTypeId meshId(
     return MeshTypeId::COUNT;
 }
 
-} // namespace hlmp
+} // namespace mop
 
-#endif // M3D_APPLICATION_UTILS_H
+#endif // MOP_APPLICATION_UTILS_H
