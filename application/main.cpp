@@ -15,6 +15,11 @@
 #include <QLocalSocket>
 #include <qglobal.h>
 
+#ifdef Q_OS_MACOS
+#include <QEvent>
+#include <QFileOpenEvent>
+#endif
+
 // Name of the local socket used for single-instance IPC
 static constexpr const char* MOP_SOCKET_NAME = "MeshOp3D-instance";
 
@@ -80,10 +85,38 @@ int main(int argc, char** argv)
             &QLocalSocket::deleteLater);
     });
 
+#ifdef Q_OS_MACOS
+    // On macOS, the Finder sends files via QFileOpenEvent instead of argv.
+    // Install an event filter to intercept these events and forward them to
+    // the main window. Must be installed before show() to catch launch-time
+    // file opens (e.g. double-clicking a .ply in Finder).
+    class FileOpenFilter : public QObject {
+    public:
+        mop::MainWindow* mw;
+        explicit FileOpenFilter(mop::MainWindow* w, QObject* parent = nullptr)
+            : QObject(parent), mw(w) {}
+        bool eventFilter(QObject*, QEvent* e) override {
+            if (e->type() == QEvent::FileOpen) {
+                auto* foe = static_cast<QFileOpenEvent*>(e);
+                mw->loadMesh(foe->file().toStdString());
+                mw->raise();
+                mw->activateWindow();
+                return true;
+            }
+            return false;
+        }
+    };
+    // Parent to qApp so the filter is destroyed when the application exits.
+    auto* fileOpenFilter = new FileOpenFilter(&mw, qApp);
+    qApp->installEventFilter(fileOpenFilter);
+#endif
+
     mw.show();
     mw.showMaximized();
 
     // Open files passed as command-line arguments / "Open With..."
+    // On macOS argv-based file opening is used when MeshOp3D is launched
+    // from the terminal; Finder launches use QFileOpenEvent (see above).
     for (const QString& path : std::as_const(fileArgs)) {
         mw.loadMesh(path.toStdString());
     }

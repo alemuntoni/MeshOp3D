@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>MeshOp3D</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>MeshOp3D</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>it.cnr.isti.vclab.meshop3d</string>
+
+    <key>CFBundleVersion</key>
+    <string>@CMAKE_PROJECT_VERSION@</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>@CMAKE_PROJECT_VERSION@</string>
+
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+
+    <key>CFBundleSignature</key>
+    <string>????</string>
+
+    <key>CFBundleExecutable</key>
+    <string>@MOP_BUNDLE_EXECUTABLE@</string>
+
+    <key>CFBundleIconFile</key>
+    <string>mop3d-icon</string>
+
+    <key>NSHighResolutionCapable</key>
+    <true/>
+
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <!-- File type associations: handled by the Finder via Launch Services -->
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+@MOP_PLIST_EXTENSIONS@
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>3D Mesh File</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+            <key>CFBundleTypeIconFile</key>
+            <string>mop3d-icon</string>
+        </dict>
+    </array>
+
+    <!-- UTI declarations for formats not yet in the system UTType database -->
+    <key>UTImportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>public.polygon-file-format</string>
+            <key>UTTypeDescription</key>
+            <string>PLY 3D mesh</string>
+            <key>UTTypeConformsTo</key>
+            <array><string>public.data</string></array>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array><string>ply</string></array>
+            </dict>
+        </dict>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>public.off-3d-mesh</string>
+            <key>UTTypeDescription</key>
+            <string>OFF 3D mesh</string>
+            <key>UTTypeConformsTo</key>
+            <array><string>public.data</string></array>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array><string>off</string></array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -8,6 +8,10 @@
 cmake_minimum_required(VERSION 3.24)
 project(MeshOp3D-app)
 
+# Public-facing name used for the installed binary, bundle, and package.
+# Change only this line on future renames.
+set(MOP_APP_NAME "MeshOp3D")
+
 if (NOT TARGET vclib-3rd-qt)
     message(FATAL_ERROR "Qt6 not found. Please set Qt6_DIR to the Qt6Config.cmake file.")
 endif()
@@ -38,18 +42,43 @@ if(APPLE)
     )
 endif()
 
+# The installed binary is always named ${MOP_APP_NAME} (/${MOP_APP_NAME}.exe/${MOP_APP_NAME}.app)
+# regardless of the CMake project name (${PROJECT_NAME}).
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${MOP_APP_NAME}")
+
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin COMPONENT Runtime
     BUNDLE DESTINATION . COMPONENT Runtime
 )
 
 if(WIN32)
-    #install(CODE "execute_process(COMMAND windeployqt \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")" COMPONENT Runtime)
+    #install(CODE "execute_process(COMMAND windeployqt \"\${CMAKE_INSTALL_PREFIX}/bin/${MOP_APP_NAME}.exe\")" COMPONENT Runtime)
     find_program(WINDEPLOYQT_EXECUTABLE NAMES windeployqt HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin" REQUIRED)
-    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")" COMPONENT Runtime)
+    install(CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/bin/${MOP_APP_NAME}.exe\")" COMPONENT Runtime)
 elseif(APPLE)
+    # The bundle and its internal executable will be named ${MOP_APP_NAME} (not ${PROJECT_NAME}).
+    set(MOP_BUNDLE_EXECUTABLE "${MOP_APP_NAME}")
+
+    # Step 1: expand @MOP_PLIST_EXTENSIONS@, @MOP_BUNDLE_EXECUTABLE@, etc.
+    configure_file(
+        assets/Info.plist.in
+        "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
+        @ONLY
+    )
+    # Step 2: point the bundle to the already-expanded plist (no further substitution)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist"
+    )
+
+    # Bundle the .icns icon into ${MOP_APP_NAME}.app/Contents/Resources/
+    set(MACOS_ICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/mop3d-icon.icns")
+    set_source_files_properties(${MACOS_ICON} PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    target_sources(${PROJECT_NAME} PRIVATE ${MACOS_ICON})
+
     find_program(MACDEPLOYQT_EXECUTABLE NAMES macdeployqt HINTS "${Qt6_DIR}/bin" "${Qt6_DIR}/../../../bin" "${Qt6_DIR}/../../bin" REQUIRED)
-    install(CODE "execute_process(COMMAND \"${MACDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}.app\")" COMPONENT Runtime)
+    install(CODE "execute_process(COMMAND \"${MACDEPLOYQT_EXECUTABLE}\" \"\${CMAKE_INSTALL_PREFIX}/${MOP_APP_NAME}.app\")" COMPONENT Runtime)
 elseif(UNIX AND NOT APPLE)
     configure_file(assets/application.desktop.in "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" @ONLY)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.desktop" DESTINATION share/applications COMPONENT Runtime)
@@ -82,9 +111,9 @@ if(SYS_ARCH STREQUAL "amd64")
 endif()
 set(CPACK_SYSTEM_NAME "${CMAKE_SYSTEM_NAME}-${SYS_ARCH}")
 
-set(CPACK_PACKAGE_NAME "MeshOp3D")
+set(CPACK_PACKAGE_NAME "${MOP_APP_NAME}")
 set(CPACK_PACKAGE_VENDOR "VCLab")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "MeshOp3D is a mesh processing application developed by the Visual Computing Lab, ISTI - CNR.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${MOP_APP_NAME} is a mesh processing application developed by the Visual Computing Lab, ISTI - CNR.")
 set(CPACK_PACKAGE_VERSION ${CMAKE_PROJECT_VERSION})
 set(CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_PROJECT_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${CMAKE_PROJECT_VERSION_MINOR})
