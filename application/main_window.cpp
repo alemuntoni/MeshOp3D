@@ -554,6 +554,7 @@ void MainWindow::populateFilterMenu()
         new QMenu("Reconstruction", mFilterMenu);
     menus[vcl::toUnderlying(SMOOTHING)] = new QMenu("Smoothing", mFilterMenu);
     menus[vcl::toUnderlying(BOOLEANS)] = new QMenu("Booleans", mFilterMenu);
+    menus[vcl::toUnderlying(TRANSFORM)] = new QMenu("Transform", mFilterMenu);
 
     for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
         mFilterMenu->addMenu(menus[i]);

@@ -26,6 +26,7 @@ public:
         RECONSTRUCTION,
         SMOOTHING,
         BOOLEANS,
+        TRANSFORM,
 
         COUNT,
     };

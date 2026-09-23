@@ -8,6 +8,7 @@
 #ifndef MOP_CORE_ACTIONS_ACTIONS_FILTER_MESH_APPLY_H
 #define MOP_CORE_ACTIONS_ACTIONS_FILTER_MESH_APPLY_H
 
+#include "apply/freeze_transform_matrix_filter.h"
 #include "apply/laplacian_smoothing_filter.h"
 
 #endif // MOP_CORE_ACTIONS_ACTIONS_FILTER_MESH_APPLY_H
