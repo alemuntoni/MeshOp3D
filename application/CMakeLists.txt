@@ -34,7 +34,19 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
 target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core Qt6::Network)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}  # for generated mop_config.h
+)
+
+# Generate mop_config.h from the cmake-computed constants (e.g. MIME type list).
+# Using configure_file avoids the semicolon-splitting issue that breaks
+# target_compile_definitions when the value contains list-separator characters.
+configure_file(
+    cmake/mop_config.h.in
+    "${CMAKE_CURRENT_BINARY_DIR}/mop_config.h"
+    @ONLY
+)
 
 if(APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
