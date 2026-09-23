@@ -15,6 +15,7 @@
 #include <mop/functions.h>
 #include <mop/manager.h>
 
+#include <vclib/qt/gui/dialog_directories.h>
 #include <vclib/qt/utils/file_format.h>
 #include <vclib/render/drawable/drawable_mesh.h>
 
@@ -23,6 +24,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QKeySequence>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -142,10 +144,12 @@ void MainWindow::openMesh()
     std::vector<vcl::FileFormat> formats = ActionManager::loadMeshFormats();
     QString filter = vcl::qt::filterFormatsToQString(formats, true);
 
+    QString lastDir = vcl::qt::dialogDirectory("MeshOp3DMesh");
     QString f = QFileDialog::getOpenFileName(
-        nullptr, QObject::tr("Open Document"), QDir::currentPath(), filter);
+        nullptr, QObject::tr("Open Document"), lastDir, filter);
 
     if (!f.isEmpty()) {
+        vcl::qt::setDialogDirectory("MeshOp3DMesh", QFileInfo(f).absolutePath());
         loadMesh(f.toStdString());
     }
 }
@@ -181,10 +185,12 @@ void MainWindow::saveMeshAs()
     QString filter = vcl::qt::filterFormatsToQString(formats);
 
     QString fs;
+    QString lastDir = vcl::qt::dialogDirectory("MeshOp3DMesh");
     QString f = QFileDialog::getSaveFileName(
-        nullptr, QObject::tr("Save Mesh"), QDir::currentPath(), filter, &fs);
+        nullptr, QObject::tr("Save Mesh"), lastDir, filter, &fs);
 
     if (!f.isEmpty()) {
+        vcl::qt::setDialogDirectory("MeshOp3DMesh", QFileInfo(f).absolutePath());
         std::string filename = f.toStdString();
         std::string pfn      = vcl::FileInfo::fileNameWithExtension(filename);
         std::string format   = vcl::FileInfo::extension(filename);
