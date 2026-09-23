@@ -15,6 +15,7 @@ namespace mop {
 FilterDockWidget::FilterDockWidget(
     const std::shared_ptr<FilterAction>& action,
     const std::vector<std::string>&             meshNames,
+    vcl::uint                                   defaultMeshId,
     QWidget*                                    parent) :
         QDockWidget(parent), mUI(new Ui::FilterDockWidget), mAction(action)
 {
@@ -27,11 +28,32 @@ FilterDockWidget::FilterDockWidget(
 
     auto params = action->parameters();
 
+    std::vector<vcl::uint> orderedMeshes;
+    if (defaultMeshId != vcl::UINT_NULL && defaultMeshId < meshNames.size()) {
+        orderedMeshes.push_back(defaultMeshId);
+        for (vcl::uint i = 0; i < meshNames.size(); ++i) {
+            if (i != defaultMeshId) {
+                orderedMeshes.push_back(i);
+            }
+        }
+    } else {
+        for (vcl::uint i = 0; i < meshNames.size(); ++i) {
+            orderedMeshes.push_back(i);
+        }
+    }
+
+    auto getDefaultMesh = [&orderedMeshes](vcl::uint k) -> vcl::uint {
+        if (orderedMeshes.empty()) return 0;
+        if (k < orderedMeshes.size()) return orderedMeshes[k];
+        return 0;
+    };
+
     auto inMeshes = action->inputMeshes();
     for (int i = (int)inMeshes.size() - 1; i >= 0; --i) {
+        vcl::uint defaultId = getDefaultMesh(i);
         EnumParameter param(
             "mesh_input_" + std::to_string(i),
-            std::min((vcl::uint)i, (vcl::uint)meshNames.size() - 1), // default
+            defaultId, // default
             meshNames,
             vcl::BitSet32().set(), // TODO: use supportedMeshTypes if available
             inMeshes[i].description(),
@@ -42,7 +64,7 @@ FilterDockWidget::FilterDockWidget(
 
     auto inoutMeshes = action->inputOutputMeshes();
     for (int i = (int)inoutMeshes.size() - 1; i >= 0; --i) {
-        vcl::uint defaultId = std::min((vcl::uint)(i + inMeshes.size()), (vcl::uint)meshNames.size() - 1);
+        vcl::uint defaultId = getDefaultMesh(i + inMeshes.size());
         EnumParameter param(
             "mesh_inout_" + std::to_string(i),
             defaultId,

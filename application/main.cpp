@@ -51,9 +51,10 @@ int main(int argc, char** argv)
 
     // ---- No running instance: start normally ----
 
+    QGuiApplication::setDesktopFileName("MeshOp3D.desktop");
+
     auto app = vcl::Application(argc, argv);
 
-    QGuiApplication::setDesktopFileName("MeshOp3D.desktop");
     QGuiApplication::setWindowIcon(QIcon(":/assets/mop3d-icon.png"));
 
     mop::MainWindow mw;
