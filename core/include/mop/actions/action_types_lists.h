@@ -20,6 +20,7 @@ using ConvertActionsList =
 
 using FilterActionsList = vcl::TypeWrapper<
     // apply filters
+    FreezeTransformMatrixFilter,
     LaplacianSmoothingFilter,
 
     // clean filters
