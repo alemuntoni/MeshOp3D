@@ -30,6 +30,7 @@ public:
     explicit FilterDockWidget(
         const std::shared_ptr<FilterAction>& action,
         const std::vector<std::string>&             meshNames,
+        vcl::uint                                   defaultMeshId = vcl::UINT_NULL,
         QWidget*                                    parent = nullptr);
 
     ~FilterDockWidget();

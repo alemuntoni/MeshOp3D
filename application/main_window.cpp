@@ -44,6 +44,8 @@ MainWindow::MainWindow(QWidget* parent) :
             parent,
             (vcl::appConfigDirectory("MeshOp3D") / "settings.json").string())
 {
+    MainWindow::setWindowTitle("MeshOp3D");
+
     vcl::pushDefaultEditors(*this);
 
     createMenus();
@@ -619,7 +621,7 @@ void MainWindow::openFilterDialog(const std::shared_ptr<FilterAction>& action)
         meshNames.push_back(drawableObject(i)->name() + " (" + std::to_string(i) + ")");
     }
 
-    FilterDockWidget* dock = new FilterDockWidget(action, meshNames, this);
+    FilterDockWidget* dock = new FilterDockWidget(action, meshNames, selectedDrawableObject(), this);
 
     connect(
         dock, &FilterDockWidget::applyFilter, this, &MainWindow::applyFilter);
