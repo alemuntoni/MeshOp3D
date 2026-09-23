@@ -1,0 +1,120 @@
+name: Build Application
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version number to pass to CMake'
+        required: false
+        type: string
+        default: '0.0.0'
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-26.04, ubuntu-26.04-arm, macos-latest, windows-latest]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v7
+      with:
+        submodules: recursive
+    
+    - name: Setup MSVC (Windows)
+      if: runner.os == 'Windows'
+      uses: TheMrMilchmann/setup-msvc-dev@v4
+      with:
+        arch: x64
+
+    - name: Install bgfx
+      uses: alemuntoni/install-bgfx-cmake@v1
+
+    - name: Install System Dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y patchelf libtbb-dev libembree-dev \
+          freeglut3-dev libgl1-mesa-dev libxi-dev libxinerama-dev libxcursor-dev \
+          libxrandr-dev libboost-dev libcgal-dev libwayland-dev wayland-protocols \
+          libxkbcommon-dev mesa-vulkan-drivers
+        sudo apt-get install -y qt6-base-dev qt6-tools-dev qt6-l10n-tools qt6-3d-dev qt6-svg-dev
+
+    - name: Determine AppImageTool Arch
+      id: arch
+      if: runner.os == 'Linux'
+      run: |
+        if [ "$RUNNER_ARCH" == "ARM64" ]; then echo "arch=aarch64" >> $GITHUB_OUTPUT; else echo "arch=x86_64" >> $GITHUB_OUTPUT; fi
+      shell: bash
+
+    - name: Setup AppImageTool (Linux)
+      if: runner.os == 'Linux'
+      uses: AnimMouse/setup-appimage@v2
+      with:
+        filename: appimagetool
+        url: "https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-${{ steps.arch.outputs.arch }}.AppImage"
+        cache_key: ${{ matrix.os }}
+
+    - name: Install System Dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew install embree gmp mpfr
+
+    - name: Install NSIS (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: | 
+        choco install nsis -y
+
+    - name: Install Qt (Windows & macOS)
+      if: runner.os != 'Linux'
+      uses: jurplel/install-qt-action@v4
+      with:
+        cache: 'true'
+        version: '6.10.*'
+
+    - name: Build Application
+      shell: bash
+      run: |
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PROJECT_VERSION=${{ inputs.version || '0.0.0' }}
+        cmake --build build --config Release
+
+    - name: Package (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        cd build
+        cpack -C Release -G "DEB;TGZ;AppImage"
+
+    - name: Package (macOS)
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        cd build
+        cpack -C Release -G DragNDrop
+
+    - name: Package (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        cd build
+        cpack -C Release -G ZIP
+        cpack -C Release -G NSIS
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: packages-${{ matrix.os }}
+        path: |
+          build/*.zip
+          build/*.exe
+          build/*.dmg
+          build/*.deb
+          build/*.tar.gz
+          build/*.AppImage
+          !build/linuxdeploy*.AppImage
