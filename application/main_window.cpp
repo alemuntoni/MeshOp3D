@@ -14,6 +14,7 @@
 
 #include <mop/functions.h>
 #include <mop/manager.h>
+#include <mop/action_instances.h>
 
 #include <vclib/qt/gui/dialog_directories.h>
 #include <vclib/qt/utils/file_format.h>
@@ -45,6 +46,8 @@ MainWindow::MainWindow(QWidget* parent) :
             (vcl::appConfigDirectory("MeshOp3D") / "settings.json").string())
 {
     MainWindow::setWindowTitle("MeshOp3D");
+
+    mop::ActionManager::add(mop::actionInstances());
 
     vcl::pushDefaultEditors(*this);
 

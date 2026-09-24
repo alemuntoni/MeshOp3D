@@ -66,7 +66,7 @@ def replace_header_guards_in_dir(folder_path, module_name):
                 file.write(file_string)
 
 if __name__ == "__main__":
-    mop_modules = ['application', 'core']
+    mop_modules = ['actions', 'application', 'core']
 
     os.chdir('../')
 

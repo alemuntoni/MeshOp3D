@@ -33,7 +33,7 @@ file(GLOB_RECURSE FORMS CONFIGURE_DEPENDS "*.ui")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} PREFIX "Forms Files" FILES ${FORMS})
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${HEADERS} ${SOURCES} ${FORMS} assets.qrc)
-target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core Qt6::Network)
+target_link_libraries(${PROJECT_NAME} PRIVATE vclib mop::core mop::actions Qt6::Network)
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}  # for generated mop_config.h

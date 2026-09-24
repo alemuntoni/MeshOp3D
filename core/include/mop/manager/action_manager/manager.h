@@ -34,8 +34,6 @@ public:
             add(action);
         }
     }
-
-    void addDefaultActions();
 };
 
 } // namespace mop::detail

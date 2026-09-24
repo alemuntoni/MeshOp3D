@@ -7,13 +7,10 @@
 
 #include <mop/manager/action_manager/manager.h>
 
-#include <mop/manager/action_instances.h>
-
 namespace mop::detail {
 
 Manager::Manager()
 {
-    addDefaultActions();
 }
 
 void Manager::add(const std::shared_ptr<Action>& action)
@@ -46,11 +43,6 @@ void Manager::add(const std::shared_ptr<Action>& action)
         break;
     default: throw std::runtime_error("Action type not supported");
     }
-}
-
-void Manager::addDefaultActions()
-{
-    add(actionInstances());
 }
 
 } // namespace mop::detail
