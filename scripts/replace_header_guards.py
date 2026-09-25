@@ -68,11 +68,14 @@ def replace_header_guards_in_dir(folder_path, module_name):
 if __name__ == "__main__":
     mop_modules = ['actions', 'application', 'core']
 
-    os.chdir('../')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.abspath(os.path.join(script_dir, '..'))
+    os.chdir(root_dir)
 
     for module in mop_modules:
-        os.chdir(module)
+        if os.path.isdir(module):
+            os.chdir(module)
 
-        replace_header_guards_in_dir('', module)
+            replace_header_guards_in_dir('', module)
 
-        os.chdir('../')
+            os.chdir('../')
