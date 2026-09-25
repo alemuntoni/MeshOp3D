@@ -9,12 +9,13 @@
 
 // #include "gui/action_file_dialog.h"
 #include "gui/filter_dock_widget.h"
+#include "gui/mop_settings_tab.h"
 #include "gui/parameter_dialog.h"
 #include "gui/search_filter_widget.h"
 
+#include <mop/action_instances.h>
 #include <mop/functions.h>
 #include <mop/manager.h>
-#include <mop/action_instances.h>
 
 #include <vclib/qt/gui/dialog_directories.h>
 #include <vclib/qt/utils/file_format.h>
@@ -46,6 +47,21 @@ MainWindow::MainWindow(QWidget* parent) :
             (vcl::appConfigDirectory("MeshOp3D") / "settings.json").string())
 {
     MainWindow::setWindowTitle("MeshOp3D");
+
+    std::string settingsPath = settingsFilePath();
+    if (std::filesystem::exists(settingsPath)) {
+        std::ifstream in(settingsPath);
+        if (in.is_open()) {
+            nlohmann::json j;
+            try {
+                in >> j;
+                mMopSettings.loadSettings(j);
+            }
+            catch (...) {
+            }
+        }
+    }
+    this->addSettingsTab(std::make_shared<MopSettingsTab>(mMopSettings));
 
     mop::ActionManager::add(mop::actionInstances());
 
@@ -150,11 +166,12 @@ void MainWindow::openMesh()
     QString filter = vcl::qt::filterFormatsToQString(formats, true);
 
     QString lastDir = vcl::qt::dialogDirectory("MeshOp3DMesh");
-    QString f = QFileDialog::getOpenFileName(
+    QString f       = QFileDialog::getOpenFileName(
         nullptr, QObject::tr("Open Document"), lastDir, filter);
 
     if (!f.isEmpty()) {
-        vcl::qt::setDialogDirectory("MeshOp3DMesh", QFileInfo(f).absolutePath());
+        vcl::qt::setDialogDirectory(
+            "MeshOp3DMesh", QFileInfo(f).absolutePath());
         loadMesh(f.toStdString());
     }
 }
@@ -191,11 +208,12 @@ void MainWindow::saveMeshAs()
 
     QString fs;
     QString lastDir = vcl::qt::dialogDirectory("MeshOp3DMesh");
-    QString f = QFileDialog::getSaveFileName(
+    QString f       = QFileDialog::getSaveFileName(
         nullptr, QObject::tr("Save Mesh"), lastDir, filter, &fs);
 
     if (!f.isEmpty()) {
-        vcl::qt::setDialogDirectory("MeshOp3DMesh", QFileInfo(f).absolutePath());
+        vcl::qt::setDialogDirectory(
+            "MeshOp3DMesh", QFileInfo(f).absolutePath());
         std::string filename = f.toStdString();
         std::string pfn      = vcl::FileInfo::fileNameWithExtension(filename);
         std::string format   = vcl::FileInfo::extension(filename);
@@ -564,7 +582,7 @@ void MainWindow::populateFilterMenu()
     menus[vcl::toUnderlying(RECONSTRUCTION)] =
         new QMenu("Reconstruction", mFilterMenu);
     menus[vcl::toUnderlying(SMOOTHING)] = new QMenu("Smoothing", mFilterMenu);
-    menus[vcl::toUnderlying(BOOLEANS)] = new QMenu("Booleans", mFilterMenu);
+    menus[vcl::toUnderlying(BOOLEANS)]  = new QMenu("Booleans", mFilterMenu);
     menus[vcl::toUnderlying(TRANSFORM)] = new QMenu("Transform", mFilterMenu);
 
     for (vcl::uint i = 0; i < vcl::toUnderlying(COUNT); ++i) {
@@ -609,22 +627,38 @@ void MainWindow::openFilterDialog(const std::shared_ptr<FilterAction>& action)
 {
     vcl::uint niMeshes  = action->inputMeshes().size();
     vcl::uint nioMeshes = action->inputOutputMeshes().size();
-    
+
     if (nioMeshes > drawableObjectsCount()) {
-        QMessageBox::warning(this, "Error", "Not enough meshes loaded. At least " + QString::number(nioMeshes) + " meshes are required for this operation.");
+        QMessageBox::warning(
+            this,
+            "Error",
+            "Not enough meshes loaded. At least " + QString::number(nioMeshes) +
+                " meshes are required for this operation.");
         return;
     }
     if (niMeshes > 0 && drawableObjectsCount() == 0) {
-        QMessageBox::warning(this, "Error", "No meshes loaded. At least 1 mesh is required for this operation.");
+        QMessageBox::warning(
+            this,
+            "Error",
+            "No meshes loaded. At least 1 mesh is required for this "
+            "operation.");
+        return;
+    }
+
+    if (mMopSettings.bypassFilterDialogForSimpleFilters &&
+        action->parameters().empty() && (niMeshes + nioMeshes <= 1)) {
+        applyFilter(action, action->parameters());
         return;
     }
 
     std::vector<std::string> meshNames;
     for (vcl::uint i = 0; i < drawableObjectsCount(); ++i) {
-        meshNames.push_back(drawableObject(i)->name() + " (" + std::to_string(i) + ")");
+        meshNames.push_back(
+            drawableObject(i)->name() + " (" + std::to_string(i) + ")");
     }
 
-    FilterDockWidget* dock = new FilterDockWidget(action, meshNames, selectedDrawableObject(), this);
+    FilterDockWidget* dock =
+        new FilterDockWidget(action, meshNames, selectedDrawableObject(), this);
 
     connect(
         dock, &FilterDockWidget::applyFilter, this, &MainWindow::applyFilter);
@@ -656,7 +690,8 @@ MeshTypeId MainWindow::getFilterMeshType(
         if (niMeshes > 0) {
             vcl::uint id = params.get("mesh_input_0")->uintValue();
             return meshId(drawableObject(id));
-        } else if (nioMeshes > 0) {
+        }
+        else if (nioMeshes > 0) {
             vcl::uint id = params.get("mesh_inout_0")->uintValue();
             return meshId(drawableObject(id));
         }

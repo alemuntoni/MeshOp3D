@@ -12,6 +12,7 @@
 #include <mop/actions/interfaces/filter_action.h>
 
 #include "utils.h"
+#include <mop/mop_settings.h>
 
 #include <vclib/qt/gui/text_edit_logger.h>
 #include <vclib/render/drawable/drawable_mesh.h>
@@ -29,6 +30,8 @@ namespace mop {
 class MainWindow : public vcl::qt::MeshViewer
 {
     Q_OBJECT
+
+    MopSettings mMopSettings;
 
     // Menus
     QMenu* mFileMenu;
@@ -100,7 +103,8 @@ private:
         std::vector<MeshType*>       inputOutputMeshes;
         std::vector<MeshType>        outputMeshes;
 
-        std::vector<std::shared_ptr<vcl::DrawableMesh<MeshType>>> modifiedDrawables;
+        std::vector<std::shared_ptr<vcl::DrawableMesh<MeshType>>>
+            modifiedDrawables;
 
         vcl::uint niMeshes  = action->inputMeshes().size();
         vcl::uint nioMeshes = action->inputOutputMeshes().size();
@@ -121,7 +125,8 @@ private:
         }
         else if (niMeshes + nioMeshes > 1) {
             for (vcl::uint i = 0; i < niMeshes; ++i) {
-                vcl::uint id = params.get("mesh_input_" + std::to_string(i))->uintValue();
+                vcl::uint id =
+                    params.get("mesh_input_" + std::to_string(i))->uintValue();
                 auto mesh = toDrawableMesh<MeshType>(this->drawableObject(id));
                 if (!mesh) {
                     throw std::runtime_error(
@@ -133,8 +138,10 @@ private:
 
             std::vector<vcl::uint> inoutIds;
             for (vcl::uint i = 0; i < nioMeshes; ++i) {
-                vcl::uint id = params.get("mesh_inout_" + std::to_string(i))->uintValue();
-                if (std::find(inoutIds.begin(), inoutIds.end(), id) != inoutIds.end()) {
+                vcl::uint id =
+                    params.get("mesh_inout_" + std::to_string(i))->uintValue();
+                if (std::find(inoutIds.begin(), inoutIds.end(), id) !=
+                    inoutIds.end()) {
                     throw std::runtime_error(
                         "Duplicate mesh selected for input/output.");
                 }
@@ -169,11 +176,11 @@ private:
         for (const auto& m : outputMeshes) {
             this->pushDrawableObject(makeMeshDrawable(m));
         }
-        
+
         if (nioMeshes > 0 || outputMeshes.size() > 0) {
             this->setRightAreaVisible(true);
         }
-        
+
         this->updateGUI();
     }
 
@@ -205,7 +212,7 @@ private:
             break;
         default: break;
         }
-        
+
         this->setRightAreaVisible(true);
         this->updateGUI();
     }
