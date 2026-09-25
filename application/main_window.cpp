@@ -12,6 +12,7 @@
 #include "gui/mop_settings_tab.h"
 #include "gui/parameter_dialog.h"
 #include "gui/search_filter_widget.h"
+#include "undo_redo_actions.h"
 
 #include <mop/action_instances.h>
 #include <mop/functions.h>
@@ -95,22 +96,27 @@ MainWindow::MainWindow(QWidget* parent) :
             if (!obj) {
                 return;
             }
-            
+
+            std::shared_ptr<vcl::DrawableObject> copy;
             if (auto tri = dynamic_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>*>(
                     obj.get())) {
-                auto copy =
+                copy =
                     std::make_shared<vcl::DrawableMesh<vcl::TriEdgeMesh>>(*tri);
-                copy->name() += " (copy)";
-                this->pushDrawableObject(copy);
-                return;
             }
-            if (auto pol = dynamic_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(
+            else if (
+                auto pol = dynamic_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(
                     obj.get())) {
-                auto copy =
-                    std::make_shared<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(*pol);
+                copy = std::make_shared<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(
+                    *pol);
+            }
+
+            if (copy) {
                 copy->name() += " (copy)";
-                this->pushDrawableObject(copy);
-                return;
+                uint newIndex = this->pushDrawableObject(copy);
+
+                auto action = std::make_unique<meshop3d::DuplicateAction>(
+                    this, newIndex, copy);
+                viewer().pushUndoRedoAction(std::move(action));
             }
         });
 
