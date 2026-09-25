@@ -90,6 +90,30 @@ MainWindow::MainWindow(QWidget* parent) :
 
     setDrawVectorIconFunction(f);
 
+    drawableObjectVectorTree().addCustomContextMenuAction(
+        "Duplicate", [this](std::shared_ptr<vcl::DrawableObject> obj) {
+            if (!obj) {
+                return;
+            }
+            
+            if (auto tri = dynamic_cast<vcl::DrawableMesh<vcl::TriEdgeMesh>*>(
+                    obj.get())) {
+                auto copy =
+                    std::make_shared<vcl::DrawableMesh<vcl::TriEdgeMesh>>(*tri);
+                copy->name() += " (copy)";
+                this->pushDrawableObject(copy);
+                return;
+            }
+            if (auto pol = dynamic_cast<vcl::DrawableMesh<vcl::PolyEdgeMesh>*>(
+                    obj.get())) {
+                auto copy =
+                    std::make_shared<vcl::DrawableMesh<vcl::PolyEdgeMesh>>(*pol);
+                copy->name() += " (copy)";
+                this->pushDrawableObject(copy);
+                return;
+            }
+        });
+
     createSearchFilterWidget();
 
     loadRecentFiles();
