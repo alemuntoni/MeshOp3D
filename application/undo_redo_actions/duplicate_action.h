@@ -9,9 +9,10 @@
 #define MOP_APPLICATION_UNDO_REDO_ACTIONS_DUPLICATE_ACTION_H
 
 #include <vclib/qt/mesh_viewer.h>
-#include <vclib/render/undo_redo/undo_redo_action.h>
 
-namespace meshop3d {
+#include <vclib/space/core.h>
+
+namespace mop {
 
 class DuplicateAction : public vcl::UndoRedoAction
 {

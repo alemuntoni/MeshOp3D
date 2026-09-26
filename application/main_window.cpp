@@ -115,8 +115,8 @@ MainWindow::MainWindow(QWidget* parent) :
                 copy->name() += " (copy)";
                 uint newIndex = this->pushDrawableObject(copy);
 
-                auto action = std::make_unique<meshop3d::DuplicateAction>(
-                    this, newIndex, copy);
+                auto action =
+                    std::make_unique<DuplicateAction>(this, newIndex, copy);
                 viewer().pushUndoRedoAction(std::move(action));
             }
         });
