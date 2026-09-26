@@ -25,6 +25,7 @@
 #include <nlohmann/json.hpp>
 
 #include <QCoreApplication>
+#include <QDir>
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -238,8 +239,10 @@ void MainWindow::saveMeshAs()
 
     QString fs;
     QString lastDir = vcl::qt::dialogDirectory("MeshOp3DMesh");
+    QString defaultFilePath =
+        QDir(lastDir).filePath(QString::fromStdString(obj->name()));
     QString f       = QFileDialog::getSaveFileName(
-        nullptr, QObject::tr("Save Mesh"), lastDir, filter, &fs);
+        nullptr, QObject::tr("Save Mesh"), defaultFilePath, filter, &fs);
 
     if (!f.isEmpty()) {
         vcl::qt::setDialogDirectory(
