@@ -239,9 +239,14 @@ void MainWindow::saveMeshAs()
 
     QString fs;
     QString lastDir = vcl::qt::dialogDirectory("MeshOp3DMesh");
-    QString defaultFilePath =
-        QDir(lastDir).filePath(QString::fromStdString(obj->name()));
-    QString f       = QFileDialog::getSaveFileName(
+    QString objName = QString::fromStdString(obj->name());
+    if (QFileInfo(objName).suffix().isEmpty() && !formats.empty() &&
+        !formats.front().extensions().empty()) {
+        objName +=
+            "." + QString::fromStdString(formats.front().extensions().front());
+    }
+    QString defaultFilePath = QDir(lastDir).filePath(objName);
+    QString f               = QFileDialog::getSaveFileName(
         nullptr, QObject::tr("Save Mesh"), defaultFilePath, filter, &fs);
 
     if (!f.isEmpty()) {
