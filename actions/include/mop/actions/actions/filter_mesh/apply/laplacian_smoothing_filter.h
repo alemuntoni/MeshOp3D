@@ -9,6 +9,7 @@
 #define MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_APPLY_LAPLACIAN_SMOOTHING_FILTER_H
 
 #include <mop/actions/interfaces/filter_action_base.h>
+#include <mop/actions/undo_redo/mesh_component_snapshot_undo_action.h>
 
 #include <vclib/algorithms/mesh/smooth.h>
 
@@ -84,10 +85,35 @@ public:
 
         MeshType& mesh = *inputOutputMeshes.front();
 
+        auto composite =
+            std::make_unique<vcl::CompositeUndoRedoAction>(name());
+
+        composite->addAction(makeMeshComponentSnapshotUndoAction(
+            mesh,
+            [](MeshType& m) { return m.vertices() | vcl::views::positions; },
+            "Vertex Positions"));
+
+        if constexpr (vcl::HasPerVertexNormal<MeshType>) {
+            if (vcl::isPerVertexNormalAvailable(mesh)) {
+                composite->addAction(makeMeshComponentSnapshotUndoAction(
+                    mesh,
+                    [](MeshType& m) { return m.vertices() | vcl::views::normals; },
+                    "Vertex Normals"));
+            }
+        }
+        if constexpr (vcl::HasPerFaceNormal<MeshType>) {
+            if (vcl::isPerFaceNormalAvailable(mesh)) {
+                composite->addAction(makeMeshComponentSnapshotUndoAction(
+                    mesh,
+                    [](MeshType& m) { return m.faces() | vcl::views::normals; },
+                    "Face Normals"));
+            }
+        }
+
         vcl::laplacianSmoothing(
             mesh, smoothingSteps, onlySelected, cotangentWeighting);
 
-        return FilterActionResult(nullptr, OutputValues());
+        return FilterActionResult(std::move(composite), OutputValues());
     }
 };
 
