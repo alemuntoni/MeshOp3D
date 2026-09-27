@@ -5,8 +5,8 @@
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at https://mozilla.org/MPL/2.0/.
 
-#ifndef MOP_APPLICATION_UNDO_REDO_ACTIONS_DUPLICATE_ACTION_H
-#define MOP_APPLICATION_UNDO_REDO_ACTIONS_DUPLICATE_ACTION_H
+#ifndef MOP_APPLICATION_UNDO_REDO_ACTIONS_ADD_DRAWABLE_OBJECT_ACTION_H
+#define MOP_APPLICATION_UNDO_REDO_ACTIONS_ADD_DRAWABLE_OBJECT_ACTION_H
 
 #include <vclib/qt/mesh_viewer.h>
 
@@ -14,19 +14,26 @@
 
 namespace mop {
 
-class DuplicateAction : public vcl::UndoRedoAction
+/**
+ * @brief Action for undoing/redoing the addition of a drawable object
+ * (e.g. a duplicated mesh, or a mesh newly created by a filter).
+ */
+class AddDrawableObjectAction : public vcl::UndoRedoAction
 {
     vcl::qt::MeshViewer*                 mViewer;
     uint                                 mIndex;
     std::shared_ptr<vcl::DrawableObject> mObj;
+    std::string                          mName;
     bool                                 mIsAdded = true;
 
 public:
-    DuplicateAction(
+    AddDrawableObjectAction(
         vcl::qt::MeshViewer*                 viewer,
         uint                                 index,
-        std::shared_ptr<vcl::DrawableObject> obj) :
-            mViewer(viewer), mIndex(index), mObj(std::move(obj))
+        std::shared_ptr<vcl::DrawableObject> obj,
+        std::string                          name = "Add Drawable Object") :
+            mViewer(viewer), mIndex(index), mObj(std::move(obj)),
+            mName(std::move(name))
     {
     }
 
@@ -34,7 +41,7 @@ public:
 
     void redo() override { toggleState(); }
 
-    std::string name() const override { return "Duplicate Mesh"; }
+    std::string name() const override { return mName; }
 
 private:
     void toggleState()
@@ -53,6 +60,6 @@ private:
     }
 };
 
-} // namespace meshop3d
+} // namespace mop
 
-#endif // MOP_APPLICATION_UNDO_REDO_ACTIONS_DUPLICATE_ACTION_H
+#endif // MOP_APPLICATION_UNDO_REDO_ACTIONS_ADD_DRAWABLE_OBJECT_ACTION_H

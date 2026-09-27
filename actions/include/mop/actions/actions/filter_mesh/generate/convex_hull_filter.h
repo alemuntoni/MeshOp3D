@@ -40,7 +40,7 @@ public:
     ParameterVector parameters() const final { return {}; }
 
     template<vcl::MeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>& inputMeshes,
         const std::vector<MeshType*>&       inputOutputMeshes,
         std::vector<MeshType>&              outputMeshes,
@@ -57,7 +57,7 @@ public:
         if constexpr (vcl::HasName<MeshType>) {
             outputMeshes.back().name() = name;
         }
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

@@ -10,38 +10,38 @@
 
 #include "filter_action.h"
 
-#include <functional>
 #include <array>
+#include <functional>
 
 namespace mop {
 
 namespace detail {
-    template<typename Derived, typename MeshType>
-    concept HasExecuteFilter = requires(
-        const Derived* d,
-        const std::vector<const MeshType*>& in,
-        const std::vector<MeshType*>& inOut,
-        std::vector<MeshType>& out,
-        const ParameterVector& params,
-        vcl::AbstractLogger& log)
-    {
-        d->template executeFilter<MeshType>(in, inOut, out, params, log);
-    };
+template<typename Derived, typename MeshType>
+concept HasExecuteFilter = requires (
+    const Derived*                      d,
+    const std::vector<const MeshType*>& in,
+    const std::vector<MeshType*>&       inOut,
+    std::vector<MeshType>&              out,
+    const ParameterVector&              params,
+    vcl::AbstractLogger&                log) {
+    d->template executeFilter<MeshType>(in, inOut, out, params, log);
+};
 } // namespace detail
 
-template <typename Derived>
+template<typename Derived>
 class FilterActionBase : public FilterAction
 {
-    using ExecutorFunc = std::function<OutputValues(
+    using ExecutorFunc = std::function<FilterActionResult(
         const std::vector<const void*>&,
         std::vector<void*>&,
         std::vector<void*>&,
         const ParameterVector&,
         vcl::AbstractLogger&)>;
 
-    static const vcl::uint MESH_TYPE_NUMBER = vcl::toUnderlying(MeshTypeId::COUNT);
+    static const vcl::uint MESH_TYPE_NUMBER =
+        vcl::toUnderlying(MeshTypeId::COUNT);
     std::array<ExecutorFunc, MESH_TYPE_NUMBER> mExecutors;
-    vcl::BitSet32 mSupportedMeshTypes;
+    vcl::BitSet32                              mSupportedMeshTypes;
 
 public:
     FilterActionBase()
@@ -50,32 +50,39 @@ public:
             if constexpr (detail::HasExecuteFilter<Derived, MeshType>) {
                 vcl::uint id = vcl::toUnderlying(meshTypeId<MeshType>());
                 mSupportedMeshTypes[id] = true;
-                
-                mExecutors[id] = [this](
-                    const std::vector<const void*>& inV,
-                    std::vector<void*>&             inOutV,
-                    std::vector<void*>&             outV,
-                    const ParameterVector&          params,
-                    vcl::AbstractLogger&            log) -> OutputValues
-                {
+
+                mExecutors[id] =
+                    [this](
+                        const std::vector<const void*>& inV,
+                        std::vector<void*>&             inOutV,
+                        std::vector<void*>&             outV,
+                        const ParameterVector&          params,
+                        vcl::AbstractLogger& log) -> FilterActionResult {
                     std::vector<const MeshType*> in;
                     in.reserve(inV.size());
-                    for (const void* p : inV) in.push_back(static_cast<const MeshType*>(p));
-                    
+                    for (const void* p : inV)
+                        in.push_back(static_cast<const MeshType*>(p));
+
                     std::vector<MeshType*> inOut;
                     inOut.reserve(inOutV.size());
-                    for (void* p : inOutV) inOut.push_back(static_cast<MeshType*>(p));
-                    
+                    for (void* p : inOutV)
+                        inOut.push_back(static_cast<MeshType*>(p));
+
                     std::vector<MeshType> out;
-                    
-                    OutputValues res = static_cast<const Derived*>(this)->template executeFilter<MeshType>(
-                        in, inOut, out, params, log);
-                        
+
+                    // executeFilter must return a FilterActionResult: this is
+                    // a hard compile error, not SFINAE, so authors cannot
+                    // skip deciding on undo support.
+                    FilterActionResult res =
+                        static_cast<const Derived*>(this)
+                            ->template executeFilter<MeshType>(
+                                in, inOut, out, params, log);
+
                     outV.reserve(out.size());
                     for (auto& newMesh : out) {
                         outV.push_back(new MeshType(std::move(newMesh)));
                     }
-                    
+
                     return res;
                 };
             }
@@ -90,7 +97,7 @@ public:
     }
 
 protected:
-    OutputValues executeErased(
+    FilterActionResult executeErased(
         MeshTypeId                      typeId,
         const std::vector<const void*>& inputMeshes,
         std::vector<void*>&             inputOutputMeshes,
@@ -100,9 +107,11 @@ protected:
     {
         vcl::uint id = vcl::toUnderlying(typeId);
         if (!mSupportedMeshTypes[id] || !mExecutors[id]) {
-            throw std::runtime_error("Action " + name() + " does not support the given mesh type.");
+            throw std::runtime_error(
+                "Action " + name() + " does not support the given mesh type.");
         }
-        return mExecutors[id](inputMeshes, inputOutputMeshes, outputMeshes, parameters, log);
+        return mExecutors[id](
+            inputMeshes, inputOutputMeshes, outputMeshes, parameters, log);
     }
 };
 

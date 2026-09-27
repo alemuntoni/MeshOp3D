@@ -40,7 +40,7 @@ public:
     std::vector<UintParameter> inputOutputMeshes() const final { return {}; }
 
     template<vcl::MeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>& inputMeshes,
         const std::vector<MeshType*>&,
         std::vector<MeshType>& outputMeshes,
@@ -54,7 +54,7 @@ public:
         result.name() = "Union";
         outputMeshes.push_back(std::move(result));
 
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

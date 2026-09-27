@@ -42,7 +42,7 @@ public:
     }
 
     template<vcl::MeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&,
@@ -65,7 +65,7 @@ public:
             log.log("No unreferenced vertices found.", MESSAGE_LOG);
         }
 
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

@@ -46,7 +46,7 @@ public:
     }
 
     template<vcl::MeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>&,
         std::vector<MeshType>& outputMeshes,
@@ -67,7 +67,7 @@ public:
 
         outputMeshes.push_back(std::move(cone));
 
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

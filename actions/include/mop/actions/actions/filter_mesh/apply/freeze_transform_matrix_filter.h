@@ -38,7 +38,7 @@ public:
     }
 
     template<vcl::MeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&,
@@ -56,7 +56,7 @@ public:
         } else {
             log.log("The mesh does not have a transform matrix component.", log.WARNING_LOG);
         }
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

@@ -40,7 +40,7 @@ public:
     ParameterVector parameters() const override { return ParameterVector(); }
 
     template<vcl::FaceMeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&,
@@ -62,7 +62,7 @@ public:
             log.log("No duplicate faces found.", MESSAGE_LOG);
         }
 
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

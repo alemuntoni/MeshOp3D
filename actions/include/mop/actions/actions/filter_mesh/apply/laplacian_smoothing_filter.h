@@ -70,7 +70,7 @@ public:
     }
 
     template<vcl::MeshConcept MeshType>
-    OutputValues executeFilter(
+    FilterActionResult executeFilter(
         const std::vector<const MeshType*>&,
         const std::vector<MeshType*>& inputOutputMeshes,
         std::vector<MeshType>&,
@@ -87,7 +87,7 @@ public:
         vcl::laplacianSmoothing(
             mesh, smoothingSteps, onlySelected, cotangentWeighting);
 
-        return OutputValues();
+        return FilterActionResult(nullptr, OutputValues());
     }
 };
 

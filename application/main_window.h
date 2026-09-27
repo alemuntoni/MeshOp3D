@@ -11,6 +11,7 @@
 #include <mop/actions/interfaces/convert_action.h>
 #include <mop/actions/interfaces/filter_action.h>
 
+#include "undo_redo_actions.h"
 #include "utils.h"
 #include <mop/mop_settings.h>
 
@@ -18,6 +19,7 @@
 #include <vclib/render/drawable/drawable_mesh.h>
 #include <vclib/render/drawable/drawable_object_vector.h>
 #include <vclib/render/mesh_viewer.h>
+#include <vclib/space/core/undo_redo.h>
 
 #include <QAction>
 #include <QDragEnterEvent>
@@ -159,7 +161,7 @@ private:
         }
 
         logger().startTimer();
-        action->execute(
+        FilterActionResult result = action->execute(
             inputMeshes, inputOutputMeshes, outputMeshes, params, logger());
         logger().stopTimer();
 
@@ -173,13 +175,28 @@ private:
                 mod->updateBuffers();
             }
         }
-        for (const auto& m : outputMeshes) {
-            this->pushDrawableObject(makeMeshDrawable(m));
+
+        // combine the Core-produced undo (in-place mesh changes) and the
+        // creation of new drawable objects into a single stack entry
+        auto undoAction =
+            std::make_unique<vcl::CompositeUndoRedoAction>(action->name());
+        if (result.undoAction) {
+            undoAction->addAction(std::move(result.undoAction));
+        }
+
+        for (auto& m : outputMeshes) {
+            std::shared_ptr<vcl::DrawableObject> drawable =
+                makeMeshDrawable(std::move(m));
+            vcl::uint id = this->pushDrawableObject(drawable);
+            undoAction->addAction(
+                std::make_unique<AddDrawableObjectAction>(this, id, drawable));
         }
 
         if (nioMeshes > 0 || outputMeshes.size() > 0) {
             this->setRightAreaVisible(true);
         }
+
+        viewer().pushUndoRedoAction(std::move(undoAction));
 
         this->updateGUI();
     }

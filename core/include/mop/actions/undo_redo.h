@@ -5,9 +5,9 @@
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at https://mozilla.org/MPL/2.0/.
 
-#ifndef MOP_APPLICATION_UNDO_REDO_ACTIONS_H
-#define MOP_APPLICATION_UNDO_REDO_ACTIONS_H
+#ifndef MOP_CORE_ACTIONS_UNDO_REDO_H
+#define MOP_CORE_ACTIONS_UNDO_REDO_H
 
-#include "undo_redo_actions/add_drawable_object_action.h"
+#include "undo_redo/mesh_snapshot_undo_action.h"
 
-#endif // MOP_APPLICATION_UNDO_REDO_ACTIONS_H
+#endif // MOP_CORE_ACTIONS_UNDO_REDO_H
