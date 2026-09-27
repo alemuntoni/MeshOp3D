@@ -113,11 +113,7 @@ MainWindow::MainWindow(QWidget* parent) :
 
             if (copy) {
                 copy->name() += " (copy)";
-                uint newIndex = this->pushDrawableObject(copy);
-
-                auto action = std::make_unique<AddDrawableObjectAction>(
-                    this, newIndex, copy, "Duplicate Mesh");
-                viewer().pushUndoRedoAction(std::move(action));
+                pushDrawableObjectWithUndo(copy, "Duplicate Mesh");
             }
         });
 
@@ -389,6 +385,24 @@ void MainWindow::convertCurrentMesh(bool)
     }
 }
 
+std::unique_ptr<AddDrawableObjectAction> MainWindow::
+    pushDrawableObjectAndGetUndo(
+        std::shared_ptr<vcl::DrawableObject> obj,
+        std::string                          undoName)
+{
+    vcl::uint id = this->pushDrawableObject(obj);
+    return std::make_unique<AddDrawableObjectAction>(
+        this, id, std::move(obj), std::move(undoName));
+}
+
+void MainWindow::pushDrawableObjectWithUndo(
+    std::shared_ptr<vcl::DrawableObject> obj,
+    std::string                          undoName)
+{
+    viewer().pushUndoRedoAction(
+        pushDrawableObjectAndGetUndo(std::move(obj), std::move(undoName)));
+}
+
 void MainWindow::loadMesh(const std::string& filename)
 {
     std::string     pfn    = vcl::FileInfo::fileNameWithExtension(filename);
@@ -416,18 +430,22 @@ void MainWindow::loadMesh(const std::string& filename)
         vcl::qt::TextEditLogger::MESSAGE_LOG);
 
     switch (id) {
-    case MeshTypeId::TRIANGLE_MESH:
-        pushDrawableObject(makeMeshDrawable(
-            std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m)))));
+    case MeshTypeId::TRIANGLE_MESH: {
+        std::shared_ptr<vcl::DrawableObject> drawable = makeMeshDrawable(
+            std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(m))));
+        pushDrawableObjectWithUndo(drawable, "Load Mesh");
         addRecentFile(filename);
         setRightAreaVisible(true);
         break;
-    case MeshTypeId::POLYGON_MESH:
-        pushDrawableObject(makeMeshDrawable(
-            std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m)))));
+    }
+    case MeshTypeId::POLYGON_MESH: {
+        std::shared_ptr<vcl::DrawableObject> drawable = makeMeshDrawable(
+            std::move(std::any_cast<vcl::PolyEdgeMesh>(std::move(m))));
+        pushDrawableObjectWithUndo(drawable, "Load Mesh");
         addRecentFile(filename);
         setRightAreaVisible(true);
         break;
+    }
     default: break;
     }
 

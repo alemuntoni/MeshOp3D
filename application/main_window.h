@@ -96,6 +96,19 @@ private:
         const ParameterVector&               params,
         vcl::uint                            selectedMesh);
 
+    // Pushes obj to the scene and returns the paired undo/redo action,
+    // without registering it anywhere: use this when the action must be
+    // composed with others (e.g. in a CompositeUndoRedoAction).
+    std::unique_ptr<AddDrawableObjectAction> pushDrawableObjectAndGetUndo(
+        std::shared_ptr<vcl::DrawableObject> obj,
+        std::string                          undoName = "Add Drawable Object");
+
+    // Pushes obj to the scene and registers the paired undo/redo action as a
+    // standalone entry in the viewer's undo stack.
+    void pushDrawableObjectWithUndo(
+        std::shared_ptr<vcl::DrawableObject> obj,
+        std::string                          undoName = "Add Drawable Object");
+
     template<vcl::MeshConcept MeshType>
     void executeFilter(
         const std::shared_ptr<FilterAction>& action,
@@ -187,9 +200,7 @@ private:
         for (auto& m : outputMeshes) {
             std::shared_ptr<vcl::DrawableObject> drawable =
                 makeMeshDrawable(std::move(m));
-            vcl::uint id = this->pushDrawableObject(drawable);
-            undoAction->addAction(
-                std::make_unique<AddDrawableObjectAction>(this, id, drawable));
+            undoAction->addAction(pushDrawableObjectAndGetUndo(drawable));
         }
 
         if (nioMeshes > 0 || outputMeshes.size() > 0) {
@@ -217,16 +228,17 @@ private:
             vcl::qt::TextEditLogger::MESSAGE_LOG);
 
         switch (id) {
-        case MeshTypeId::TRIANGLE_MESH:
-            this->pushDrawableObject(makeMeshDrawable(
+        case MeshTypeId::TRIANGLE_MESH: {
+            auto drawable = makeMeshDrawable(
+                std::move(std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh))));
+            pushDrawableObjectWithUndo(drawable, action->name());
+        } break;
+        case MeshTypeId::POLYGON_MESH: {
+            auto drawable = makeMeshDrawable(
                 std::move(
-                    std::any_cast<vcl::TriEdgeMesh>(std::move(anyMesh)))));
-            break;
-        case MeshTypeId::POLYGON_MESH:
-            this->pushDrawableObject(makeMeshDrawable(
-                std::move(
-                    std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh)))));
-            break;
+                    std::any_cast<vcl::PolyEdgeMesh>(std::move(anyMesh))));
+            pushDrawableObjectWithUndo(drawable, action->name());
+        } break;
         default: break;
         }
 
