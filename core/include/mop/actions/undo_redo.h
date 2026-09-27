@@ -8,6 +8,7 @@
 #ifndef MOP_CORE_ACTIONS_UNDO_REDO_H
 #define MOP_CORE_ACTIONS_UNDO_REDO_H
 
+#include "undo_redo/mesh_component_snapshot_undo_action.h"
 #include "undo_redo/mesh_snapshot_undo_action.h"
 
 #endif // MOP_CORE_ACTIONS_UNDO_REDO_H

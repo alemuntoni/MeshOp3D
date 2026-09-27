@@ -194,7 +194,15 @@ private:
         auto undoAction =
             std::make_unique<vcl::CompositeUndoRedoAction>(action->name());
         if (result.undoAction) {
-            undoAction->addAction(std::move(result.undoAction));
+            // the adapter re-uploads GPU buffers and refreshes the GUI after
+            // every undo()/redo(), which the Core-level action cannot do
+            std::vector<std::shared_ptr<vcl::AbstractDrawableMesh>>
+                drawablesToRefresh(
+                    modifiedDrawables.begin(), modifiedDrawables.end());
+            undoAction->addAction(std::make_unique<CoreActionGuiAdapter>(
+                std::move(result.undoAction),
+                std::move(drawablesToRefresh),
+                *this));
         }
 
         for (auto& m : outputMeshes) {

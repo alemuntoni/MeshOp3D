@@ -9,5 +9,6 @@
 #define MOP_APPLICATION_UNDO_REDO_ACTIONS_H
 
 #include "undo_redo_actions/add_drawable_object_action.h"
+#include "undo_redo_actions/core_action_gui_adapter.h"
 
 #endif // MOP_APPLICATION_UNDO_REDO_ACTIONS_H
