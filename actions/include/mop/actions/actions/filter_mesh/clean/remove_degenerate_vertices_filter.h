@@ -9,6 +9,7 @@
 #define MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_CLEAN_REMOVE_DEGENERATE_VERTICES_FILTER_H
 
 #include <mop/actions/interfaces/filter_action_base.h>
+#include <mop/actions/undo_redo/mesh_snapshot_undo_action.h>
 #include <vclib/algorithms/mesh/clean.h>
 
 namespace mop {
@@ -52,21 +53,26 @@ public:
         using enum vcl::AbstractLogger::LogLevel;
 
         MeshType& mesh = *inputOutputMeshes.front();
+        MeshType snapshot = mesh;
 
         // Always pass deleteAlsoIncidentElements = true
         vcl::uint removedCount = vcl::removeDegenerateVertices(mesh, true);
+
+        std::unique_ptr<vcl::UndoRedoAction> undoAction;
 
         if (removedCount > 0) {
             log.log(
                 "Removed " + std::to_string(removedCount) +
                     " degenerate vertices and any incident elements.",
                 MESSAGE_LOG);
+            undoAction = std::make_unique<MeshSnapshotUndoAction<MeshType>>(
+                mesh, std::move(snapshot));
         }
         else {
             log.log("No degenerate vertices found.", MESSAGE_LOG);
         }
 
-        return FilterActionResult(nullptr, OutputValues());
+        return FilterActionResult(std::move(undoAction), OutputValues());
     }
 };
 
