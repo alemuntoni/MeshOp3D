@@ -52,50 +52,50 @@ public:
 
         std::unique_ptr<vcl::UndoRedoAction> undoAction;
 
-        if constexpr (vcl::comp::HasTransformMatrix<MeshType>) {
-            if (vcl::comp::isTransformMatrixAvailableOn(mesh)) {
-                // snapshot only the components that applyTransformMatrix and
-                // the identity reset actually touch, not the whole mesh
-                auto composite =
-                    std::make_unique<vcl::CompositeUndoRedoAction>(name());
+        // snapshot only the components that applyTransformMatrix and
+        // the identity reset actually touch, not the whole mesh
+        auto composite = std::make_unique<vcl::CompositeUndoRedoAction>(name());
 
+        composite->addAction(makeMeshComponentSnapshotUndoAction(
+            mesh,
+            [](MeshType& m) {
+                return m.vertices() | vcl::views::positions;
+            },
+            "Vertex Positions"));
+
+        if constexpr (vcl::HasPerVertexNormal<MeshType>) {
+            if (vcl::isPerVertexNormalAvailable(mesh)) {
                 composite->addAction(makeMeshComponentSnapshotUndoAction(
                     mesh,
-                    [](MeshType& m) { return m.vertices() | vcl::views::positions; },
-                    "Vertex Positions"));
-
-                if constexpr (vcl::HasPerVertexNormal<MeshType>) {
-                    if (vcl::isPerVertexNormalAvailable(mesh)) {
-                        composite->addAction(makeMeshComponentSnapshotUndoAction(
-                            mesh,
-                            [](MeshType& m) { return m.vertices() | vcl::views::normals; },
-                            "Vertex Normals"));
-                    }
-                }
-                if constexpr (vcl::HasPerFaceNormal<MeshType>) {
-                    if (vcl::isPerFaceNormalAvailable(mesh)) {
-                        composite->addAction(makeMeshComponentSnapshotUndoAction(
-                            mesh,
-                            [](MeshType& m) { return m.faces() | vcl::views::normals; },
-                            "Face Normals"));
-                    }
-                }
-
-                composite->addAction(makeMeshComponentSnapshotUndoAction(
-                    mesh,
-                    [](MeshType& m) { return std::span(&m.transformMatrix(), 1); },
-                    "Transform Matrix"));
-
-                vcl::applyTransformMatrix(mesh, mesh.transformMatrix());
-                mesh.transformMatrix().setIdentity();
-
-                undoAction = std::move(composite);
-            } else {
-                log.log("The mesh does not have a transform matrix component enabled.", log.WARNING_LOG);
+                    [](MeshType& m) {
+                        return m.vertices() | vcl::views::normals;
+                    },
+                    "Vertex Normals"));
             }
-        } else {
-            log.log("The mesh does not have a transform matrix component.", log.WARNING_LOG);
         }
+        if constexpr (vcl::HasPerFaceNormal<MeshType>) {
+            if (vcl::isPerFaceNormalAvailable(mesh)) {
+                composite->addAction(makeMeshComponentSnapshotUndoAction(
+                    mesh,
+                    [](MeshType& m) {
+                        return m.faces() | vcl::views::normals;
+                    },
+                    "Face Normals"));
+            }
+        }
+
+        composite->addAction(makeMeshComponentSnapshotUndoAction(
+            mesh,
+            [](MeshType& m) {
+                return std::span(&m.transformMatrix(), 1);
+            },
+            "Transform Matrix"));
+
+        vcl::applyTransformMatrix(mesh, mesh.transformMatrix());
+        mesh.transformMatrix().setIdentity();
+
+        undoAction = std::move(composite);
+
         return FilterActionResult(std::move(undoAction), OutputValues());
     }
 };

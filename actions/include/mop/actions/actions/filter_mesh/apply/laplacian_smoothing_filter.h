@@ -78,26 +78,30 @@ public:
         const ParameterVector& parameters,
         vcl::AbstractLogger&   log = FilterAction::logger()) const
     {
-        vcl::uint smoothingSteps = parameters.get("smoothing_steps")->uintValue();
+        vcl::uint smoothingSteps =
+            parameters.get("smoothing_steps")->uintValue();
         bool cotangentWeighting =
             parameters.get("cotangent_weighting")->boolValue();
         bool onlySelected = parameters.get("only_selected")->boolValue();
 
         MeshType& mesh = *inputOutputMeshes.front();
 
-        auto composite =
-            std::make_unique<vcl::CompositeUndoRedoAction>(name());
+        auto composite = std::make_unique<vcl::CompositeUndoRedoAction>(name());
 
         composite->addAction(makeMeshComponentSnapshotUndoAction(
             mesh,
-            [](MeshType& m) { return m.vertices() | vcl::views::positions; },
+            [](MeshType& m) {
+                return m.vertices() | vcl::views::positions;
+            },
             "Vertex Positions"));
 
         if constexpr (vcl::HasPerVertexNormal<MeshType>) {
             if (vcl::isPerVertexNormalAvailable(mesh)) {
                 composite->addAction(makeMeshComponentSnapshotUndoAction(
                     mesh,
-                    [](MeshType& m) { return m.vertices() | vcl::views::normals; },
+                    [](MeshType& m) {
+                        return m.vertices() | vcl::views::normals;
+                    },
                     "Vertex Normals"));
             }
         }
@@ -105,7 +109,9 @@ public:
             if (vcl::isPerFaceNormalAvailable(mesh)) {
                 composite->addAction(makeMeshComponentSnapshotUndoAction(
                     mesh,
-                    [](MeshType& m) { return m.faces() | vcl::views::normals; },
+                    [](MeshType& m) {
+                        return m.faces() | vcl::views::normals;
+                    },
                     "Face Normals"));
             }
         }
