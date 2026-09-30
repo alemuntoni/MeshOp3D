@@ -34,7 +34,10 @@ using FilterActionsList = vcl::TypeWrapper<
     CreateConeFilter,
 
     // generate filters
-    ConvexHullFilter
+    ConvexHullFilter,
+
+    // transform filters
+    RotateFilter
 #if defined(VCLIB_WITH_CGAL) && defined(VCLIB_WITH_BOOST)
     ,
     // boolean filters

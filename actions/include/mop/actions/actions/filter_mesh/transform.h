@@ -5,9 +5,10 @@
 // v. 2.0. If a copy of the MPL was not distributed with this file, You can
 // obtain one at https://mozilla.org/MPL/2.0/.
 
-#ifndef MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_APPLY_H
-#define MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_APPLY_H
+#ifndef MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_TRANSFORM_H
+#define MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_TRANSFORM_H
 
-#include "apply/laplacian_smoothing_filter.h"
+#include "transform/freeze_transform_matrix_filter.h"
+#include "transform/rotate_filter.h"
 
-#endif // MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_APPLY_H
+#endif // MOP_ACTIONS_ACTIONS_ACTIONS_FILTER_MESH_TRANSFORM_H
