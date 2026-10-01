@@ -32,4 +32,9 @@ std::shared_ptr<Parameter> BoolParameterRow::parameterFromWidget() const
     return p;
 }
 
+void BoolParameterRow::connectValueChanged(const QObject* receiver, const char* slot)
+{
+    QObject::connect(mCheckBox, SIGNAL(stateChanged(int)), receiver, slot);
+}
+
 } // namespace mop

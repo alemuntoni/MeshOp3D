@@ -48,4 +48,9 @@ std::shared_ptr<Parameter> EnumParameterRow::parameterFromWidget() const
     return p;
 }
 
+void EnumParameterRow::connectValueChanged(const QObject* receiver, const char* slot)
+{
+    QObject::connect(mComboBox, SIGNAL(currentIndexChanged(int)), receiver, slot);
+}
+
 } // namespace mop

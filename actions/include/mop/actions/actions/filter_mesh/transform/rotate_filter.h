@@ -43,14 +43,21 @@ public:
         ParameterVector p;
         p.pushBack(
             std::make_shared<EnumParameter>(
-                "rotation on",
+                "rotation_on",
                 0,
-                std::vector<std::string> {"X", "Y", "Z"},
+                std::vector<std::string> {"X", "Y", "Z", "Custom"},
                 vcl::BitSet32().set(),
                 "Axis of rotation"));
+        auto customAxis = std::make_shared<Point3Parameter>(
+                "custom_axis",
+                vcl::Point3d(0, 0, 1),
+                "Custom axis",
+                "The custom axis of rotation (used when 'Custom' is selected)");
+        customAxis->setDependency("rotation_on", 3);
+        p.pushBack(customAxis);
         p.pushBack(
             std::make_shared<EnumParameter>(
-                "center of rotation",
+                "center_of_rotation",
                 1,
                 std::vector<std::string> {"Origin", "Barycenter"},
                 vcl::BitSet32().set(),
@@ -61,12 +68,12 @@ public:
                 "rotated around its barycenter."));
         p.pushBack(
             std::make_shared<ScalarParameter>(
-                "rotation angle", 0.0, "Rotation angle",
+                "rotation_angle", 0.0, "Rotation angle",
                 "Rotation angle in degrees. Positive values rotate counter-clockwise "
                 "when looking along the axis of rotation towards the origin."));
         p.pushBack(
             std::make_shared<BoolParameter>(
-                "freeze transform",
+                "freeze_transform",
                 true,
                 "Freeze transform matrix",
                 "If true, the mesh vertices and normals are rotated and the "
@@ -91,18 +98,22 @@ public:
         MeshType& mesh     = *inputOutputMeshes.front();
         MeshType  snapshot = mesh;
 
-        uint   axis_id   = params.get("rotation on")->uintValue();
-        uint   center_id = params.get("center of rotation")->uintValue();
-        double angle     = params.get("rotation angle")->scalarValue();
-        bool   freeze    = params.get("freeze transform")->boolValue();
+        uint   axis_id   = params.get("rotation_on")->uintValue();
+        uint   center_id = params.get("center_of_rotation")->uintValue();
+        double angle     = params.get("rotation_angle")->scalarValue();
+        bool   freeze    = params.get("freeze_transform")->boolValue();
 
         PositionType axis(0, 0, 0);
         if (axis_id == 0)
             axis[0] = 1.0;
         else if (axis_id == 1)
             axis[1] = 1.0;
-        else
+        else if (axis_id == 2)
             axis[2] = 1.0;
+        else if (axis_id == 3) {
+            auto custom_axis = params.get("custom_axis")->point3Value();
+            axis = PositionType(custom_axis[0], custom_axis[1], custom_axis[2]).normalized();
+        }
 
         PositionType center(0, 0, 0);
         if (center_id == 1) {

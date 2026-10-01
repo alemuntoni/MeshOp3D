@@ -15,9 +15,16 @@
 
 #include <any>
 #include <memory>
+#include <optional>
 #include <string>
+#include <vector>
 
 namespace mop {
+
+struct ParameterDependency {
+    std::string      parameterName;
+    std::vector<int> expectedValues;
+};
 
 enum class ParameterType {
     // native parameters - the std::any mValue member is one of these types
@@ -46,6 +53,7 @@ class Parameter
     std::string mDescription;
     std::string mToolTip;
     std::string mCategory;
+    std::optional<ParameterDependency> mDependency;
 
 public:
     Parameter() = default;
@@ -69,6 +77,20 @@ public:
     const std::string& tooltip() const { return mToolTip; }
 
     const std::string& category() const { return mCategory; }
+
+    bool hasDependency() const { return mDependency.has_value(); }
+
+    const ParameterDependency& dependency() const { return *mDependency; }
+
+    void setDependency(const std::string& paramName, const std::vector<int>& values)
+    {
+        mDependency = ParameterDependency{paramName, values};
+    }
+
+    void setDependency(const std::string& paramName, int value)
+    {
+        setDependency(paramName, std::vector<int>{value});
+    }
 
     void setValue(const Parameter& p)
     {
