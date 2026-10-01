@@ -49,27 +49,39 @@ public:
                 vcl::BitSet32().set(),
                 "Axis of rotation"));
         auto customAxis = std::make_shared<Point3Parameter>(
-                "custom_axis",
-                vcl::Point3d(0, 0, 1),
-                "Custom axis",
-                "The custom axis of rotation (used when 'Custom' is selected)");
+            "custom_axis",
+            vcl::Point3d(0, 0, 1),
+            "Custom axis",
+            "The custom axis of rotation (used when 'Custom' is selected)");
         customAxis->setDependency("rotation_on", 3);
         p.pushBack(customAxis);
         p.pushBack(
             std::make_shared<EnumParameter>(
                 "center_of_rotation",
                 1,
-                std::vector<std::string> {"Origin", "Barycenter"},
+                std::vector<std::string> {"Origin", "Barycenter", "Custom"},
                 vcl::BitSet32().set(),
                 "Center of rotation",
                 "The point around which the mesh is rotated. If 'Origin' is "
                 "selected, the mesh is rotated around the origin of the world "
                 "coordinate system. If 'Barycenter' is selected, the mesh is "
-                "rotated around its barycenter."));
+                "rotated around its barycenter. If 'Custom' is selected, the "
+                "mesh is "
+                "rotated around the specified custom center."));
+        auto customCenter = std::make_shared<Point3Parameter>(
+            "custom_center",
+            vcl::Point3d(0, 0, 0),
+            "Custom center",
+            "The custom center of rotation (used when 'Custom' is selected)");
+        customCenter->setDependency("center_of_rotation", 2);
+        p.pushBack(customCenter);
         p.pushBack(
             std::make_shared<ScalarParameter>(
-                "rotation_angle", 0.0, "Rotation angle",
-                "Rotation angle in degrees. Positive values rotate counter-clockwise "
+                "rotation_angle",
+                0.0,
+                "Rotation angle",
+                "Rotation angle in degrees. Positive values rotate "
+                "counter-clockwise "
                 "when looking along the axis of rotation towards the origin."));
         p.pushBack(
             std::make_shared<BoolParameter>(
@@ -77,7 +89,8 @@ public:
                 true,
                 "Freeze transform matrix",
                 "If true, the mesh vertices and normals are rotated and the "
-                "transform matrix is reset to identity. If false, the transform "
+                "transform matrix is reset to identity. If false, the "
+                "transform "
                 "matrix is modified and the mesh vertices and normals are not "
                 "changed."));
         return p;
@@ -112,12 +125,18 @@ public:
             axis[2] = 1.0;
         else if (axis_id == 3) {
             auto custom_axis = params.get("custom_axis")->point3Value();
-            axis = PositionType(custom_axis[0], custom_axis[1], custom_axis[2]).normalized();
+            axis = PositionType(custom_axis[0], custom_axis[1], custom_axis[2])
+                       .normalized();
         }
 
         PositionType center(0, 0, 0);
         if (center_id == 1) {
             center = vcl::barycenter(mesh);
+        }
+        else if (center_id == 2) {
+            auto custom_center = params.get("custom_center")->point3Value();
+            center             = PositionType(
+                custom_center[0], custom_center[1], custom_center[2]);
         }
 
         if (freeze) {
