@@ -12,6 +12,7 @@
 #include "parameters/scalar_parameter_row.h"
 #include "parameters/uint_parameter_row.h"
 #include "parameters/uscalar_parameter_row.h"
+#include "parameters/point3_parameter_row.h"
 
 namespace mop {
 
@@ -67,6 +68,13 @@ void ParametersGridLayout::setParameters(
                     std::dynamic_pointer_cast<const UscalarParameter>(
                         par);
                 parRow = std::make_shared<UscalarParameterRow>(*usp);
+
+                paramInserted = true;
+            } break;
+            case ParameterType::POINT3: {
+                std::shared_ptr<const Point3Parameter> ptp =
+                    std::dynamic_pointer_cast<const Point3Parameter>(par);
+                parRow = std::make_shared<Point3ParameterRow>(*ptp);
 
                 paramInserted = true;
             } break;

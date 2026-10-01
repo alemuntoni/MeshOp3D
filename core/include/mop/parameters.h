@@ -15,5 +15,6 @@
 #include "parameters/string_parameter.h"
 #include "parameters/uint_parameter.h"
 #include "parameters/uscalar_parameter.h"
+#include "parameters/point3_parameter.h"
 
 #endif // MOP_CORE_PARAMETERS_H

@@ -36,7 +36,8 @@ public:
                 "The number of enum values exceeds the maximum allowed value "
                 "of 32.");
         }
-        setUintValue(value);
+
+        EnumParameter::setUintValue(value); // no virtual call
     }
 
     ParameterType type() const override { return ParameterType::ENUM; }
