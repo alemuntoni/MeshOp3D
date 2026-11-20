@@ -34,12 +34,27 @@ if(CPACK_GENERATOR MATCHES "^(AppImage|TGZ)$")
     endif()
 
     if(CPACK_GENERATOR MATCHES "AppImage")
-        # linuxdeploy creates symlinks for AppRun, desktop file, and icon in the AppDir root.
+        # linuxdeploy creates symlinks for desktop file, icon, and .DirIcon in the AppDir root.
         # CPack's native AppImage generator ALSO tries to create them, causing a "File exists" error.
-        # We remove them here so CPack can do its job.
-        file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
+        # We remove the desktop and icon symlinks so CPack can create them.
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/@MOP_APP_NAME@.desktop")
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/mop3d-icon.png")
         file(REMOVE "${CPACK_TEMPORARY_DIRECTORY}/.DirIcon")
+
+        # CPack's native AppImage generator checks if AppRun exists in the AppDir root.
+        # If AppRun is removed, CPack generates a default AppRun with permissions 0744 (rwxr--r--),
+        # which causes recent appimagetool builds to fail with:
+        #   "Problem: this program/script has mode 0744 ... It needs at least mode 0755".
+        # We ensure AppRun is preserved (or created if missing) and has at least 0755 (a+rx) permissions.
+        if(NOT EXISTS "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
+            file(WRITE "${CPACK_TEMPORARY_DIRECTORY}/AppRun"
+"#!/usr/bin/env bash
+set -e
+this_dir=\"\$(readlink -f \"\$(dirname \"\$0\")\")\"
+exec \"\$this_dir\"/usr/bin/@MOP_APP_NAME@ \"\$@\"
+")
+        endif()
+        execute_process(COMMAND chmod a+rx "${CPACK_TEMPORARY_DIRECTORY}/AppRun")
+        execute_process(COMMAND chmod -R a+rX "${CPACK_TEMPORARY_DIRECTORY}")
     endif()
 endif()
