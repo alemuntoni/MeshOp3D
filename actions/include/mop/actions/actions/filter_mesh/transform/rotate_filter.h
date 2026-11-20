@@ -10,9 +10,8 @@
 
 #include <mop/actions/interfaces/filter_action_base.h>
 #include <mop/actions/undo_redo/mesh_snapshot_undo_action.h>
-#include <vclib/algorithms/mesh/stat/barycenter.h>
-#include <vclib/algorithms/mesh/update/transform.h>
-#include <vclib/mesh/components/transform_matrix.h>
+#include <vclib/algorithms/mesh.h>
+#include <vclib/mesh.h>
 
 namespace mop {
 
@@ -105,8 +104,8 @@ public:
         vcl::AbstractLogger&   log = FilterAction::logger()) const
     {
         using enum vcl::AbstractLogger::LogLevel;
-        using PositionType = typename MeshType::VertexType::PositionType;
-        using ScalarType   = typename PositionType::ScalarType;
+        using PositionType = vcl::PositionType<MeshType>;
+        using ScalarType   = PositionType::ScalarType;
 
         MeshType& mesh     = *inputOutputMeshes.front();
         MeshType  snapshot = mesh;
@@ -147,7 +146,7 @@ public:
             if (center_id == 1) {
                 vcl::translate(mesh, center);
             }
-            log.log("Rotated mesh vertices and normals.", MESSAGE_LOG);
+            log.log(MESSAGE_LOG, "Rotated mesh vertices and normals.");
         }
         else {
             using ScalarM = typename MeshType::TransformMatrixType::Scalar;
@@ -174,7 +173,7 @@ public:
             // * M
             mesh.transformMatrix() = tr2 * rot * tr1 * mesh.transformMatrix();
 
-            log.log("Modified transform matrix.", MESSAGE_LOG);
+            log.log(MESSAGE_LOG, "Modified transform matrix.");
         }
 
         auto undoAction = std::make_unique<MeshSnapshotUndoAction<MeshType>>(

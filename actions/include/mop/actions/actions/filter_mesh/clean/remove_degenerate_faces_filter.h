@@ -59,14 +59,13 @@ public:
 
         if (removedCount > 0) {
             log.log(
-                "Removed or repaired " + std::to_string(removedCount) +
-                    " degenerate faces.",
-                MESSAGE_LOG);
+                MESSAGE_LOG,
+                "Removed or repaired {} degenerate faces.", std::to_string(removedCount));
             undoAction = std::make_unique<MeshSnapshotUndoAction<MeshType>>(
                 mesh, std::move(snapshot));
         }
         else {
-            log.log("No degenerate faces found.", MESSAGE_LOG);
+            log.log(MESSAGE_LOG, "No degenerate faces found.");
         }
 
         return FilterActionResult(std::move(undoAction), OutputValues());
