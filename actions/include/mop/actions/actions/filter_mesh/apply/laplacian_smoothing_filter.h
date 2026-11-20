@@ -95,8 +95,8 @@ public:
             },
             "Vertex Positions"));
 
-        if constexpr (vcl::HasPerVertexNormal<MeshType>) {
-            if (vcl::isPerVertexNormalAvailable(mesh)) {
+        if constexpr (vcl::HasVertexNormal<MeshType>) {
+            if (mesh.isVertexNormalAvailable()) {
                 composite->addAction(makeMeshComponentSnapshotUndoAction(
                     mesh,
                     [](MeshType& m) {
@@ -105,8 +105,8 @@ public:
                     "Vertex Normals"));
             }
         }
-        if constexpr (vcl::HasPerFaceNormal<MeshType>) {
-            if (vcl::isPerFaceNormalAvailable(mesh)) {
+        if constexpr (vcl::HasFaceNormal<MeshType>) {
+            if (mesh.isFaceNormalAvailable()) {
                 composite->addAction(makeMeshComponentSnapshotUndoAction(
                     mesh,
                     [](MeshType& m) {

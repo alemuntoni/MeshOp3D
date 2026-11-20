@@ -331,11 +331,11 @@ protected:
     {
         if (!outputMeshes.empty()) {
             log.log(
-                "The action " + name() +
-                    " returned output meshes, but an "
-                    "outputMeshes vector was not provided to the execute "
-                    "function.",
-                log.WARNING_LOG);
+                vcl::AbstractLogger::MESSAGE_LOG,
+                "The action {} returned output meshes, but an "
+                "outputMeshes vector was not provided to the execute "
+                "function.",
+                name());
         }
     }
 
@@ -352,7 +352,7 @@ protected:
     void postExecute(MeshType& mesh) const
     {
         if constexpr (vcl::HasFaces<MeshType>) {
-            vcl::updatePerVertexAndFaceNormals(mesh);
+            vcl::updateVertexAndFaceNormals(mesh);
         }
         vcl::updateBoundingBox(mesh);
     }

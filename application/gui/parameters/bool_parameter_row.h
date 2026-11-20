@@ -27,6 +27,8 @@ public:
     QWidget* parameterWidget() override;
 
     std::shared_ptr<Parameter> parameterFromWidget() const override;
+
+    void connectValueChanged(const QObject* receiver, const char* slot) override;
 };
 
 } // namespace mop

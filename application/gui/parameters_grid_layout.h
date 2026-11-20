@@ -18,6 +18,8 @@ namespace mop {
 
 class ParametersGridLayout : public QGridLayout
 {
+    Q_OBJECT
+
     ParameterVector mParameters;
 
     std::vector<std::shared_ptr<ParameterRow>> mRows;
@@ -30,6 +32,9 @@ public:
     ParameterVector parameters() const;
 
     void setHelpVisible(bool b);
+
+public slots:
+    void updateDependencies();
 
 private:
     void clear();

@@ -61,7 +61,7 @@ public:
         auto cone = vcl::createCone<MeshType>(
             bottomRadius, topRadius, height, subdivisions);
 
-        vcl::updatePerVertexAndFaceNormals(cone);
+        vcl::updateVertexAndFaceNormals(cone);
 
         cone.name() = "Cone";
 

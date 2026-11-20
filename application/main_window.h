@@ -179,9 +179,10 @@ private:
         logger().stopTimer();
 
         logger().log(
-            action->name() + " applied in " + std::to_string(logger().time()) +
-                " seconds.",
-            vcl::qt::TextEditLogger::MESSAGE_LOG);
+            vcl::AbstractLogger::MESSAGE_LOG,
+            "{} applied in {} seconds.",
+            action->name(),
+            logger().time());
 
         if (nioMeshes > 0) {
             for (auto& mod : modifiedDrawables) {
@@ -231,9 +232,10 @@ private:
             meshTypeId<MeshType>(), std::any(meshPtr), logger());
         logger().stopTimer();
         logger().log(
-            action->name() + " applied in " + std::to_string(logger().time()) +
-                " seconds.",
-            vcl::qt::TextEditLogger::MESSAGE_LOG);
+            vcl::AbstractLogger::MESSAGE_LOG,
+            "{} applied in {} seconds.",
+            action->name(),
+            logger().time());
 
         switch (id) {
         case MeshTypeId::TRIANGLE_MESH: {

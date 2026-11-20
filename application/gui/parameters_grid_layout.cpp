@@ -12,6 +12,7 @@
 #include "parameters/scalar_parameter_row.h"
 #include "parameters/uint_parameter_row.h"
 #include "parameters/uscalar_parameter_row.h"
+#include "parameters/point3_parameter_row.h"
 
 namespace mop {
 
@@ -70,16 +71,24 @@ void ParametersGridLayout::setParameters(
 
                 paramInserted = true;
             } break;
+            case ParameterType::POINT3: {
+                std::shared_ptr<const Point3Parameter> ptp =
+                    std::dynamic_pointer_cast<const Point3Parameter>(par);
+                parRow = std::make_shared<Point3ParameterRow>(*ptp);
+
+                paramInserted = true;
+            } break;
             default: break;
             }
             if (paramInserted) {
                 parRow->addRowToGridLayout(this, row);
-
+                parRow->connectValueChanged(this, SLOT(updateDependencies()));
                 mRows.push_back(parRow);
                 ++row;
             }
         }
     }
+    updateDependencies();
 }
 
 ParameterVector ParametersGridLayout::parameters() const
@@ -96,6 +105,32 @@ void ParametersGridLayout::setHelpVisible(bool b)
 {
     for (const std::shared_ptr<ParameterRow>& row : mRows)
         row->setHelpVisible(b);
+}
+
+void ParametersGridLayout::updateDependencies()
+{
+    ParameterVector currentParams = parameters();
+    for (const std::shared_ptr<ParameterRow>& row : mRows) {
+        auto p = row->parameterFromWidget();
+        if (p->hasDependency()) {
+            const auto& dep = p->dependency();
+            auto depParam = currentParams.get(dep.parameterName);
+            bool satisfied = false;
+            if (depParam) {
+                int val = -1;
+                if (depParam->type() == ParameterType::BOOL) val = depParam->boolValue() ? 1 : 0;
+                else if (depParam->type() == ParameterType::ENUM) val = depParam->uintValue();
+                
+                for (int expected : dep.expectedValues) {
+                    if (val == expected) {
+                        satisfied = true;
+                        break;
+                    }
+                }
+            }
+            row->setVisible(satisfied);
+        }
+    }
 }
 
 void ParametersGridLayout::clear()

@@ -301,8 +301,10 @@ void MainWindow::saveMeshAs()
 
         logger().stopTimer();
         logger().log(
-            pfn + " saved in " + std::to_string(logger().time()) + " seconds.",
-            vcl::qt::TextEditLogger::MESSAGE_LOG);
+            vcl::AbstractLogger::MESSAGE_LOG,
+            "{} saved in {} seconds.",
+            pfn,
+            logger().time());
     }
 }
 
@@ -341,7 +343,7 @@ void MainWindow::applyFilter(
         std::string msg = "Error executing filter '" + action->name() +
                           "': " + std::string(e.what());
 
-        logger().log(msg, vcl::qt::TextEditLogger::ERROR_LOG);
+        logger().log(vcl::AbstractLogger::MESSAGE_LOG, msg);
         QMessageBox::critical(
             this, "Error", QString::fromStdString(msg), QMessageBox::Ok);
     }
@@ -426,8 +428,10 @@ void MainWindow::loadMesh(const std::string& filename)
     auto [m, id] = loadMeshBestFit(filename, params, logger());
     logger().stopTimer();
     logger().log(
-        pfn + " loaded in " + std::to_string(logger().time()) + " seconds.",
-        vcl::qt::TextEditLogger::MESSAGE_LOG);
+        vcl::AbstractLogger::MESSAGE_LOG,
+        "{} loaded in {} seconds.",
+        pfn,
+        logger().time());
 
     switch (id) {
     case MeshTypeId::TRIANGLE_MESH: {

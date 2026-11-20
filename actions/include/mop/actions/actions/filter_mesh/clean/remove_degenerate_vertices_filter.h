@@ -62,14 +62,14 @@ public:
 
         if (removedCount > 0) {
             log.log(
-                "Removed " + std::to_string(removedCount) +
-                    " degenerate vertices and any incident elements.",
-                MESSAGE_LOG);
+                MESSAGE_LOG,
+                "Removed {} degenerate vertices and any incident elements.",
+                removedCount);
             undoAction = std::make_unique<MeshSnapshotUndoAction<MeshType>>(
                 mesh, std::move(snapshot));
         }
         else {
-            log.log("No degenerate vertices found.", MESSAGE_LOG);
+            log.log(MESSAGE_LOG, "No degenerate vertices found.");
         }
 
         return FilterActionResult(std::move(undoAction), OutputValues());

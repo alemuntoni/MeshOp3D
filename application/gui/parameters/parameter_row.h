@@ -40,6 +40,8 @@ public:
 
     virtual std::shared_ptr<Parameter> parameterFromWidget() const = 0;
 
+    virtual void connectValueChanged(const QObject* receiver, const char* slot) {}
+
     void addRowToGridLayout(QGridLayout* lay, const int row);
 
     bool hasBeenModified() const;

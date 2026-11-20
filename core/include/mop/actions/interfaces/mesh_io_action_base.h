@@ -159,11 +159,11 @@ protected:
     void postLoad(MeshType& mesh, const vcl::MeshInfo& loadedInfo) const
     {
         if constexpr (vcl::HasFaces<MeshType>) {
-            if (!loadedInfo.hasPerFaceNormal()) {
-                vcl::updatePerFaceNormals(mesh);
+            if (!loadedInfo.hasFaceNormal()) {
+                vcl::updateFaceNormals(mesh);
             }
-            if (!loadedInfo.hasPerVertexNormal()) {
-                vcl::updatePerVertexNormalsFromFaceNormals(mesh);
+            if (!loadedInfo.hasVertexNormal()) {
+                vcl::updateVertexNormalsFromFaceNormals(mesh);
             }
         }
         vcl::updateBoundingBox(mesh);

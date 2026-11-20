@@ -61,14 +61,16 @@ public:
 
         if (removedCount > 0) {
             log.log(
-                "Removed " + std::to_string(removedCount) +
-                    " unreferenced vertices.",
-                MESSAGE_LOG);
+                MESSAGE_LOG,
+                "Removed {} unreferenced vertices.",
+                removedCount);
             undoAction = std::make_unique<MeshSnapshotUndoAction<MeshType>>(
                 mesh, std::move(snapshot));
         }
         else {
-            log.log("No unreferenced vertices found.", MESSAGE_LOG);
+            log.log(
+                MESSAGE_LOG,
+                "No unreferenced vertices found.");
         }
 
         return FilterActionResult(std::move(undoAction), OutputValues());

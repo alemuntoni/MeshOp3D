@@ -8,7 +8,7 @@
 #ifndef MOP_CORE_SETTINGS_H
 #define MOP_CORE_SETTINGS_H
 
-#include <vclib/algorithms/mesh/type_name.h>
+#include <vclib/algorithms/mesh.h>
 #include <vclib/meshes.h>
 
 namespace mop {
@@ -19,11 +19,6 @@ using uint = vcl::uint;
  * @brief Scalar type used in MeshOp3D.
  */
 using ScalarType = double;
-
-/**
- * @brief Flag that indicates if the meshes are indexed.
- */
-constexpr bool INDEXED_MESHES = false;
 
 enum class MeshTypeId : uint {
     TRIANGLE_MESH = 0,
@@ -36,8 +31,8 @@ enum class MeshTypeId : uint {
  * @brief List of mesh types supported by MeshOp3D.
  */
 using MeshTypes = vcl::TypeWrapper<
-    vcl::TriEdgeMeshT<ScalarType, INDEXED_MESHES>,
-    vcl::PolyEdgeMeshT<ScalarType, INDEXED_MESHES>>;
+    vcl::TriEdgeMeshT<ScalarType>,
+    vcl::PolyEdgeMeshT<ScalarType>>;
 
 template<MeshTypeId MESH_ID>
 using GetMeshType = vcl::TypeAt<vcl::toUnderlying(MESH_ID), MeshTypes>::type;
